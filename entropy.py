@@ -26,7 +26,7 @@ args = parser.parse_args()
 data  = read_nii_arrays(args.data,
         image_ext=args.ext,
         default_shape=(256, 256, 166),
-        True)
+        ignore_shape=True)
 norm_data = normalize(data)
 result = voxel_dist_operations(norm_data, [np.max, np.mean, np.var, np.min, np.median])
 result["shapes"] = norm_data.shape
