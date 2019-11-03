@@ -6,7 +6,7 @@ import argparse
 import numpy as np
 
 parser = argparse.ArgumentParser(description="Characteristics of images.")
-parser.add_argument("--data", "-d", 
+parser.add_argument("--data", "-d",
                     help="Root directory of data",
                     type=str,
                     required=True)
@@ -23,7 +23,10 @@ parser.add_argument("--ext", "-e",
 
 args = parser.parse_args()
 
-data  = read_nii_arrays(args.data, image_ext=args.ext, default_shape=(256, 256, 166))
+data  = read_nii_arrays(args.data,
+        image_ext=args.ext,
+        default_shape=(256, 256, 166),
+        True)
 norm_data = normalize(data)
 result = voxel_dist_operations(norm_data, [np.max, np.mean, np.var, np.min, np.median])
 result["shapes"] = norm_data.shape
