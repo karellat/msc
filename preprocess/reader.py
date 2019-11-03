@@ -3,7 +3,7 @@ from nilearn import image
 import numpy as np
 import logging
 
-def read_nii_arrays(input_dir, image_ext="nii", default_shape=(256, 256, 166)):
+def read_nii_arrays(input_dir, image_ext="nii", default_shape=(256, 256, 166), ignore_shape=False):
     # easy option
     nii_images = []
     for (dirpath, dirnames, filenames) in os.walk(input_dir):
@@ -12,6 +12,10 @@ def read_nii_arrays(input_dir, image_ext="nii", default_shape=(256, 256, 166)):
                 logging.info("Read nii file from {}.".format(os.path.join(dirpath, f)))
                 img = np.squeeze(np.array(image.load_img(os.path.join(dirpath, f)).get_data()))
                 if img.shape != default_shape:
-                    logging.warning("Expected {} shape but {} found in {}".format(default_shape, img.shape , os.path.join(dirpath, f))) 
+                    logging.warning("Expected {} shape but {} found in {}".format(default_shape, img.shape , os.path.join(dirpath, f)))
+                    if ignore_shape:
+                        logging.warning("Ignoring {}".format(f))
+                        continue
+
                 nii_images.append(img)
     return np.array(nii_images)
