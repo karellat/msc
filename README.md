@@ -1,5 +1,8 @@
 # master_thesis
 Master Thesis at MFF UK
+=======
+# master_thesis
+Master Thesis at MFF UK
 
 ## ADNI - basic info and glossary
 ### INLUSIoN Criteria 
@@ -16,4 +19,3 @@ Master Thesis at MFF UK
 - memory problems
 - CLinical Dementia Rating 0,5, 1
 - Criteria of AD
-
