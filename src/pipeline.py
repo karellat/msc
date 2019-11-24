@@ -28,6 +28,7 @@ img_generator = nii_dir_generator(input_dir=IMG_PATH,
                                   default_shape=IMG_SHAPE,
                                   ignore_shape=IMG_IGNORE_BAD_SHAPE)
 for fname, img in img_generator:
+    if img is None: continue
     labels.append(fname)
     images.append(img)
 
@@ -37,11 +38,18 @@ labels = np.array(labels)
 assert len(images) > 0
 info('Reading finished')
 
+# LABELS STATS
+unique, counts = np.unique(labels, return_counts=True)
+for label, count in zip(unique, counts):
+    info(f'Label {label} = {count}')
+
 # NORMALIZATION PHASE
+info('Calculating data boundaries')
 voxel_mean = np.mean(images)
 voxel_std = np.std(images)
 voxel_max = np.max(images)
 voxel_min = np.min(images)
+info(f'Normalization by {NORM_METHOD}')
 
 normalize(images,
           feature_range=(0, 1),
@@ -63,7 +71,6 @@ info('Normalization finished')
 assert images.shape[-1] != 1
 
 images = images.reshape((*images.shape, 1)).astype('float32')
-labels = labels == 'CN'
 
 info('Preparation finished')
 info(f'\t X data shape {images.shape}')
@@ -92,4 +99,4 @@ info(f'Test')
 #info(f'Test accuracy: {test_scores[1]}')
 
 info(f'Coping config to {logs_dir}')
-copyfile('config.py', os.path.join(logs_dir,'config.py'))
+copyfile('src/config.py', os.path.join(logs_dir,'config.py'))

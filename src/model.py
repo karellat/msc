@@ -26,6 +26,6 @@ def get_baseline():
                           activation='relu')(conv3)
     flatten = layers.Flatten()(conv4)
 
-    output = layers.Dense(2, activation='softmax')(flatten)
+    output = layers.Dense(3, activation='softmax')(flatten)
 
     return(tf.keras.Model(inputs=img_inputs, outputs=output, name='3D_Dense'))
