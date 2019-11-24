@@ -10,6 +10,7 @@ from config import *
 from reader import nii_dir_generator
 from normalize import normalize
 from model import get_baseline
+import adni
 
 # MODULES INFO 
 basicConfig(level=logging.DEBUG)
@@ -29,6 +30,7 @@ img_generator = nii_dir_generator(input_dir=IMG_PATH,
                                   ignore_shape=IMG_IGNORE_BAD_SHAPE)
 for fname, img in img_generator:
     if img is None: continue
+    if fname == 1: continue # Filter MCI 
     labels.append(fname)
     images.append(img)
 
@@ -40,6 +42,8 @@ info('Reading finished')
 
 # LABELS STATS
 unique, counts = np.unique(labels, return_counts=True)
+max_perc = np.max(counts)/np.sum(counts)
+info(f'Ration {max_perc} max class {adni.int_to_str(unique[np.argmax(counts)])}') 
 for label, count in zip(unique, counts):
     info(f'Label {label} = {count}')
 

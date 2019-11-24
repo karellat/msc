@@ -23,14 +23,25 @@ def get_adni_group(adni_img_name, adni_desc_df):
     img_id = parse_adni_img_id(adni_img_name)
     adni_ids = adni_desc_df.loc[adni_desc_df['Image Data ID'] == img_id, 'Group'].values
     assert adni_ids.shape[0] == 1 
-    return adni_str_to_int(adni_ids[0]) 
+    return str_to_int(adni_ids[0]) 
 
-def adni_str_to_int(adni_id:str):
+def str_to_int(adni_id:str):
     if adni_id == "CN": 
         return 0
     elif adni_id == "MCI": 
         return 1
     elif adni_id == "AD": 
         return 2
+    else:
+        raise Exception(f'Unknown adni_id: {adni_id}')
+
+
+def int_to_str(adni_id:str):
+    if adni_id == 0: 
+        return "CN" 
+    elif adni_id == 1: 
+        return "MCI"
+    elif adni_id == 2: 
+        return "AD"
     else:
         raise Exception(f'Unknown adni_id: {adni_id}')
