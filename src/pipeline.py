@@ -1,12 +1,22 @@
 import numpy as np
 import tensorflow as tf
+import logging
+from logging import info, warning, error, basicConfig
+import os
+from datetime import datetime
+from shutil import copyfile
 
-from logging import info, warning, error
 from config import *
 from reader import nii_dir_generator
 from normalize import normalize
 from model import get_baseline
 
+# MODULES INFO 
+basicConfig(level=logging.DEBUG)
+
+info(f'Tensorflow {tf.__version__}')
+
+logs_dir = os.path.join(T_LOGS, datetime.now().strftime("%y-%m-%H-%M"))
 # READ PHASE
 info(f'Reading from {IMG_PATH}')
 
@@ -24,6 +34,7 @@ for fname, img in img_generator:
 images = np.array(images)
 labels = np.array(labels)
 
+assert len(images) > 0
 info('Reading finished')
 
 # NORMALIZATION PHASE
@@ -54,20 +65,13 @@ assert images.shape[-1] != 1
 images = images.reshape((*images.shape, 1)).astype('float32')
 labels = labels == 'CN'
 
-train_x = images[2:]
-train_y = labels[2:]
-
-test_x = images[:2]
-test_y = labels[:2]
-
-val_x = test_x
-val_y = test_y
-
 info('Preparation finished')
+info(f'\t X data shape {images.shape}')
+info(f'\t y data shape {labels.shape}') 
 
 # TRAINING PHASE
 # TODO: USE Straka logging name trick
-callbacks = [tf.keras.callbacks.TensorBoard(log_dir=T_LOGS),
+callbacks = [tf.keras.callbacks.TensorBoard(log_dir=logs_dir),
              tf.keras.callbacks.ModelCheckpoint(filepath=T_CHECKPOINT,
                                                 verbose=1)
              ]
@@ -75,13 +79,17 @@ model = get_baseline()
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer=tf.optimizers.Adam(),
               metrics=['accuracy'])
-history = model.fit(train_x, train_y,
+info(f'Compile')
+history = model.fit(images, labels,
                     batch_size=T_BATCH_SIZE,
                     epochs=T_EPOCHS,
-                    validation_data=(val_x, val_y),
+                    validation_split=0.2,
                     callbacks=callbacks)
 # EVALUATE PHASE
-print(f'Test')
-test_scores = model.evaluate(test_x, test_y, batch_size=T_BATCH_SIZE)
-print(f'Test loss: {test_scores[0]}')
-print(f'Test accuracy: {test_scores[1]}')
+info(f'Test')
+#test_scores = model.evaluate(test_x, test_y, batch_size=T_BATCH_SIZE)
+#info(f'Test loss: {test_scores[0]}')
+#info(f'Test accuracy: {test_scores[1]}')
+
+info(f'Coping config to {logs_dir}')
+copyfile('config.py', os.path.join(logs_dir,'config.py'))

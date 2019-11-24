@@ -1,12 +1,14 @@
 import pandas as pd
 from adni import get_adni_group
+import os
 # CONFIG
 # TODO: Move to config file
+HOME_PATH='/storage/praha1/home/karellat/'
 # IMG
 # ADNI
-ADNI_DF = pd.read_csv("ADNI1_Complete_1Yr_1.5T_11_21_2019.csv")
+ADNI_DF = pd.read_csv(os.path.join(HOME_PATH, "ADNI1_Complete_1Yr_1.5T_11_04_2019.csv"))
 # READING
-IMG_PATH = 'data'
+IMG_PATH = '/storage/praha1/home/karellat/examples/'
 IMG_EXT = 'nii'
 IMG_SHAPE = (256, 256, 166)
 IMG_IGNORE_BAD_SHAPE = True
@@ -20,6 +22,6 @@ NORM_RANGE = (0, 1)
 
 # TRAINING
 T_BATCH_SIZE = 2
-T_EPOCHS = 10
-T_LOGS = 'logs'
-T_CHECKPOINT = 'checkpoints'
+T_EPOCHS = 2
+T_LOGS = os.path.join(HOME_PATH, 'logs')
+T_CHECKPOINT = os.path.join(HOME_PATH, 'checkpoints')
