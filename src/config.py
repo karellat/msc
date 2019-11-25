@@ -8,7 +8,7 @@ HOME_PATH='/storage/praha1/home/karellat/'
 # ADNI
 ADNI_DF = pd.read_csv(os.path.join(HOME_PATH, "ADNI1_Complete_1Yr_1.5T_11_04_2019.csv"))
 # READING
-IMG_PATH = '/storage/praha1/home/karellat/examples/'
+IMG_PATH = '/storage/praha1/home/karellat/ADNI'
 IMG_EXT = 'nii'
 IMG_SHAPE = (256, 256, 166)
 IMG_IGNORE_BAD_SHAPE = True
@@ -21,7 +21,7 @@ NORM_RANGE = (0, 1)
 # CLASS BALANCING
 
 # TRAINING
-T_BATCH_SIZE = 2
-T_EPOCHS = 2
+T_BATCH_SIZE = 16
+T_EPOCHS = 100
 T_LOGS = os.path.join(HOME_PATH, 'logs')
 T_CHECKPOINT = os.path.join(HOME_PATH, 'checkpoints')
