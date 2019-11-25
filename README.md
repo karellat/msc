@@ -1,9 +1,4 @@
-# master_thesis
-Master Thesis at MFF UK
-=======
-# master_thesis
-Master Thesis at MFF UK
-
+# Master Thesis at MFF UK
 ## ADNI - basic info and glossary
 ### INLUSIoN Criteria 
 - age 55-90
