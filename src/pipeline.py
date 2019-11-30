@@ -30,7 +30,11 @@ img_generator = nii_dir_generator(input_dir=IMG_PATH,
                                   ignore_shape=IMG_IGNORE_BAD_SHAPE)
 for fname, img in img_generator:
     if img is None: continue
-    if fname == 1: continue # Filter MCI 
+    if fname == 1: continue # Filter MCI
+    if fname == 2:
+        labels.append(1)
+    else:
+        labels.append(fname)
     labels.append(fname)
     images.append(img)
 
@@ -89,7 +93,8 @@ callbacks = [tf.keras.callbacks.TensorBoard(log_dir=logs_dir),
              tf.keras.callbacks.ModelCheckpoint(filepath=T_CHECKPOINT,
                                                 verbose=1)
              ]
-model = get_baseline()
+model = get_baseline(2)
+info(model.summary())
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer=tf.optimizers.Adam(),
               metrics=['accuracy'])
