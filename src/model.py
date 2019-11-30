@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow.keras import layers
 
 def get_baseline(
-        filters=[16, 32],
+        filters=[16, 32, 64],
         num_features=2,
         fc_num=16,
         stride=(2,2,2),
