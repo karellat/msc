@@ -37,6 +37,9 @@ for fname, img in img_generator:
 images = np.array(images)
 labels = np.array(labels)
 
+images = images[:20]
+labels = labels[:20]
+
 assert len(images) > 0
 info('Reading finished')
 
