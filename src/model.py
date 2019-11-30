@@ -3,15 +3,15 @@ import tensorflow as tf
 from tensorflow.keras import layers
 
 def get_baseline(
-        filters=[16, 32],
+        filters=[32, 64],
         num_features=2,
-        fc_num=16,
+        fc_num=128,
         stride=(2,2,2),
         ):
     kernel = 3
     activation = 'relu'
     pool_kernel = (3, 3, 3)
-    dropout = 0.0
+    dropout = 0.5
     padding='same'
 
     img_inputs = layers.Input((256, 256, 166, 1))
