@@ -3,7 +3,7 @@ from adni import get_adni_group
 import os
 # CONFIG
 # TODO: Move to config file
-HOME_PATH='/home/tomas/Workspace/master_thesis'
+HOME_PATH='/storage/praha1/home/karellat'
 # IMG
 # ADNI
 ADNI_DF = pd.read_csv(os.path.join(HOME_PATH, "ADNI1_Complete_1Yr_1.5T_11_04_2019.csv"))
