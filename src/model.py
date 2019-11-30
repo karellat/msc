@@ -7,8 +7,8 @@ def get_baseline(num_features=3):
     kernel = 3
     activation = 'relu'
     pool_kernel = (3, 3, 3)
-    filters = (8, 16, 32, 16, 8)
-    fc_num = 32
+    filters = (64, 128, 256, 128, 64)
+    fc_num = 2048
     dropout = 0.5
 
     assert len(filters) == 5
