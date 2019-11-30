@@ -11,7 +11,7 @@ def get_baseline(
     kernel = 3
     activation = 'relu'
     pool_kernel = (3, 3, 3)
-    dropout = 0.5
+    dropout = 0.0
     padding='same'
 
     img_inputs = layers.Input((256, 256, 166, 1))
