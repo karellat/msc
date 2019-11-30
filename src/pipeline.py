@@ -35,7 +35,6 @@ for fname, img in img_generator:
         labels.append(1)
     else:
         labels.append(fname)
-    labels.append(fname)
     images.append(img)
 
 images = np.array(images)
