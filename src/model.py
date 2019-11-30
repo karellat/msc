@@ -2,50 +2,29 @@
 import tensorflow as tf
 from tensorflow.keras import layers
 
-def get_baseline(num_features=3):
-    stride = (1, 1, 1)
+def get_baseline(
+        filters=[16, 32],
+        num_features=2,
+        fc_num=16,
+        stride=(2,2,2),
+        ):
     kernel = 3
     activation = 'relu'
     pool_kernel = (3, 3, 3)
-    filters = (64, 128, 256, 128, 64)
-    fc_num = 2048
     dropout = 0.5
-
-    assert len(filters) == 5
+    padding='same'
 
     img_inputs = layers.Input((256, 256, 166, 1))
-
-    conv0 = layers.Conv3D(filters[0],
-                          kernel,
-                          strides=stride,
-                          activation=activation)(img_inputs)
-    mp0 = layers.MaxPool3D()(conv0)
-
-    conv1 = layers.Conv3D(filters[1],
-                          kernel,
-                          strides=stride,
-                          activation=activation)(mp0)
-    mp1 = layers.MaxPool3D()(conv1)
-
-    conv2 = layers.Conv3D(filters[2],
-                          kernel,
-                          strides=stride,
-                          activation=activation)(mp1)
-    mp2 = layers.MaxPool3D()(conv2)
-
-    conv3 = layers.Conv3D(filters[3],
-                          kernel,
-                          strides=stride,
-                          activation=activation)(mp2)
-    mp3 = layers.MaxPool3D()(conv3)
-
-    conv4 = layers.Conv3D(filters[4],
-                          kernel,
-                          strides=stride,
-                          activation=activation)(mp3)
-    mp4 = layers.MaxPool3D()(conv4)
-
-    flatten = layers.Flatten()(mp4)
+    last_layer = img_inputs
+    for fc in filters:
+        conv = layers.Conv3D(fc,
+                             kernel,
+                             strides=stride,
+                             padding=padding,
+                             activation=activation)(last_layer)
+        maxp = layers.MaxPool3D()(conv)
+        last_layer = maxp
+    flatten = layers.Flatten()(last_layer)
 
     fc  = layers.Dense(fc_num, activation='relu')(flatten)
     dr_fc = layers.Dropout(dropout)(fc)
