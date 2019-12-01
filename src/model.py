@@ -7,12 +7,14 @@ def get_baseline(
         num_features=2,
         fc_num=128,
         stride=(2,2,2),
+        batch_norm=True,
         ):
     kernel = 3
     activation = 'relu'
     pool_kernel = (3, 3, 3)
     dropout = 0.5
     padding='same'
+    relu_ind = 0
 
     img_inputs = layers.Input((256, 256, 166, 1))
     last_layer = img_inputs
@@ -21,7 +23,11 @@ def get_baseline(
                              kernel,
                              strides=stride,
                              padding=padding,
-                             activation=activation)(last_layer)
+                             activation=None)(last_layer)
+        if batch_norm:
+            conv = layers.BatchNormalization()(conv)
+        conv = layers.Activation(activation, name=activation+str(relu_ind))(conv)
+        relu_ind += 1
         maxp = layers.MaxPool3D()(conv)
         last_layer = maxp
     flatten = layers.Flatten()(last_layer)
