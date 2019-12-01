@@ -21,7 +21,7 @@ NORM_RANGE = (0, 1)
 # CLASS BALANCING
 
 # TRAINING
-T_BATCH_SIZE = 16
+T_BATCH_SIZE = 8
 T_EPOCHS = 100
 T_LOGS = os.path.join(HOME_PATH, 'logs')
 T_CHECKPOINT = os.path.join(HOME_PATH, 'checkpoints')
