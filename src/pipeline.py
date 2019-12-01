@@ -12,7 +12,7 @@ from normalize import normalize
 from model import get_baseline
 import adni
 
-# MODULES INFO 
+# MODULES INFO
 basicConfig(level=logging.DEBUG)
 
 info(f'Tensorflow {tf.__version__}')
@@ -30,8 +30,11 @@ img_generator = nii_dir_generator(input_dir=IMG_PATH,
                                   ignore_shape=IMG_IGNORE_BAD_SHAPE)
 for fname, img in img_generator:
     if img is None: continue
-    if fname == 1: continue # Filter MCI 
-    labels.append(fname)
+    if fname == 1: continue # Filter MCI
+    if fname == 2:
+        labels.append(1)
+    else:
+        labels.append(fname)
     images.append(img)
 
 images = np.array(images)
@@ -43,7 +46,7 @@ info('Reading finished')
 # LABELS STATS
 unique, counts = np.unique(labels, return_counts=True)
 max_perc = np.max(counts)/np.sum(counts)
-info(f'Ration {max_perc} max class {adni.int_to_str(unique[np.argmax(counts)])}') 
+info(f'Ration {max_perc} max class {adni.int_to_str(unique[np.argmax(counts)])}')
 for label, count in zip(unique, counts):
     info(f'Label {label} = {count}')
 
@@ -87,6 +90,7 @@ callbacks = [tf.keras.callbacks.TensorBoard(log_dir=logs_dir),
                                                 verbose=1)
              ]
 model = get_baseline()
+info(model.summary())
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer=tf.optimizers.Adam(),
               metrics=['accuracy'])

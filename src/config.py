@@ -8,7 +8,7 @@ HOME_PATH='/storage/praha1/home/karellat/'
 # ADNI
 ADNI_DF = pd.read_csv(os.path.join(HOME_PATH, "ADNI1_Complete_1Yr_1.5T_11_04_2019.csv"))
 # READING
-IMG_PATH = '/storage/praha1/home/karellat/ADNI'
+IMG_PATH = os.path.join(HOME_PATH,"data", "ADNI")
 IMG_EXT = 'nii'
 IMG_SHAPE = (256, 256, 166)
 IMG_IGNORE_BAD_SHAPE = True
