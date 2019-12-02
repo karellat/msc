@@ -90,7 +90,7 @@ callbacks = [tf.keras.callbacks.TensorBoard(log_dir=logs_dir),
                                                 verbose=1)
              ]
 model = get_baseline()
-info(model.summary())
+warn(model.summary())
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer=tf.optimizers.Adam(),
               metrics=['accuracy'])
