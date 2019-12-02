@@ -17,7 +17,7 @@ basicConfig(level=logging.DEBUG)
 
 info(f'Tensorflow {tf.__version__}')
 
-logs_dir = os.path.join(T_LOGS, datetime.now().strftime("%y-%m-%H-%M"))
+logs_dir = os.path.join(T_LOGS, datetime.now().strftime("%y-%m-%d-%H-%M"))
 # READ PHASE
 info(f'Reading from {IMG_PATH}')
 
