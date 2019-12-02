@@ -81,7 +81,7 @@ images = images.reshape((*images.shape, 1)).astype('float32')
 
 info('Preparation finished')
 info(f'\t X data shape {images.shape}')
-info(f'\t y data shape {labels.shape}') 
+info(f'\t y data shape {labels.shape}')
 
 # TRAINING PHASE
 # TODO: USE Straka logging name trick
@@ -89,8 +89,9 @@ callbacks = [tf.keras.callbacks.TensorBoard(log_dir=logs_dir),
              tf.keras.callbacks.ModelCheckpoint(filepath=T_CHECKPOINT,
                                                 verbose=1)
              ]
-model = get_baseline()
-warn(model.summary())
+model = get_baseline(batch_norm=False)
+info(model.summary())
+>>>>>>> 63b799f7dce14f6d6d95683027b20ef620787ab7
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer=tf.optimizers.Adam(),
               metrics=['accuracy'])
@@ -98,6 +99,7 @@ info(f'Compile')
 history = model.fit(images, labels,
                     batch_size=T_BATCH_SIZE,
                     epochs=T_EPOCHS,
+                    verbose=2,
                     validation_split=0.2,
                     callbacks=callbacks)
 # EVALUATE PHASE
