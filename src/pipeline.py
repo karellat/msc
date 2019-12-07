@@ -7,7 +7,7 @@ from datetime import datetime
 from shutil import copyfile
 
 from config import *
-from reader import nii_dir_generator
+from reader import nii_dir_generator, img_to_shape
 from normalize import normalize
 from model import get_baseline
 import adni
@@ -35,7 +35,10 @@ for fname, img in img_generator:
         labels.append(1)
     else:
         labels.append(fname)
-    images.append(img)
+    if MODEL_SHAPE: 
+        images.append(img_to_shape(img=img, new_shape=MODEL_SHAPE))
+    else:
+        images.append(img)
 
 images = np.array(images)
 labels = np.array(labels)

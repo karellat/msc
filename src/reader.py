@@ -3,10 +3,10 @@ import numpy as np
 import logging
 import os
 from typing import Callable
-
+from scipy.ndimage import zoom
 
 # TODO: Could be refactor as TFRecord class
-def nii_reader(path: str, default_shape: tuple = (256, 256, 166), ignore_shape: bool = True):
+def nii_reader(path: str, default_shape: tuple = (256, 256, 166), ignore_shape: bool = True, as_numpy: bool = True):
     # TODO: Could be extended to multiple formats
     # TODO: Could return objects of Nibel etc.
     # TODO: Optimalize reading, test different methods
@@ -18,22 +18,31 @@ def nii_reader(path: str, default_shape: tuple = (256, 256, 166), ignore_shape: 
     if img.shape != default_shape:
         logging.warning(f'Unexpected shape {img.shape}, default shape {default_shape}, file {path}')
         if ignore_shape: return None
-
-    return np.squeeze(np.array(img.get_fdata()))
-
+    
+    if as_numpy:
+        return np.squeeze(np.array(img.get_fdata()))
+    else:
+        return img
 
 def nii_dir_generator(input_dir: str,
                       fname2label: Callable[[str], str] = None,
                       image_ext: str = "nii",
                       default_shape: tuple = (256, 256, 166),
-                      ignore_shape: bool = False):
+                      ignore_shape: bool = False,
+                      as_numpy: bool = True):
     for (dirpath, dirnames, filenames) in os.walk(input_dir):
         for f in filenames:
             if f.endswith(image_ext):
                 f_path = os.path.join(dirpath, f)
                 logging.info(f'Read nii file from {f_path}')
-                img = nii_reader(f_path, default_shape=default_shape, ignore_shape=ignore_shape)
+                img = nii_reader(f_path, default_shape=default_shape, ignore_shape=ignore_shape, as_numpy=as_numpy)
                 if fname2label:
                     yield fname2label(f), img
                 else:
                     yield f, img
+                    
+def img_to_shape(img: np.ndarray , new_shape: tuple = (110, 110, 110), mode :str = 'constant'):
+    origin_shape = np.array(img.shape)
+    new_shape = np.array(new_shape)
+    
+    return  zoom(input=img, zoom=new_shape/origin_shape, mode=mode)
