@@ -1,6 +1,8 @@
 # Training
 import tensorflow as tf
 from tensorflow.keras import layers
+from tensorflow.keras.layers import Conv3D, MaxPool3D, Dropout, Dense, BatchNormalization, Flatten
+from tensorflow.keras import Sequential
 
 def get_baseline(
         filters=[32, 64],
@@ -41,3 +43,38 @@ def get_baseline(
         inputs=img_inputs,
         outputs=output,
         name='3D_Dense'))
+
+def get_VoxCNN():
+    """ Return the Keras model of the network
+    """
+    model = Sequential()
+    # 1st Volumetric Convolutional block
+    model.add(Conv3D(8, (3, 3, 3), activation='relu', padding='same', input_shape=(110, 110, 110, 1)))
+    model.add(Conv3D(8, (3, 3, 3), activation='relu', padding='same'))
+    model.add(MaxPool3D(pool_size=(2, 2, 2)))
+    # 2nd Volumetric Convolutional block
+    model.add(Conv3D(16, (3, 3, 3), activation='relu', padding='same'))
+    model.add(Conv3D(16, (3, 3, 3), activation='relu', padding='same'))
+    model.add(MaxPool3D(pool_size=(2, 2, 2)))
+    # 3rd Volumetric Convolutional block
+    model.add(Conv3D(32, (3, 3, 3), activation='relu', padding='same'))
+    model.add(Conv3D(32, (3, 3, 3), activation='relu', padding='same'))
+    model.add(Conv3D(32, (3, 3, 3), activation='relu', padding='same'))
+    model.add(MaxPool3D(pool_size=(2, 2, 2)))
+    # 4th Volumetric Convolutional block
+    model.add(Conv3D(64, (3, 3, 3), activation='relu', padding='same'))
+    model.add(Conv3D(64, (3, 3, 3), activation='relu', padding='same'))
+    model.add(Conv3D(64, (3, 3, 3), activation='relu', padding='same'))
+    model.add(MaxPool3D(pool_size=(2, 2, 2)))
+    model.add(Flatten())
+    # 1th Deconvolutional layer with batchnorm and dropout for regularization
+    model.add(Dense(128, activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.7))
+    # 2th Deconvolutional layer
+    model.add(Dense(64, activation='relu'))
+    #model.add(BatchNormalization())
+    #model.add(Dropout(0.7))
+    # Output with softmax nonlinearity for classification
+    model.add(Dense(2, activation='softmax'))
+    return model
