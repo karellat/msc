@@ -1,6 +1,7 @@
 import pandas as pd
 from adni import get_adni_group
 import os
+from reader import expand_channel_dim, img_to_shape
 # CONFIG
 # TODO: Move to config file
 # HOME_PATH='/storage/praha1/home/karellat/'
@@ -14,7 +15,7 @@ IMG_EXT = 'nii'
 IMG_SHAPE = (256, 256, 166)
 MODEL_SHAPE = (110, 110, 110)
 IMG_IGNORE_BAD_SHAPE = False
-[lambda x: img_to_shape(x, MODEL_SHAPE),
+IMG_TRANSFORMS = [lambda x: img_to_shape(x, MODEL_SHAPE),
                       expand_channel_dim]
 FNAME_TO_LABEL = lambda x: get_adni_group(x, ADNI_DF)
 # NORMALIZATION

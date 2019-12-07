@@ -30,7 +30,9 @@ else:
 # MODULES INFO
 
 info(f'Tensorflow {tf.__version__}')
-logs_dir = os.path.join(T_LOGS, datetime.now().strftime("%y-%m-%H-%M"))
+
+logs_dir = os.path.join(T_LOGS, datetime.now().strftime("%y-%m-%d-%H-%M"))
+
 # READ PHASE
 with Timer(msg="Read phase: ", print_fnc=print):
     info(f'Reading from {IMG_PATH}')
@@ -118,12 +120,13 @@ with Timer(msg="Training Phase ", print_fnc=print):
                   optimizer=tf.optimizers.Adam(),
                   metrics=['accuracy'])
     info(f'Compile')
-    history = model.fit(images, labels,
+    history = model.fit(X_train, y_train,
                         batch_size=T_BATCH_SIZE,
                         epochs=T_EPOCHS,
                         verbose=2,
-                        validation_split=0.2,
+                        validation_data=(X_valid, y_valid),
                         callbacks=callbacks)
+
 # EVALUATE PHASE
 info(f'Test')
 #test_scores = model.evaluate(test_x, test_y, batch_size=T_BATCH_SIZE)
