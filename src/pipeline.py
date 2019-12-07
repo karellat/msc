@@ -6,14 +6,23 @@ import os
 from datetime import datetime
 from shutil import copyfile
 
-from config import *
 from reader import nii_dir_generator, img_to_shape
 from normalize import normalize
 from model import get_baseline
 import adni
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--debug', type=bool, default=False, help="Activate debug mode, use debug config etc..")
+
+args = parser.parse_args()
+
+if args["debug"]:
+    from debug_config import *
+    basicConfig(level=logging.DEBUG)
+else:
+    from server_config import *
 # MODULES INFO
-basicConfig(level=logging.DEBUG)
 
 info(f'Tensorflow {tf.__version__}')
 
