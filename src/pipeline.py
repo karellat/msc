@@ -5,43 +5,66 @@ from logging import info, warning, error, basicConfig
 import os
 from datetime import datetime
 from shutil import copyfile
+from sklearn.model_selection import train_test_split
+import argparse
 
-from config import *
-from reader import nii_dir_generator
+from reader import nii_dir_generator, img_to_shape, expand_channel_dim 
 from normalize import normalize
 from model import get_baseline
 import adni
+from utils import Timer, max_class_accuracy
+
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--debug', action="store_true", default=False, help="Activate debug mode, use debug config etc..")
+
+args = parser.parse_args()
+
+if args.debug:
+    from debug_config import *
+    basicConfig(level=logging.DEBUG)
+else:
+    from server_config import *
 
 # MODULES INFO
-basicConfig(level=logging.DEBUG)
 
 info(f'Tensorflow {tf.__version__}')
 
 logs_dir = os.path.join(T_LOGS, datetime.now().strftime("%y-%m-%d-%H-%M"))
+
 # READ PHASE
-info(f'Reading from {IMG_PATH}')
+with Timer(msg="Read phase: ", print_fnc=print):
+    info(f'Reading from {IMG_PATH}')
 
-labels = []
-images = []
-img_generator = nii_dir_generator(input_dir=IMG_PATH,
-                                  fname2label=FNAME_TO_LABEL,
-                                  image_ext=IMG_EXT,
-                                  default_shape=IMG_SHAPE,
-                                  ignore_shape=IMG_IGNORE_BAD_SHAPE)
-for fname, img in img_generator:
-    if img is None: continue
-    if fname == 1: continue # Filter MCI
-    if fname == 2:
-        labels.append(1)
-    else:
-        labels.append(fname)
-    images.append(img)
+    labels = []
+    images = []
+    img_generator = nii_dir_generator(input_dir=IMG_PATH,
+                                      fname2label=FNAME_TO_LABEL,
+                                      image_ext=IMG_EXT,
+                                      default_shape=IMG_SHAPE,
+                                      ignore_shape=IMG_IGNORE_BAD_SHAPE)
+    
+    img_transforms = IMG_TRANSFORMS
+    
+    for fname, img in img_generator:
+        if img is None: continue
+        if fname == 1: continue # Filter MCI
+        if fname == 2:
+            labels.append(1)
+        else:
+            labels.append(fname)
+        
+        for t in img_transforms: 
+            img = t(img)
+        
+        images.append(img)
+        
+    images = np.array(images)
+    labels = np.array(labels)
 
-images = np.array(images)
-labels = np.array(labels)
-
-assert len(images) > 0
-info('Reading finished')
+    assert len(images) > 0
+    info('Reading finished')
 
 # LABELS STATS
 unique, counts = np.unique(labels, return_counts=True)
@@ -51,21 +74,22 @@ for label, count in zip(unique, counts):
     info(f'Label {label} = {count}')
 
 # NORMALIZATION PHASE
-info('Calculating data boundaries')
-voxel_mean = np.mean(images)
-voxel_std = np.std(images)
-voxel_max = np.max(images)
-voxel_min = np.min(images)
-info(f'Normalization by {NORM_METHOD}')
+with Timer(msg="Normalization phase ", print_fnc=print):
+    info('Calculating data boundaries')
+    voxel_mean = np.mean(images)
+    voxel_std = np.std(images)
+    voxel_max = np.max(images)
+    voxel_min = np.min(images)
+    info(f'Normalization by {NORM_METHOD}')
 
-normalize(images,
-          feature_range=(0, 1),
-          method=NORM_METHOD,
-          min_data=voxel_min,
-          max_data=voxel_max,
-          copy=False)
+    normalize(images,
+              feature_range=(0, 1),
+              method=NORM_METHOD,
+              min_data=voxel_min,
+              max_data=voxel_max,
+              copy=False)
 
-info('Normalization finished')
+    info('Normalization finished')
 
 # DATA AUGMENTATION PHASE
 # TODO: Implement
@@ -74,34 +98,35 @@ info('Normalization finished')
 # TODO: Implement
 
 # PREPARATION PHASE
-
-assert images.shape[-1] != 1
-
-images = images.reshape((*images.shape, 1)).astype('float32')
-
-info('Preparation finished')
-info(f'\t X data shape {images.shape}')
-info(f'\t y data shape {labels.shape}')
+with Timer(msg="Preparation phase: ", print_fnc=print):
+    info(f'\t X data shape {images.shape}')
+    info(f'\t y data shape {labels.shape}')
+    X_train, X_valid, y_train, y_valid = train_test_split(images, labels, test_size=T_VALID_SIZE, random_state=42)
+    most, acc = max_class_accuracy(y_train)
+    info(f'\t train shape {X_train.shape} most label {most} perc {acc}') 
+    most, acc = max_class_accuracy(y_valid)
+    info(f'\t valid shape {X_valid.shape} most label {most} perc {acc}')   
 
 # TRAINING PHASE
+with Timer(msg="Training Phase ", print_fnc=print):
 # TODO: USE Straka logging name trick
-callbacks = [tf.keras.callbacks.TensorBoard(log_dir=logs_dir),
-             tf.keras.callbacks.ModelCheckpoint(filepath=T_CHECKPOINT,
-                                                verbose=1)
-             ]
-model = get_baseline(batch_norm=False)
-info(model.summary())
->>>>>>> 63b799f7dce14f6d6d95683027b20ef620787ab7
-model.compile(loss='sparse_categorical_crossentropy',
-              optimizer=tf.optimizers.Adam(),
-              metrics=['accuracy'])
-info(f'Compile')
-history = model.fit(images, labels,
-                    batch_size=T_BATCH_SIZE,
-                    epochs=T_EPOCHS,
-                    verbose=2,
-                    validation_split=0.2,
-                    callbacks=callbacks)
+    callbacks = [tf.keras.callbacks.TensorBoard(log_dir=logs_dir),
+                 tf.keras.callbacks.ModelCheckpoint(filepath=T_CHECKPOINT,
+                                                    verbose=1)
+                 ]
+    model = get_baseline(batch_norm=False)
+    info(model.summary())
+    model.compile(loss='sparse_categorical_crossentropy',
+                  optimizer=tf.optimizers.Adam(),
+                  metrics=['accuracy'])
+    info(f'Compile')
+    history = model.fit(X_train, y_train,
+                        batch_size=T_BATCH_SIZE,
+                        epochs=T_EPOCHS,
+                        verbose=2,
+                        validation_data=(X_valid, y_valid),
+                        callbacks=callbacks)
+
 # EVALUATE PHASE
 info(f'Test')
 #test_scores = model.evaluate(test_x, test_y, batch_size=T_BATCH_SIZE)
