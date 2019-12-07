@@ -16,7 +16,7 @@ def get_baseline(
     padding='same'
     relu_ind = 0
 
-    img_inputs = layers.Input((256, 256, 166, 1))
+    img_inputs = layers.Input((110, 110, 110, 1))
     last_layer = img_inputs
     for fc in filters:
         conv = layers.Conv3D(fc,

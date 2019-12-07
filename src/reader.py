@@ -46,3 +46,8 @@ def img_to_shape(img: np.ndarray , new_shape: tuple = (110, 110, 110), mode :str
     new_shape = np.array(new_shape)
     
     return  zoom(input=img, zoom=new_shape/origin_shape, mode=mode)
+
+def expand_channel_dim(img, expected_shape=3, export_type='float32'):
+    assert len(img.shape)
+    assert isinstance(img, np.ndarray)
+    return img.reshape((*img.shape,1)).astype(export_type)
