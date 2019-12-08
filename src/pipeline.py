@@ -8,16 +8,15 @@ from shutil import copyfile
 from sklearn.model_selection import train_test_split
 import argparse
 
-from reader import nii_dir_generator, img_to_shape, expand_channel_dim 
+from reader import nii_dir_generator, img_to_shape, expand_channel_dim
 from normalize import normalize
-from model import get_baseline
+from model import get_model
 import adni
 from utils import Timer, max_class_accuracy
 
-
-
 parser = argparse.ArgumentParser()
-parser.add_argument('-d', '--debug', action="store_true", default=False, help="Activate debug mode, use debug config etc..")
+parser.add_argument('-d', '--debug', action="store_true", default=False,
+                    help="Activate debug mode, use debug config etc..")
 
 args = parser.parse_args()
 
@@ -44,22 +43,22 @@ with Timer(msg="Read phase: ", print_fnc=print):
                                       image_ext=IMG_EXT,
                                       default_shape=IMG_SHAPE,
                                       ignore_shape=IMG_IGNORE_BAD_SHAPE)
-    
+
     img_transforms = IMG_TRANSFORMS
-    
+
     for fname, img in img_generator:
         if img is None: continue
-        if fname == 1: continue # Filter MCI
+        if fname == 1: continue  # Filter MCI
         if fname == 2:
             labels.append(1)
         else:
             labels.append(fname)
-        
-        for t in img_transforms: 
+
+        for t in img_transforms:
             img = t(img)
-        
+
         images.append(img)
-        
+
     images = np.array(images)
     labels = np.array(labels)
 
@@ -68,7 +67,7 @@ with Timer(msg="Read phase: ", print_fnc=print):
 
 # LABELS STATS
 unique, counts = np.unique(labels, return_counts=True)
-max_perc = np.max(counts)/np.sum(counts)
+max_perc = np.max(counts) / np.sum(counts)
 info(f'Ration {max_perc} max class {adni.int_to_str(unique[np.argmax(counts)])}')
 for label, count in zip(unique, counts):
     info(f'Label {label} = {count}')
@@ -103,18 +102,18 @@ with Timer(msg="Preparation phase: ", print_fnc=print):
     info(f'\t y data shape {labels.shape}')
     X_train, X_valid, y_train, y_valid = train_test_split(images, labels, test_size=T_VALID_SIZE, random_state=42)
     most, acc = max_class_accuracy(y_train)
-    info(f'\t train shape {X_train.shape} most label {most} perc {acc}') 
+    info(f'\t train shape {X_train.shape} most label {most} perc {acc}')
     most, acc = max_class_accuracy(y_valid)
-    info(f'\t valid shape {X_valid.shape} most label {most} perc {acc}')   
+    info(f'\t valid shape {X_valid.shape} most label {most} perc {acc}')
 
 # TRAINING PHASE
 with Timer(msg="Training Phase ", print_fnc=print):
-# TODO: USE Straka logging name trick
+    # TODO: USE Straka logging name trick
     callbacks = [tf.keras.callbacks.TensorBoard(log_dir=logs_dir),
                  tf.keras.callbacks.ModelCheckpoint(filepath=T_CHECKPOINT,
                                                     verbose=1)
                  ]
-    model = get_baseline(batch_norm=False)
+    model = get_model(MODEL_NAME)
     info(model.summary())
     model.compile(loss='sparse_categorical_crossentropy',
                   optimizer=tf.optimizers.Adam(),
@@ -129,9 +128,14 @@ with Timer(msg="Training Phase ", print_fnc=print):
 
 # EVALUATE PHASE
 info(f'Test')
-#test_scores = model.evaluate(test_x, test_y, batch_size=T_BATCH_SIZE)
-#info(f'Test loss: {test_scores[0]}')
-#info(f'Test accuracy: {test_scores[1]}')
+# test_scores = model.evaluate(test_x, test_y, batch_size=T_BATCH_SIZE)
+# info(f'Test loss: {test_scores[0]}')
+# info(f'Test accuracy: {test_scores[1]}')
 
 info(f'Coping config to {logs_dir}')
-copyfile('src/config.py', os.path.join(logs_dir,'config.py'))
+if args.debug:
+
+    copyfile('src/debug_config.py', os.path.join(logs_dir, 'config.py'))
+else:
+    copyfile('src/server_config.py', os.path.join(logs_dir, 'config.py'))
+
