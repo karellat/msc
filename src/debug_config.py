@@ -1,11 +1,15 @@
 import pandas as pd
 from adni import get_adni_group
 import os
+import platform
 from reader import expand_channel_dim, img_to_shape
 # CONFIG
 # TODO: Move to config file
 # HOME_PATH='/storage/praha1/home/karellat/'
-HOME_PATH='/home/tomas/Workspace/master_thesis'
+if platform.node() == 'Leontynka':
+    HOME_PATH='/mnt/c/Users/tomas/Desktop/master_thesis'
+else:
+    HOME_PATH='/home/tomas/Workspace/master_thesis'
 # IMG
 # ADNI
 ADNI_DF = pd.read_csv(os.path.join(HOME_PATH,"ADNI1_Complete_1Yr_1.5T_11_04_2019.csv"))
@@ -24,10 +28,12 @@ NORM_RANGE = (0, 1)
 # AUGMENTATION
 
 # CLASS BALANCING
+# MODEL
+MODEL_NAME = "resnet"
 
 # TRAINING
 T_VALID_SIZE = 0.2
-T_BATCH_SIZE = 8
-T_EPOCHS = 100
+T_BATCH_SIZE = 1
+T_EPOCHS = 1
 T_LOGS = os.path.join(HOME_PATH, 'logs')
 T_CHECKPOINT = os.path.join(HOME_PATH, 'checkpoints')
