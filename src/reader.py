@@ -51,3 +51,14 @@ def expand_channel_dim(img, expected_shape=3, export_type='float32'):
     assert len(img.shape)
     assert isinstance(img, np.ndarray)
     return img.reshape((*img.shape,1)).astype(export_type)
+
+def max_entropy_slice_generator(img, n=32, normalizer=None):
+    assert normalizer is not None
+    nimg = normalizer(img)
+    ent = np.zeros(nimg.shape[0])
+    for i in range(nimg.shape[0]): 
+        ent[i] = entropy.img_entropy(nimg[i, :, :])
+    ent = np.argsort(ent)
+    for i in range(n):
+        # -1 for last img
+        yield nimg[ent[-i-1],:,:]
