@@ -5,9 +5,9 @@ import cv2
 # ARK: Sklearn does not work od 3D data
 # TODO: Registration etc... https://mirtk.github.io
 # https://nilearn.github.io
-def normalize(data, feature_range=(0, 1), method="inax", min_data=None, max_data=None, copy=True):
+def normalize(data, feature_range=(0, 1), method="MinMax", min_data=None, max_data=None, copy=True):
     min_out, max_out = feature_range
-    if method == "inax":
+    if method == "MinMax":
         if not min_data: np.min(data)
         if not max_data: np.max(data)
 
@@ -22,4 +22,4 @@ def normalize(data, feature_range=(0, 1), method="inax", min_data=None, max_data
 
 def normalize_img(img):
     out = np.zeros(img.shape, np.double)
-    return cv2.normalize(img, out, 1.0, 0.0, cv2.NOR_INAX)
+    return cv2.normalize(img, out, 1.0, 0.0, cv2.NORM_MINMAX)

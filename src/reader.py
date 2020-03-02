@@ -5,6 +5,7 @@ import os
 from typing import Callable
 from scipy.ndimage import zoom
 
+
 # TODO: Could be refactor as TFRecord class
 def nii_reader(path: str, default_shape: tuple = (256, 256, 166), ignore_shape: bool = True, as_numpy: bool = True):
     # TODO: Could be extended to multiple formats
@@ -52,12 +53,18 @@ def expand_channel_dim(img, expected_shape=3, export_type='float32'):
     assert isinstance(img, np.ndarray)
     return img.reshape((*img.shape,1)).astype(export_type)
 
+def img_entropy(img):
+    marg = np.histogramdd(np.ravel(img), bins = 256)[0]/img.size
+    marg = list(filter(lambda p: p > 0, np.ravel(marg)))
+    return -np.sum(np.multiply(marg, np.log2(marg)))
+
+
 def max_entropy_slice_generator(img, n=32, normalizer=None):
     assert normalizer is not None
     nimg = normalizer(img)
     ent = np.zeros(nimg.shape[0])
     for i in range(nimg.shape[0]): 
-        ent[i] = entropy.img_entropy(nimg[i, :, :])
+        ent[i] = img_entropy(nimg[i, :, :])
     ent = np.argsort(ent)
     for i in range(n):
         # -1 for last img
