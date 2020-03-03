@@ -26,7 +26,7 @@ class RescaleImage(BaseInterface):
         out_file = self.inputs.out_file
         if not isdefined(out_file) and isdefined(self.inputs.in_file):
             no_ext = os.path.splitext(self.inputs.in_file)[0]
-            n = os.path.split(no_ext)[-1] + ".nii"
+            n = os.path.split(no_ext)[-1]
             out_file = os.path.join(os.getcwd(), n)
         return os.path.abspath(out_file)
 
