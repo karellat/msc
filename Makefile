@@ -1,25 +1,34 @@
-DATA_PATH="$(pwd)/data"
+ADNI_DATA='/d/MRI/ADNI'
+
+ifeq (, $(shell which nvidia-docker))
+	DOCKER=docker
+else
+	DOCKER=nvidia-docker
+endif
 
 build: 
 	docker build --tag my_neuro .
 
+# Fixing mounting wsl fsl 
+SOURCE_PATH=$(shell pwd | sed 's/^\/mnt//g')
+
 run_docker: 
-	nvidia-docker run \
+	$(DOCKER) run \
 		-it \
 		--rm \
 		-p 8889:8889 \
-		-v /home/tkarella/master_thesis:/home/neuro/thesis \
-		-v /home/tkarella/ADNI/MRI:/ADNI \
+		-v $(SOURCE_PATH):/home/neuro/thesis \
+		-v $(ADNI_DATA):/ADNI \
 		--name "tkarella_con" \
 		my_neuro jupyter notebook --port 8889
 	
 run_docker_bash:  
-	nvidia-docker run \
+	$(DOCKER) run \
 		-it \
 		--rm \
 		-p 8889:8889 \
-		-v /home/tkarella/master_thesis:/home/neuro/thesis \
-		-v /home/tkarella/ADNI/MRI:/ADNI \
+		-v $(SOURCE_PATH):/home/neuro/thesis \
+		-v $(ADNI_DATA):/ADNI \
 		--name "tkarella_con" \
 		my_neuro /bin/bash 
 
