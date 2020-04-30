@@ -1,4 +1,5 @@
 ADNI_DATA='/d/MRI/ADNI'
+CON_NAME="tkarellla_con"
 
 ifeq (, $(shell which nvidia-docker))
 	DOCKER=docker
@@ -19,17 +20,20 @@ run_docker:
 		-p 8889:8889 \
 		-v $(SOURCE_PATH):/home/neuro/thesis \
 		-v $(ADNI_DATA):/ADNI \
-		--name "tkarella_con" \
+		--name $(CON_NAME) \
 		my_neuro jupyter notebook --port 8889
 	
+connect_bash: 
+	$(DOCKER) exec -it "tkarellla_con" /bin/bash
+
 run_docker_bash:  
 	$(DOCKER) run \
 		-it \
 		--rm \
-		-p 8889:8889 \
 		-v $(SOURCE_PATH):/home/neuro/thesis \
 		-v $(ADNI_DATA):/ADNI \
-		--name "tkarella_con" \
+		--name $(CON_NAME) \
+		--memory=12G \
 		my_neuro /bin/bash 
 
 prepare_dockerfile:
@@ -44,7 +48,6 @@ prepare_dockerfile:
 	--minc version=1.9.15 \
 	--ant version=2.3.1 \
 	--afni version=latest \
-	--freesurfer version=6.0.0-min \
 	--user=neuro \
 	--workdir /home/neuro \
 	--miniconda miniconda_version="4.3.31" \
