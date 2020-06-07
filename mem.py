@@ -1,6 +1,6 @@
 INPUT_PATH="/ADNI/ADNI"
 CSV_PATH="/ADNI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv"
-OUTPUT_PATH="/ADNI/mem_test"
+OUTPUT_PATH="/ADNI/minc_beast"
 
 import logging
 logger = logging.getLogger()
@@ -43,7 +43,7 @@ from nipype import SelectFiles, Node, Workflow, MapNode, IdentityInterface
 
 id_lists["test"] = id_lists['ad'][:10] 
 
-diagnosis = "test"
+diagnosis = "mci"
 output_dir = os.path.join(OUTPUT_PATH, diagnosis)
 iterables = id_lists[diagnosis]
 new_shape = (192, 192, 160)
@@ -98,7 +98,8 @@ wf.connect(product, "output_file", mncnii, "input_file")
 wf.connect(mncnii,"output_file", sink,"@out_file")
 
 from nipype.utils.profiler import log_nodes_cb
-args_dict = {'n_procs' : 2, 'memory_gb' : 10, 'status_callback' : log_nodes_cb}
+args_dict = {'n_procs' : 10, 'memory_gb' : 62, 'status_callback' : log_nodes_cb}
+
 
 import logging
 callback_log_path = '/tmp/run_stats.log'
