@@ -6,6 +6,8 @@ import glob
 import logging
 from nibabel import Nifti2Image
 from auto_tqdm import tqdm
+import pandas as pd
+import re
 
 DEFAULT_PATH = "/ADNI/minc_beast/*/*/*.nii"
 CLASS_NAMES = np.array(['ad', 'mci', 'cn'])
@@ -24,10 +26,10 @@ def get_label_str(file_path, class_folder=3):
     return parts[class_folder] == CLASS_NAMES
 
 
-def train_valid_split_mri_files(path=DEFAULT_PATH, seed=42, return_test=True, shuffle=False):
+def train_valid_split_mri_files(files_list, seed=42, return_test=True, shuffle=False):
     rnd = random.Random(seed)
     scans = {c: [] for c in CLASS_NAMES}
-    for f in glob.glob(path):
+    for f in files_list:
         target = CLASS_NAMES[np.argmax(get_label_str(f))]
         scans[target].append(f)
 
@@ -80,3 +82,23 @@ def get_random_img_path(path=DEFAULT_PATH):
 
 def numpy_to_nibabel(numpy_array):
     return Nifti2Image(numpy_array, np.eye(4))
+
+
+def get_all_files(path=DEFAULT_PATH, filter_first_screen=False):
+    files_list = glob.glob(path)
+
+    if filter_first_screen:
+        first_screen = set(filter_first_image_id())
+        return list(filter(lambda x: get_image_id(x) in first_screen, files_list))
+    else:
+        return files_list
+
+
+def filter_first_image_id(csv_path='/ADNI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv'):
+    df = pd.read_csv(csv_path)
+    first_screen = df.groupby('Subject').agg({'Acq Date': 'min'}).reset_index()
+    return pd.merge(df, first_screen, on=['Subject', 'Acq Date'], how='inner')['Image Data ID'].values
+
+
+def get_image_id(name):
+    return int(re.search('_image_id_([0-9]*)', name).group(1))

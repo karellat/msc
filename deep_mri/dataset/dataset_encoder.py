@@ -4,6 +4,8 @@ import tensorflow as tf
 import nibabel as nib
 import random
 from nilearn.image import resample_img
+import glob
+import re
 
 DEFAULT_GENERATOR_ARGS = {
     "normalize": True,
@@ -49,7 +51,8 @@ def _generator(files_list, normalize, box_size, boxes_per_img, downscale_ratio):
 
 
 def get_encoder_dataset(path=DEFAULT_PATH, **gen_args):
-    train_files, valid_files = train_valid_split_mri_files(return_test=False)
+    files_list = glob.glob(path)
+    train_files, valid_files = train_valid_split_mri_files(files_list, return_test=False)
     train_ds = load_files_to_dataset(train_files, len(train_files) * gen_args['boxes_per_img'], _generator, **gen_args)
     valid_ds = load_files_to_dataset(valid_files, len(valid_files) * gen_args['boxes_per_img'], _generator, **gen_args)
 
@@ -57,3 +60,6 @@ def get_encoder_dataset(path=DEFAULT_PATH, **gen_args):
     valid_ds = valid_ds.prefetch(AUTOTUNE)
 
     return train_ds, valid_ds
+
+
+

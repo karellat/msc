@@ -54,7 +54,7 @@ def _merge_items(dictionary):
     return items
 
 
-def get_3d_dataset(path=DEFAULT_PATH,
+def get_3d_dataset(files_list,
                    img_shape=(193, 229, 193, 1),
                    downscale_ratio=1,
                    normalize=True,
@@ -63,7 +63,7 @@ def get_3d_dataset(path=DEFAULT_PATH,
     rnd = random.Random(seed)
     output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
     scans = {c: [] for c in CLASS_NAMES}
-    for f in glob.glob(path):
+    for f in files_list:
         target = CLASS_NAMES[np.argmax(get_label_str(f))]
         scans[target].append(f)
 
