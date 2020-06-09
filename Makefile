@@ -1,4 +1,4 @@
-ADNI_DATA='/d/MRI/ADNI'
+ADNI_DATA='/data/tkarella/ADNI/MRI/'
 CON_NAME="tkarellla_con"
 
 ifeq (, $(shell which nvidia-docker))
@@ -24,7 +24,44 @@ run_docker:
 		my_neuro jupyter notebook --port 8889
 	
 connect_bash: 
-	$(DOCKER) exec -it "tkarellla_con" /bin/bash
+	$(DOCKER) exec -it "tkarella_con" /bin/bash
+
+	
+run_tensorflow: 
+	$(DOCKER) run \
+		--detach \
+		-v $(SOURCE_PATH):/tf/thesis \
+		-v $(ADNI_DATA):/ADNI \
+		--name "tkarella_tf" \
+		tensorflow/tensorflow:latest /bin/bash -c "pip install --upgrade tensorflow-hub scikit-learn matplotlib nilearn && cd /tf/thesis && python training3d.py" 
+
+
+run_encoder: 
+	$(DOCKER) run \
+		--detach \
+		-v $(SOURCE_PATH):/tf/thesis \
+		-v $(ADNI_DATA):/ADNI \
+		--name "tkarella_encoder" \
+		tensorflow/tensorflow:latest-gpu /bin/bash -c "pip install --upgrade tensorflow-hub scikit-learn matplotlib nilearn auto-tqdm && cd /tf/thesis && python training_encoder.py" 
+	
+run_jupyter:  
+	$(DOCKER) run \
+		--detach \
+		--rm \
+		-it \
+		-p 8889:8888 \
+		-v $(SOURCE_PATH):/tf/thesis \
+		-v $(ADNI_DATA):/ADNI \
+		--name "tkarella_jupyter" \
+		tensorflow/tensorflow:latest-gpu-jupyter
+run_board: 
+	$(DOCKER) run \
+		--rm \
+		--detach \
+		-p 6008:6008\
+		-v $(SOURCE_PATH):/tf/thesis \
+		--name "tkarella_board" \
+		tensorflow/tensorflow:latest-gpu tensorboard --port 6008 --logdir /tf/thesis/encoder --bind_all
 
 run_docker_bash:  
 	$(DOCKER) run \
@@ -33,8 +70,18 @@ run_docker_bash:
 		-v $(SOURCE_PATH):/home/neuro/thesis \
 		-v $(ADNI_DATA):/ADNI \
 		--name $(CON_NAME) \
-		--memory=12G \
+		--memory=62G \
 		my_neuro /bin/bash 
+	
+run_docker_detached:  
+	docker run \
+		--detach \
+		--rm \
+		-v $(SOURCE_PATH):/home/neuro/thesis \
+		-v $(ADNI_DATA):/ADNI \
+		--name $(CON_NAME) \
+		--memory=62G \
+		my_neuro /bin/bash -c "python thesis/mem.py"
 
 prepare_dockerfile:
 	docker run  --rm kaczmarj/neurodocker:master generate docker \
