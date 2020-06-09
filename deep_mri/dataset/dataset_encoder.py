@@ -1,4 +1,4 @@
-from deep_mri.dataset.general_dataset import train_valid_split_mri_files, load_files_to_dataset, DEFAULT_PATH, AUTOTUNE
+from deep_mri.dataset.dataset import train_valid_split_mri_files, load_files_to_dataset, DEFAULT_PATH, AUTOTUNE
 import numpy as np
 import tensorflow as tf
 import nibabel as nib
