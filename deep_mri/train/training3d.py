@@ -1,14 +1,8 @@
 import logging
-from nibabel import Nifti2Image
-from prepare_dataset_3D import get_3d_dataset
-from model_zoo import payan_montana_model
-import nibabel as nib
-from nilearn.plotting import plot_anat
-from nilearn.image import resample_img
+from deep_mri.dataset.dataset_3d import get_3d_dataset
+from deep_mri.model_zoo.model_zoo import payan_montana_model
 import numpy as np
 import tensorflow as tf
-import glob
-from train_utils import log_confusion_matrix
 
 logging.basicConfig(level=logging.WARN)
 

@@ -1,8 +1,8 @@
-from dataset import DEFAULT_PATH, AUTOTUNE
+from dataset import DEFAULT_PATH
 import tensorflow as tf
 import logging
 import numpy as np
-from prepare_encoder_dataset import get_encoder_dataset, DEFAULT_GENERATOR_ARGS
+from deep_mri.dataset.dataset_encoder import get_encoder_dataset, DEFAULT_GENERATOR_ARGS
 
 tf.config.list_physical_devices('GPU')
 

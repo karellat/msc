@@ -1,6 +1,6 @@
 INPUT_PATH="/ADNI/ADNI"
 CSV_PATH="/ADNI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv"
-OUTPUT_PATH="/ADNI/corregistered_ADNI"
+OUTPUT_PATH="/ADNI/minc_beast"
 
 import logging
 logger = logging.getLogger()
@@ -9,6 +9,7 @@ logger.setLevel(logging.INFO)
 import pandas as pd
 import re
 import os
+from deep_mri.preprocess.nipype_ext import *
 df = pd.read_csv(CSV_PATH)
 
 all_files = []
@@ -32,29 +33,29 @@ logger.warning(f"MCI images {len(mci_img_ids)}, CN images {len(cn_img_ids)}, AD 
 
 import os
 import nipype.interfaces.io as nio
-import logging
-import matplotlib.pyplot as plt
-import numpy as np
-import nibabel as nb
-from src.preprocess import RescaleImage
+from nipype import SelectFiles, Node, Workflow, IdentityInterface
 
-id_lists["test"] = id_lists['ad'][:2] 
 
-diagnosis = "test"
+id_lists["test"] = id_lists['ad'][:10] 
+
+diagnosis = "mci"
 output_dir = os.path.join(OUTPUT_PATH, diagnosis)
 iterables = id_lists[diagnosis]
 new_shape = (192, 192, 160)
 image_format='*_S_*/*/*/S*/*_I{image_id}.nii'
 input_path = INPUT_PATH
 
-from nipype import SelectFiles, Node, Workflow, MapNode, IdentityInterface 
-from nipype.interfaces.fsl import BET, Info, FNIRT, ApplyWarp
-from nipype.interfaces.base import BaseInterfaceInputSpec, BaseInterface, File, TraitedSpec, traits, isdefined
 
-logger.warning(f"{str(iterables)}")
+# Input
+iterables = id_lists[diagnosis]
+infosource = Node(IdentityInterface(fields=['image_id']),
+                name="infosource")
+infosource.iterables = [('image_id', iterables)]
 
-# Template coregistra
-template = Info.standard_image('MNI152_T1_1mm_brain.nii.gz')
+input_node = Node(SelectFiles({'anat' : image_format},
+                               base_directory=input_path),
+                              name="input_node")
+
 # Input
 infosource = Node(IdentityInterface(fields=['image_id']),
                 name="infosource")
@@ -64,38 +65,42 @@ input_node = Node(SelectFiles({'anat' : image_format},
                                base_directory=input_path),
                               name="input_node")
 
-# Calculate coregistration 
-coregistration = Node(FNIRT(ref_file="/ADNI/mni_icbm152_nl_VI_nifti/icbm_avg_152_t1_tal_nlin_symmetric_VI.nii",field_file=True, fieldcoeff_file=True),
-                     name='fslreg',
-                     iterfield=['in_file'])
-# Aplicate coregistration 
-apply_warp = Node(ApplyWarp(ref_file="/ADNI/mni_icbm152_nl_VI_nifti/icbm_avg_152_t1_tal_nlin_symmetric_VI.nii"),
-                  name='warp', 
-                  iterfield=['in_file'])
+niimnc = Node(Nii2Mnc(), name="nii_2_mnc_node") 
 
+normalizer = Node(BeastNormalize(), name="beast_normalizer_node")
+beast = Node(MincBeast(library_dir="/opt/minc-1.9.15/share/beast-library-1.1/"), name="beast_node")
+product = Node(MincProduct(), name="product_node") 
 
-# Skull stripping Node with BET
-skullstrip = Node(BET(mask=True),
-                  name="skullstrip",
-                  iterfield=['in_file'])
-
-
+mncnii = Node(Mnc2Nii(), name="mnc_2_nii_node")
 
 # Sink
 sink = Node(interface=nio.DataSink(),
             name='sink')
 sink.inputs.regexp_substitutions = [("_skullstrip[0-9]+", "")]
 sink.inputs.base_directory = output_dir
+
 # Preprocess Workflow
 wf = Workflow(name='preproc')
+
 # Connections
 wf.connect(infosource, "image_id", input_node, "image_id")
-wf.connect(input_node, "anat", coregistration, "in_file")
-wf.connect(input_node, "anat", apply_warp, "in_file")
-wf.connect(coregistration, "field_file", apply_warp, "field_file")
-#wf.connect(apply_warp, "out_file", skullstrip, "in_file")
-#wf.connect(skullstrip, "out_file",sink, "@out_file")
-wf.connect(apply_warp, "out_file", sink, "@out_file")
+wf.connect(input_node, "anat", niimnc, "input_file")
+wf.connect(niimnc, "output_file", normalizer, "input_file")
+wf.connect(normalizer,"output_file", beast, "input_file")
+wf.connect(beast, "output_file", product, "mask_file")
+wf.connect(normalizer, "output_file", product, "input_file")
+wf.connect(product, "output_file", mncnii, "input_file")
+wf.connect(mncnii,"output_file", sink,"@out_file")
+
+from nipype.utils.profiler import log_nodes_cb
+args_dict = {'n_procs' : 10, 'memory_gb' : 62, 'status_callback' : log_nodes_cb}
 
 
-wf.run()
+import logging
+callback_log_path = '/tmp/run_stats.log'
+logger = logging.getLogger('callback')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(callback_log_path)
+logger.addHandler(handler)
+
+wf.run(plugin='MultiProc', plugin_args=args_dict)

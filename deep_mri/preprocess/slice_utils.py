@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt 
 import numpy as np
 import math
-from prepare_dataset import CLASS_NAMES
+from deep_mri.dataset.dataset import CLASS_NAMES
 
 def get_not_matching(ds, model):
     not_matching_img = None

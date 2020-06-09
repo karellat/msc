@@ -9,7 +9,7 @@ logger.setLevel(logging.INFO)
 import pandas as pd
 import re
 import os
-from nipype_ext import *
+
 df = pd.read_csv(CSV_PATH)
 
 all_files = []
@@ -36,7 +36,7 @@ logger.warning(f"MCI images {len(mci_img_ids)}, CN images {len(cn_img_ids)}, AD 
 
 from nipype import MapNode, Node, Workflow, IdentityInterface, SelectFiles
 import nipype.interfaces.io as nio
-from nipype_ext2 import EntropyBySlice, ArgSort, Slicer2D
+from deep_mri.preprocess.nipype_ext2 import EntropyBySlice, ArgSort, Slicer2D
 # Input
 image_format='*/*_I{image_id}_*.nii'
 diagnosis = 'mci'

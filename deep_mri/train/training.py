@@ -1,14 +1,11 @@
-from prepare_dataset import get_datasets, CLASS_NAMES
+from deep_mri.dataset.dataset import get_datasets, CLASS_NAMES
 import tensorflow as tf
 import tensorflow_hub as hub
-from datetime import datetime
 import matplotlib.pyplot as plt
-import itertools
 import numpy as np
 import io
 from sklearn.metrics import confusion_matrix
-from slice_utils import show_batch, get_not_matching
-from prepare_dataset import decode_img, ImgReshape
+from deep_mri.dataset.dataset import ImgReshape
 import itertools
 
 # Functions 
