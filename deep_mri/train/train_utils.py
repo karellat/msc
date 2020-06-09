@@ -2,6 +2,8 @@ import io
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
+import itertools
+
 # Functions 
 def plot_to_image(figure):
     """Converts the matplotlib plot specified by 'figure' to a PNG image and
@@ -50,6 +52,7 @@ def plot_confusion_matrix(cm, class_names):
     return figure
 
 def log_confusion_matrix(epoch, logs):
+    #TODO: Resolve
   # Use the model to predict the values from the validation dataset.
     test_pred_raw = model.predict(valid_ds)
     test_pred = np.argmax(test_pred_raw, axis=1)
