@@ -129,5 +129,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#Idea
+# Idea
 .idea/
+
