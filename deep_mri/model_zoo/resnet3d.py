@@ -232,7 +232,7 @@ class Resnet3DBuilder(object):
                                           activation="sigmoid",
                                           kernel_regularizer='l2')(flatten1)
 
-        model = tf.keras.layers.Model(inputs=input, outputs=dense)
+        model = tf.keras.Model(inputs=input, outputs=dense)
         return model
 
     @staticmethod
