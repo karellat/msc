@@ -1,11 +1,11 @@
-from resnet3d import Resnet3DBuilder
+from deep_mri.model_zoo.resnet3d import Resnet3DBuilder
 import tensorflow as tf
 from deep_mri.dataset.dataset_3d import get_3d_dataset
+from deep_mri.dataset.dataset import get_all_files
 
 BATCH_SIZE = 16
 DOWNSCALE_RATIO = 2.0
 EPOCHS = 100
-
 
 models = {
     'resnet_18': Resnet3DBuilder.build_resnet_18((97, 115, 97, 1), 3),
@@ -16,7 +16,8 @@ models = {
 }
 
 for model_name, model in models:
-    train_ds, valid_ds, test_ds = get_3d_dataset(downscale_ratio=DOWNSCALE_RATIO)
+    files_list = get_all_files(filter_first_screen=True)
+    train_ds, test_ds, valid_ds = get_3d_dataset(files_list, downscale_ratio=DOWNSCALE_RATIO)
 
     log_dir = f"resnet/logs/-name{model_name}-b{BATCH_SIZE}"
     models_dir = log_dir + "/models"
