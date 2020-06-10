@@ -12,3 +12,4 @@ dependencies:
     - nilearn>=0.6.2
     - auto-tqdm
     - pandas
+    - git+https://github.com/JihongJu/keras-resnet3d.git

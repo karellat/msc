@@ -7,10 +7,10 @@ import tensorflow as tf
 logging.basicConfig(level=logging.WARN)
 
 BATCH_SIZE = 8
-EPOCHS=100
-DOWNSCALE_RATION=3.0
-IMAGE_SHAPE=np.ceil(np.array((193, 229, 193,1))/DOWNSCALE_RATION).astype(int)
-IMAGE_SHAPE=tuple(IMAGE_SHAPE)
+EPOCHS = 100
+DOWNSCALE_RATION = 3.0
+IMAGE_SHAPE = np.ceil(np.array((193, 229, 193, 1)) / DOWNSCALE_RATION).astype(int)
+IMAGE_SHAPE = tuple(IMAGE_SHAPE)
 LOG_DIR = f"3d_models/logs/payan_montana-b{BATCH_SIZE}-e{EPOCHS}-s{DOWNSCALE_RATION}"
 MODELS_DIR = LOG_DIR + "/models"
 file_writer_cm = tf.summary.create_file_writer(LOG_DIR + '/cm')
@@ -23,14 +23,14 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=LOG_DIR)
 train_ds, valid_ds, test_ds = get_3d_dataset(downscale_ratio=DOWNSCALE_RATION)
 model = payan_montana_model(input_shape=IMAGE_SHAPE)
 model.compile(optimizer='adam',
-               loss=tf.keras.losses.CategoricalCrossentropy(),
-                metrics=[tf.keras.metrics.CategoricalAccuracy()])
+              loss=tf.keras.losses.CategoricalCrossentropy(),
+              metrics=[tf.keras.metrics.CategoricalAccuracy()])
 
 model.fit(train_ds.batch(BATCH_SIZE),
-                    epochs=EPOCHS,
-                    validation_data=valid_ds.batch(BATCH_SIZE),
-                    verbose=1,
-                    workers=40,
-                    use_multiprocessing=True,
-                    callbacks=[tensorboard_callback]
-                   )
+          epochs=EPOCHS,
+          validation_data=valid_ds.batch(BATCH_SIZE),
+          verbose=1,
+          workers=40,
+          use_multiprocessing=True,
+          callbacks=[tensorboard_callback]
+          )
