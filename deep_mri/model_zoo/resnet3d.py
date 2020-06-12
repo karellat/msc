@@ -172,7 +172,7 @@ class Resnet3DBuilder(object):
     """ResNet3D."""
 
     @staticmethod
-    def build(input_shape, num_outputs, block_fn, repetitions, reg_factor):
+    def build(input_shape, num_outputs, block_fn, repetitions, first_filters=64):
         """Instantiate a vanilla ResNet3D keras model.
 
         # Arguments
@@ -197,7 +197,7 @@ class Resnet3DBuilder(object):
         block_fn = _get_block(block_fn)
         input = tf.keras.Input(shape=input_shape)
         # first conv
-        conv1 = _conv_bn_relu3D(filters=64, kernel_size=(7, 7, 7),
+        conv1 = _conv_bn_relu3D(filters=first_filters, kernel_size=(7, 7, 7),
                                 strides=(2, 2, 2),
                                 kernel_regularizer="l2"
                                 )(input)
@@ -206,7 +206,7 @@ class Resnet3DBuilder(object):
 
         # repeat blocks
         block = pool1
-        filters = 64
+        filters = first_filters
         for i, r in enumerate(repetitions):
             block = _residual_block3d(block_fn, filters=filters,
                                       kernel_regularizer='l2',
@@ -236,31 +236,31 @@ class Resnet3DBuilder(object):
         return model
 
     @staticmethod
-    def build_resnet_18(input_shape, num_outputs, reg_factor=1e-4):
+    def build_resnet_18(input_shape, num_outputs, filters=64):
         """Build resnet 18."""
         return Resnet3DBuilder.build(input_shape, num_outputs, basic_block,
-                                     [2, 2, 2, 2], reg_factor=reg_factor)
+                                     [2, 2, 2, 2], filters)
 
     @staticmethod
-    def build_resnet_34(input_shape, num_outputs, reg_factor=1e-4):
+    def build_resnet_34(input_shape, num_outputs, filters=64):
         """Build resnet 34."""
         return Resnet3DBuilder.build(input_shape, num_outputs, basic_block,
-                                     [3, 4, 6, 3], reg_factor=reg_factor)
+                                     [3, 4, 6, 3], filters)
 
     @staticmethod
-    def build_resnet_50(input_shape, num_outputs, reg_factor=1e-4):
+    def build_resnet_50(input_shape, num_outputs, filters=64):
         """Build resnet 50."""
         return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
-                                     [3, 4, 6, 3], reg_factor=reg_factor)
+                                     [3, 4, 6, 3], filters)
 
     @staticmethod
-    def build_resnet_101(input_shape, num_outputs, reg_factor=1e-4):
+    def build_resnet_101(input_shape, num_outputs, filters=64):
         """Build resnet 101."""
         return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
-                                     [3, 4, 23, 3], reg_factor=reg_factor)
+                                     [3, 4, 23, 3], filters)
 
     @staticmethod
-    def build_resnet_152(input_shape, num_outputs, reg_factor=1e-4):
+    def build_resnet_152(input_shape, num_outputs, filters=64):
         """Build resnet 152."""
         return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
-                                     [3, 8, 36, 3], reg_factor=reg_factor)
+                                     [3, 8, 36, 3], filters)
