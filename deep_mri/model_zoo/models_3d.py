@@ -17,7 +17,7 @@ def payan_montana_model(input_shape=(97, 115, 97, 1),
 
     input_layer = tf.keras.layers.Input(input_shape, name=f'Input')
     if batch_norm:
-        conv_layer2 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name='Conv-1', activation='relu')
+        conv_layer1 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name='Conv-1', activation='relu')
         conv_layer2 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name='Conv-2', activation='relu')
         conv_layer3 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name='Conv-3', activation='relu')
     else:
