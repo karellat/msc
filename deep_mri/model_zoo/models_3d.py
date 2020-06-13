@@ -1,19 +1,31 @@
 import tensorflow as tf
 
 
+def batch_norm_conv(input, filters, kernel, name, activation):
+    layer = tf.keras.layers.Convolution3D(filters, kernel, name=name, activation=None)(input)
+    layer = tf.keras.layers.BatchNormalization()(layer)
+    return tf.keras.layers.Activation(activation)(layer)
+
+
 def payan_montana_model(input_shape=(97, 115, 97, 1),
                         conv_filters_count=150,
+                        batch_norm=True,
                         fc_size=800):
     # TODO: add paper name
     assert len(input_shape) == 4
 
     input_layer = tf.keras.layers.Input(input_shape, name=f'Input')
-    conv_layer1 = tf.keras.layers.Convolution3D(conv_filters_count, (5, 5, 5), name='Conv-1', activation='relu')(
-        input_layer)
-    conv_layer2 = tf.keras.layers.Convolution3D(conv_filters_count, (5, 5, 5), name='Conv-2', activation='relu')(
-        input_layer)
-    conv_layer3 = tf.keras.layers.Convolution3D(conv_filters_count, (5, 5, 5), name='Conv-3', activation='relu')(
-        input_layer)
+    if batch_norm:
+        conv_layer2 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name='Conv-1', activation='relu')
+        conv_layer2 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name='Conv-2', activation='relu')
+        conv_layer3 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name='Conv-3', activation='relu')
+    else:
+        conv_layer1 = tf.keras.layers.Convolution3D(conv_filters_count, (5, 5, 5), name='Conv-1', activation='relu')(
+            input_layer)
+        conv_layer2 = tf.keras.layers.Convolution3D(conv_filters_count, (5, 5, 5), name='Conv-2', activation='relu')(
+            input_layer)
+        conv_layer3 = tf.keras.layers.Convolution3D(conv_filters_count, (5, 5, 5), name='Conv-3', activation='relu')(
+            input_layer)
     maxp_layer1 = tf.keras.layers.MaxPool3D(name='MaxP-1', pool_size=(5, 5, 5))(conv_layer1)
     maxp_layer2 = tf.keras.layers.MaxPool3D(name='MaxP-2', pool_size=(5, 5, 5))(conv_layer2)
     maxp_layer3 = tf.keras.layers.MaxPool3D(name='MaxP-3', pool_size=(5, 5, 5))(conv_layer3)
