@@ -10,6 +10,7 @@ def batch_norm_conv(input, filters, kernel, name, activation):
 def payan_montana_model(input_shape=(97, 115, 97, 1),
                         conv_filters_count=150,
                         batch_norm=True,
+                        dropout=0.5,
                         fc_size=800):
     # TODO: add paper name
     assert len(input_shape) == 4
@@ -35,7 +36,8 @@ def payan_montana_model(input_shape=(97, 115, 97, 1),
     conv_layer = tf.keras.layers.Concatenate(name='Concat')([maxp_layer1, maxp_layer2, maxp_layer3])
     flat_layer = tf.keras.layers.Flatten()(conv_layer)
     fc_layer = tf.keras.layers.Dense(fc_size, name=f'FC-{fc_size}', activation='relu')(flat_layer)
-    output_layer = tf.keras.layers.Dense(3, name='Classification', activation='softmax')(fc_layer)
+    drop_layer = tf.keras.layers.Dropout(dropout)(fc_layer)
+    output_layer = tf.keras.layers.Dense(3, name='Classification', activation='softmax')(drop_layer)
 
     return tf.keras.Model(input_layer, output_layer)
 
