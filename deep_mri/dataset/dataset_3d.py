@@ -59,6 +59,7 @@ def get_3d_dataset(files_list,
                    downscale_ratio=1,
                    normalize=True,
                    shuffle=True,
+                   return_testset=False,
                    seed=42):
     rnd = random.Random(seed)
     output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
@@ -78,34 +79,42 @@ def get_3d_dataset(files_list,
         for k in scans.keys():
             random.shuffle(scans[k])
 
-    train_files = {key: scans[key][fold_size * 2:] for key, fold_size in zip(scans.keys(), folds_size)}
-    test_files = {key: scans[key][0:fold_size] for key, fold_size in zip(scans.keys(), folds_size)}
-    valid_files = {key: scans[key][fold_size:fold_size * 2] for key, fold_size in zip(scans.keys(), folds_size)}
+    if return_testset:
+        train_files = {key: scans[key][fold_size * 2:] for key, fold_size in zip(scans.keys(), folds_size)}
+        test_files = {key: scans[key][0:fold_size] for key, fold_size in zip(scans.keys(), folds_size)}
+        valid_files = {key: scans[key][fold_size:fold_size * 2] for key, fold_size in zip(scans.keys(), folds_size)}
+    else:
+        train_files = {key: scans[key][fold_size:] for key, fold_size in zip(scans.keys(), folds_size)}
+        valid_files = {key: scans[key][0:fold_size] for key, fold_size in zip(scans.keys(), folds_size)}
 
     train_files = _merge_items(train_files)
-    test_files = _merge_items(test_files)
     valid_files = _merge_items(valid_files)
 
-    if shuffle:
-        rnd.shuffle(train_files)
-        rnd.shuffle(test_files)
-        rnd.shuffle(valid_files)
+    rnd.shuffle(train_files)
+    rnd.shuffle(valid_files)
 
     train_ds = tf.data.Dataset.from_generator(generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(output_shape, (3,)),
                                               args=[train_files, normalize, downscale_ratio])
-    test_ds = tf.data.Dataset.from_generator(generator,
-                                             output_types=(tf.float32, tf.bool),
-                                             output_shapes=(output_shape, (3,)),
-                                             args=[test_files, normalize, downscale_ratio])
     valid_ds = tf.data.Dataset.from_generator(generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(output_shape, (3,)),
                                               args=[valid_files, normalize, downscale_ratio])
 
     train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
-    test_ds = test_ds.prefetch(buffer_size=AUTOTUNE)
     valid_ds = valid_ds.prefetch(buffer_size=AUTOTUNE)
 
-    return train_ds, valid_ds, test_ds
+    if return_testset:
+        test_files = _merge_items(test_files)
+        if shuffle:
+            rnd.shuffle(test_files)
+        test_ds = tf.data.Dataset.from_generator(generator,
+                                                 output_types=(tf.float32, tf.bool),
+                                                 output_shapes=(output_shape, (3,)),
+                                                 args=[test_files, normalize, downscale_ratio])
+        test_ds = test_ds.prefetch(buffer_size=AUTOTUNE)
+
+        return train_ds, valid_ds, test_ds
+    else:
+        return train_ds, valid_ds
