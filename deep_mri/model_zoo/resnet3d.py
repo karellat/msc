@@ -13,13 +13,7 @@ from math import ceil
 import tensorflow as tf
 
 
-def _bn_relu(input):
-    """Helper to build a BN -> relu block (by @raghakot)."""
-    norm = tf.keras.layers.BatchNormalization(axis=CHANNEL_AXIS)(input)
-    return tf.keras.layers.Activation("relu")(norm)
-
-
-def _conv_bn_relu3D(**conv_params):
+def _conv3d_relu(**conv_params):
     filters = conv_params["filters"]
     kernel_size = conv_params["kernel_size"]
     strides = conv_params.setdefault("strides", (1, 1, 1))
@@ -27,27 +21,10 @@ def _conv_bn_relu3D(**conv_params):
     kernel_regularizer = conv_params.setdefault("kernel_regularizer", "l2")
 
     def f(input):
-        conv = tf.keras.layers.Conv3D(filters=filters, kernel_size=kernel_size,
-                                      strides=strides, padding=padding,
-                                      kernel_regularizer=kernel_regularizer)(input)
-        return _bn_relu(conv)
-
-    return f
-
-
-def _bn_relu_conv3d(**conv_params):
-    """Helper to build a  BN -> relu -> conv3d block."""
-    filters = conv_params["filters"]
-    kernel_size = conv_params["kernel_size"]
-    strides = conv_params.setdefault("strides", (1, 1, 1))
-    padding = conv_params.setdefault("padding", "same")
-    kernel_regularizer = conv_params.setdefault("kernel_regularizer", "l2")
-
-    def f(input):
-        activation = _bn_relu(input)
         return tf.keras.layers.Conv3D(filters=filters, kernel_size=kernel_size,
                                       strides=strides, padding=padding,
-                                      kernel_regularizer=kernel_regularizer)(activation)
+                                      activation='relu',
+                                      kernel_regularizer=kernel_regularizer)(input)
 
     return f
 
@@ -105,13 +82,13 @@ def basic_block(filters,
                                            kernel_regularizer=kernel_regularizer
                                            )(input)
         else:
-            conv1 = _bn_relu_conv3d(filters=filters,
+            conv1 = _conv3d_relu(filters=filters,
                                     kernel_size=(3, 3, 3),
                                     strides=strides,
                                     kernel_regularizer=kernel_regularizer
                                     )(input)
 
-        residual = _bn_relu_conv3d(filters=filters, kernel_size=(3, 3, 3),
+        residual = _conv3d_relu(filters=filters, kernel_size=(3, 3, 3),
                                    kernel_regularizer=kernel_regularizer
                                    )(conv1)
         return _shortcut3d(input, residual)
@@ -124,22 +101,15 @@ def bottleneck(filters, strides=(1, 1, 1), kernel_regularizer='l2',
     """Basic 3 X 3 X 3 convolution blocks. Extended from raghakot's 2D impl."""
 
     def f(input):
-        if is_first_block_of_first_layer:
-            # don't repeat bn->relu since we just did bn->relu->maxpool
-            conv_1_1 = tf.keras.layers.Conv3D(filters=filters, kernel_size=(1, 1, 1),
-                                              strides=strides, padding="same",
-                                              kernel_regularizer=kernel_regularizer
-                                              )(input)
-        else:
-            conv_1_1 = _bn_relu_conv3d(filters=filters, kernel_size=(1, 1, 1),
+        conv_1_1 = _conv3d_relu(filters=filters, kernel_size=(1, 1, 1),
                                        strides=strides,
                                        kernel_regularizer=kernel_regularizer
                                        )(input)
 
-        conv_3_3 = _bn_relu_conv3d(filters=filters, kernel_size=(3, 3, 3),
+        conv_3_3 = _conv3d_relu(filters=filters, kernel_size=(3, 3, 3),
                                    kernel_regularizer=kernel_regularizer
                                    )(conv_1_1)
-        residual = _bn_relu_conv3d(filters=filters * 4, kernel_size=(1, 1, 1),
+        residual = _conv3d_relu(filters=filters * 4, kernel_size=(1, 1, 1),
                                    kernel_regularizer=kernel_regularizer
                                    )(conv_3_3)
 
@@ -197,7 +167,7 @@ class Resnet3DBuilder(object):
         block_fn = _get_block(block_fn)
         input = tf.keras.Input(shape=input_shape)
         # first conv
-        conv1 = _conv_bn_relu3D(filters=first_filters, kernel_size=(7, 7, 7),
+        conv1 = _conv3d_relu(filters=first_filters, kernel_size=(7, 7, 7),
                                 strides=(2, 2, 2),
                                 kernel_regularizer="l2"
                                 )(input)
@@ -214,14 +184,11 @@ class Resnet3DBuilder(object):
                                       )(block)
             filters *= 2
 
-        # last activation
-        block_output = _bn_relu(block)
-
         # average poll and classification
         pool2 = tf.keras.layers.AveragePooling3D(pool_size=(block.shape[DIM1_AXIS],
                                                             block.shape[DIM2_AXIS],
                                                             block.shape[DIM3_AXIS]),
-                                                 strides=(1, 1, 1))(block_output)
+                                                 strides=(1, 1, 1))(block)
         flatten1 = tf.keras.layers.Flatten()(pool2)
         if num_outputs > 1:
             dense = tf.keras.layers.Dense(units=num_outputs,
