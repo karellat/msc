@@ -8,13 +8,15 @@ from nibabel import Nifti2Image
 from auto_tqdm import tqdm
 import pandas as pd
 import re
-from deep_mri.dataset import dataset_3d, dataset_2d, dataset_encoder
 
 DEFAULT_PATH = '/ADNI/minc_beast/*/*/*.nii'
 DEFAULT_2D_PATH = '/ADNI/slice_minc/*/*/*/*.png'
 
 CLASS_NAMES = np.array(['ad', 'mci', 'cn'])
 AUTOTUNE = tf.data.experimental.AUTOTUNE
+
+from deep_mri.dataset import dataset_3d, dataset_2d, dataset_encoder
+
 
 
 
