@@ -8,5 +8,6 @@ CLASS_NAMES = np.array(['ad', 'mci', 'cn'])
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 from .dataset_factory import dataset_factory
+from .dataset import numpy_to_nibabel
 
-__all__ = ["dataset_factory", "CLASS_NAMES", "AUTOTUNE", "DEFAULT_2D_PATH", "DEFAULT_PATH"]
+__all__ = ["dataset_factory", "CLASS_NAMES", "AUTOTUNE", "DEFAULT_2D_PATH", "DEFAULT_PATH", "numpy_to_nibabel"]

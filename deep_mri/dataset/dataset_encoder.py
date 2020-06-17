@@ -45,9 +45,9 @@ def _generator(files_list, normalize, box_size, boxes_per_img, downscale_ratio):
 def factory(files_list, normalize=True, box_size=5, downscale_ratio=None, boxes_per_img=100):
     train_files, valid_files = train_valid_split_mri_files(files_list, return_test=False)
     train_ds = load_files_to_dataset(train_files, len(train_files) * boxes_per_img, _generator, normalize=normalize,
-                                     box_size=box_size, downscale_ratio=downscale_ratio)
+                                     box_size=box_size, downscale_ratio=downscale_ratio, boxes_per_img=boxes_per_img)
     valid_ds = load_files_to_dataset(valid_files, len(valid_files) * boxes_per_img, _generator, normalize=normalize,
-                                     box_size=box_size, downscale_ratio=downscale_ratio)
+                                     box_size=box_size, downscale_ratio=downscale_ratio, boxes_per_img=boxes_per_img)
 
     train_ds = train_ds.prefetch(AUTOTUNE)
     valid_ds = valid_ds.prefetch(AUTOTUNE)
