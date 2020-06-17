@@ -3,9 +3,9 @@ from deep_mri.train.training import run_train
 
 
 @click.command()
-@click.option("--config_file", type=click.Path(exists=True))
+@click.option("-c", "--config_file", type=click.Path(exists=True))
 def main(config_file):
-    run_train(path_to_config)
+    run_train(config_file)
 
 
 if __name__ == "__main__":
