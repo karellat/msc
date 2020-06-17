@@ -1,18 +1,15 @@
 import logging
 import tensorflow as tf
-import numpy as np
 import os
 import math
 from enum import Enum, auto
+from deep_mri.dataset.dataset import CLASS_NAMES
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-
-CLASS_NAMES = np.array(['ad', 'mci', 'cn'])
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 BATCH_SIZE = 128
 DATASET_SIZE = 21140
+
 
 def _get_label(file_path, class_folder=3):
     parts = tf.strings.split(file_path, os.path.sep)
@@ -100,4 +97,3 @@ def factory(files_list,
         num_parallel_calls=AUTOTUNE)
 
     return _prepare_for_training(labeled_ds, dataset_size=dataset_size, shuffle=shuffle)
-
