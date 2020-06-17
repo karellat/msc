@@ -4,7 +4,7 @@ from tensorflow.math import log
 
 
 def cae(input_shape=(32, 32, 32, 1), init_filters=256, activation='relu'):
-    tf.keras.Sequential([
+    return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape),
         tf.keras.layers.Conv3D(filters=init_filters, kernel_size=6, strides=2, activation=activation),
         tf.keras.layers.Conv3D(filters=init_filters * 2, kernel_size=6, strides=2, activation=activation),
