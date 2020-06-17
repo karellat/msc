@@ -3,12 +3,12 @@ import numpy as np
 from tensorflow.math import log
 
 
-def autoencoder_conv_model(input_shape=(5, 5, 5, 1),
-                           conv_kernel=(5, 5, 5),
-                           conv_activation='relu',
-                           regularization='l2',
-                           conv_filters=8,
-                           dense_activation=None):
+def autoencoder_baseline(input_shape=(5, 5, 5, 1),
+                         conv_kernel=(5, 5, 5),
+                         conv_activation='relu',
+                         regularization='l2',
+                         conv_filters=8,
+                         dense_activation=None):
     fc_nodes = np.prod(input_shape)
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape, name='Input'),
@@ -19,28 +19,7 @@ def autoencoder_conv_model(input_shape=(5, 5, 5, 1),
     ])
 
 
-def conv_3d_baseline(conv_kernel=(5, 5, 5),
-                     conv_filters=[16, 32, 64, 128],
-                     pool_kernel=(5, 5, 5),
-                     pool_stride=(3, 3, 3),
-                     padding='same',
-                     conv_activation='relu'):
-    return tf.keras.Sequential([
-        tf.keras.layers.Input((192, 223, 192, 1)),
-        tf.keras.layers.Convolution3D(conv_filters[0], conv_kernel, padding=padding, activation=conv_activation),
-        tf.keras.layers.MaxPool3D(pool_size=pool_kernel, strides=pool_stride, padding=padding),
-        tf.keras.layers.Convolution3D(conv_filters[1], conv_kernel, padding=padding, activation=conv_activation),
-        tf.keras.layers.MaxPool3D(pool_size=pool_kernel, strides=pool_stride, padding=padding),
-        tf.keras.layers.Convolution3D(conv_filters[2], conv_kernel, padding=padding, activation=conv_activation),
-        tf.keras.layers.MaxPool3D(pool_size=pool_kernel, strides=pool_stride, padding=padding),
-        tf.keras.layers.Convolution3D(conv_filters[3], conv_kernel, padding=padding, activation=conv_activation),
-        tf.keras.layers.MaxPool3D(pool_size=pool_kernel, strides=pool_stride, padding=padding),
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(3, activation='softmax')
-    ])
-
-
-def kld(target_s, s):
+def _kld(target_s, s):
     return target_s * log(target_s / s) + (1 - target_s) * log((1 - target_s) / (1 - s))
 
 
@@ -80,10 +59,19 @@ class PayanEncoder(tf.keras.Model):
         activation_mean = tf.reduce_mean(encoder_l, axis=0)
         elems = (tf.fill(value=self.sparsity, dims=activation_mean.shape),
                  activation_mean)
-        kl_divergence = tf.map_fn(lambda x: kld(x[0], x[1]),
+        kl_divergence = tf.map_fn(lambda x: _kld(x[0], x[1]),
                                   elems,
                                   dtype=tf.float32)
         kl = tf.reduce_sum(kl_divergence)
         self.add_loss(self.beta * kl)
 
         return out_l
+
+
+def factory(model_name, **model_args):
+    if model_name.lower() == 'baseline':
+        return autoencoder_baseline(**model_args)
+    elif model_name.lower() == 'payan':
+        return PayanEncoder(**model_args)
+    else:
+        raise Exception(f"Unknown encoder name {model_name}")

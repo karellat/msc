@@ -1,5 +1,5 @@
 import tensorflow as tf
-
+from deep_mri.model_zoo.resnet3d import Resnet3DBuilder
 
 def batch_norm_conv(input, filters, kernel, name, activation):
     layer = tf.keras.layers.Convolution3D(filters, kernel, name=name, activation=None)(input)
@@ -59,4 +59,22 @@ def payan_montana_model_pretrained_conv(path_to_model, input_shape=(97, 115, 97,
     return big_model
 
 
-
+def factory(model_name, **model_args):
+    if model_name.lower() == "payan":
+        return payan_montana_model(**model_args)
+    elif model_name.lower() == "pretrained_payan":
+        return payan_montana_model_pretrained_conv(**model_args)
+    elif model_name.lower() == "resnet":
+        return Resnet3DBuilder.build(**model_args)
+    elif model_name.lower() == "resnet18":
+        return Resnet3DBuilder.build_resnet_18(**model_args)
+    elif model_name.lower() == "resnet34":
+        return Resnet3DBuilder.build_resnet_34(**model_args)
+    elif model_name.lower() == "resnet50":
+        return Resnet3DBuilder.build_resnet_50(**model_args)
+    elif model_name.lower() == "resnet101":
+        return Resnet3DBuilder.build_resnet_101(**model_args)
+    elif model_name.lower() == "resnet154":
+        return Resnet3DBuilder.build_resnet_152(**model_args)
+    else:
+        raise Exception(f"Unknown 3d model : {model_name}")
