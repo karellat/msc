@@ -3,6 +3,18 @@ import numpy as np
 from tensorflow.math import log
 
 
+def cae(input_shape=(32, 32, 32, 1), init_filters=256, activation='relu'):
+    tf.keras.Sequential([
+        tf.keras.layers.Input(input_shape),
+        tf.keras.layers.Conv3D(filters=init_filters, kernel_size=6, strides=2, activation=activation),
+        tf.keras.layers.Conv3D(filters=init_filters * 2, kernel_size=6, strides=2, activation=activation),
+        tf.keras.layers.Conv3D(filters=init_filters * 4, kernel_size=5, activation=activation),
+        tf.keras.layers.Conv3DTranspose(filters=init_filters * 2, kernel_size=5, activation=activation),
+        tf.keras.layers.Conv3DTranspose(filters=init_filters, kernel_size=6, strides=2, activation=activation),
+        tf.keras.layers.Conv3DTranspose(filters=1, kernel_size=6, strides=2, activation=activation)
+    ])
+
+
 def autoencoder_baseline(input_shape=(5, 5, 5, 1),
                          conv_kernel=(5, 5, 5),
                          conv_activation='relu',
@@ -73,5 +85,7 @@ def factory(model_name, **model_args):
         return autoencoder_baseline(**model_args)
     elif model_name.lower() == 'payan':
         return PayanEncoder(**model_args)
+    elif model_name.lower() == "cae":
+        return cae(**model_args)
     else:
         raise Exception(f"Unknown encoder name {model_name}")
