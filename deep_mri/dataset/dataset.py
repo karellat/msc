@@ -9,15 +9,7 @@ from auto_tqdm import tqdm
 import pandas as pd
 import re
 
-DEFAULT_PATH = '/ADNI/minc_beast/*/*/*.nii'
-DEFAULT_2D_PATH = '/ADNI/slice_minc/*/*/*/*.png'
-
-CLASS_NAMES = np.array(['ad', 'mci', 'cn'])
-AUTOTUNE = tf.data.experimental.AUTOTUNE
-
-from deep_mri.dataset import dataset_3d, dataset_2d, dataset_encoder
-
-
+from deep_mri.dataset import DEFAULT_2D_PATH, DEFAULT_PATH, CLASS_NAMES, dataset_3d, dataset_2d, dataset_encoder
 
 
 def _merge_items(dictionary):
@@ -111,7 +103,6 @@ def get_image_id(name):
 
 
 def dataset_factory(dataset_name, data_path, filter_first_scan, **dataset_args):
-
     if dataset_name.lower() == "3d":
         data_path = DEFAULT_PATH if data_path is None or data_path == 'default' else data_path
         files_list = get_all_files(path=data_path, filter_first_screen=filter_first_scan)

@@ -5,7 +5,7 @@ from nilearn.image import resample_img
 import nibabel as nib
 import logging
 import random
-from deep_mri.dataset.dataset import CLASS_NAMES
+from deep_mri.dataset import CLASS_NAMES
 
 BUFFER_SIZE = 64
 AUTOTUNE = tf.data.experimental.AUTOTUNE

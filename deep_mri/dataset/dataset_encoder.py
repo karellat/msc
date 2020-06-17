@@ -1,10 +1,11 @@
-from deep_mri.dataset.dataset import train_valid_split_mri_files, load_files_to_dataset, DEFAULT_PATH, AUTOTUNE
 import numpy as np
 import tensorflow as tf
 import nibabel as nib
 import random
 from nilearn.image import resample_img
 
+from deep_mri.dataset import AUTOTUNE
+from deep_mri.dataset.dataset import train_valid_split_mri_files, load_files_to_dataset
 
 def _get_3d_boxes(img_array, N, box_size=5, max_tries=100):
     assert len(img_array.shape) == 3
