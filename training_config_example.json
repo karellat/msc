@@ -5,7 +5,7 @@
     "init_filters" : 256,
     "activation"  : "relu"
   },
-  "data_path" : "default",
+  "dataset_path" : "default",
   "filter_first_scan" : false,
   "dataset" : "encoder",
   "dataset_args" : {
