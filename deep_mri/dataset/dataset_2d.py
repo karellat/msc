@@ -13,10 +13,8 @@ AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 BATCH_SIZE = 128
 DATASET_SIZE = 21140
-DEFAULT_PATH = '/ADNI/slice_minc/*/*/*/*.png'
 
-
-def get_label(file_path, class_folder=3):
+def _get_label(file_path, class_folder=3):
     parts = tf.strings.split(file_path, os.path.sep)
     return parts[class_folder] == CLASS_NAMES
 
@@ -27,9 +25,9 @@ class ImgReshape(Enum):
     RESIZE_PAD = auto()
 
 
-def decode_img(img,
-               out_shape=(193, 193),
-               reshape_method=ImgReshape.RESIZE):
+def _decode_img(img,
+                out_shape=(193, 193),
+                reshape_method=ImgReshape.RESIZE):
     img = tf.image.decode_png(img, channels=3)
     img = tf.image.convert_image_dtype(img, tf.float32)
     if out_shape is None:
@@ -43,21 +41,21 @@ def decode_img(img,
             return tf.image.resize_with_pad(img, target_height=out_shape[0], target_width=out_shape[1])
 
 
-def process_path(file_path, out_shape=(193, 193), reshape_method=ImgReshape.RESIZE):
-    label = get_label(file_path)
+def _process_path(file_path, out_shape=(193, 193), reshape_method=ImgReshape.RESIZE):
+    label = _get_label(file_path)
     img = tf.io.read_file(file_path)
-    img = decode_img(img,
-                     out_shape=out_shape,
-                     reshape_method=reshape_method)
+    img = _decode_img(img,
+                      out_shape=out_shape,
+                      reshape_method=reshape_method)
 
     return img, label
 
 
-def prepare_for_training(ds,
-                         dataset_size,
-                         shuffle=True,
-                         cache=True,
-                         shuffle_buffer_size=1000):
+def _prepare_for_training(ds,
+                          dataset_size,
+                          shuffle=True,
+                          cache=True,
+                          shuffle_buffer_size=1000):
     # This is a small dataset, only load it once, and keep it in memory.
     # use `.cache(filename)` to cache preprocessing work for datasets that don't
     # fit in memory.
@@ -90,16 +88,16 @@ def prepare_for_training(ds,
         return train_ds, valid_ds, test_ds
 
 
-def get_datasets(path=DEFAULT_PATH,
-                 dataset_size=DATASET_SIZE,
-                 out_shape=(193, 193),
-                 reshape_method=ImgReshape.RESIZE,
-                 shuffle=True):
-    list_ds = tf.data.Dataset.list_files(path)
-    labeled_ds = list_ds.map(
-        lambda file_path: process_path(file_path,
-                                       out_shape=out_shape,
-                                       reshape_method=reshape_method),
+def factory(files_list,
+            dataset_size=DATASET_SIZE,
+            out_shape=(193, 193),
+            reshape_method=ImgReshape.RESIZE,
+            shuffle=True):
+    labeled_ds = files_list.map(
+        lambda file_path: _process_path(file_path,
+                                        out_shape=out_shape,
+                                        reshape_method=reshape_method),
         num_parallel_calls=AUTOTUNE)
 
-    return prepare_for_training(labeled_ds, dataset_size=dataset_size, shuffle=shuffle)
+    return _prepare_for_training(labeled_ds, dataset_size=dataset_size, shuffle=shuffle)
+

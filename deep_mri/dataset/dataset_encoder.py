@@ -4,18 +4,9 @@ import tensorflow as tf
 import nibabel as nib
 import random
 from nilearn.image import resample_img
-import glob
-import re
-
-DEFAULT_GENERATOR_ARGS = {
-    "normalize": True,
-    "box_size": 5,
-    "downscale_ratio": None,
-    "boxes_per_img": 100,
-}
 
 
-def get_3d_boxes(img_array, N, box_size=5, max_tries=100):
+def _get_3d_boxes(img_array, N, box_size=5, max_tries=100):
     assert len(img_array.shape) == 3
     default_shape = img_array.shape
     boxes = []
@@ -41,7 +32,7 @@ def _generator(files_list, normalize, box_size, boxes_per_img, downscale_ratio):
         img = nib.load(file_name)
         if downscale_ratio is not None and downscale_ratio != 1.0:
             img = resample_img(img, target_affine=np.eye(3) * downscale_ratio)
-        boxes = get_3d_boxes(img.get_fdata(), boxes_per_img, box_size)
+        boxes = _get_3d_boxes(img.get_fdata(), boxes_per_img, box_size)
         for box in boxes:
             tensor = tf.convert_to_tensor(box, tf.float32)
             tensor = tf.expand_dims(tensor, -1)
@@ -50,16 +41,14 @@ def _generator(files_list, normalize, box_size, boxes_per_img, downscale_ratio):
             yield (tensor, tensor)
 
 
-def get_encoder_dataset(path=DEFAULT_PATH, **gen_args):
-    files_list = glob.glob(path)
+def factory(files_list, normalize=True, box_size=5, downscale_ratio=None, boxes_per_img=100):
     train_files, valid_files = train_valid_split_mri_files(files_list, return_test=False)
-    train_ds = load_files_to_dataset(train_files, len(train_files) * gen_args['boxes_per_img'], _generator, **gen_args)
-    valid_ds = load_files_to_dataset(valid_files, len(valid_files) * gen_args['boxes_per_img'], _generator, **gen_args)
+    train_ds = load_files_to_dataset(train_files, len(train_files) * boxes_per_img, _generator, normalize=normalize,
+                                     box_size=box_size, downscale_ratio=downscale_ratio)
+    valid_ds = load_files_to_dataset(valid_files, len(valid_files) * boxes_per_img, _generator, normalize=normalize,
+                                     box_size=box_size, downscale_ratio=downscale_ratio)
 
     train_ds = train_ds.prefetch(AUTOTUNE)
     valid_ds = valid_ds.prefetch(AUTOTUNE)
 
     return train_ds, valid_ds
-
-
-

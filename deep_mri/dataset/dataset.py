@@ -8,10 +8,14 @@ from nibabel import Nifti2Image
 from auto_tqdm import tqdm
 import pandas as pd
 import re
+from deep_mri.dataset import dataset_3d, dataset_2d, dataset_encoder
 
-DEFAULT_PATH = "/ADNI/minc_beast/*/*/*.nii"
+DEFAULT_PATH = '/ADNI/minc_beast/*/*/*.nii'
+DEFAULT_2D_PATH = '/ADNI/slice_minc/*/*/*/*.png'
+
 CLASS_NAMES = np.array(['ad', 'mci', 'cn'])
 AUTOTUNE = tf.data.experimental.AUTOTUNE
+
 
 
 def _merge_items(dictionary):
@@ -102,3 +106,23 @@ def filter_first_image_id(csv_path='/ADNI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv
 
 def get_image_id(name):
     return int(re.search('_image_id_([0-9]*)', name).group(1))
+
+
+def dataset_factory(dataset_name, data_path, filter_first_scan, **dataset_args):
+
+    if dataset_name.lower() == "3d":
+        data_path = DEFAULT_PATH if data_path is None or data_path == 'default' else data_path
+        files_list = get_all_files(path=data_path, filter_first_screen=filter_first_scan)
+        return dataset_3d.factory(files_list, **dataset_args)
+    elif dataset_name.lower() == "2d":
+        if filter_first_scan:
+            raise NotImplementedError()
+        data_path = DEFAULT_2D_PATH if data_path is None or data_path == 'default' else data_path
+        files_list = tf.data.Dataset.list_files(data_path)
+        return dataset_2d.factory(files_list, **dataset_args)
+    elif dataset_name.lower() == "encoder":
+        data_path = DEFAULT_PATH if data_path is None or data_path == 'default' else data_path
+        files_list = get_all_files(path=data_path, filter_first_screen=filter_first_scan)
+        return dataset_encoder.factory(files_list, **dataset_args)
+    else:
+        raise Exception(f"Unknown type of dataset {dataset_name}")
