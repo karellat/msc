@@ -11,7 +11,7 @@
   "dataset_args" : {
     "normalize" : true,
     "box_size" : 32,
-    "downscale" : null,
+    "downscale_ratio" : null,
     "boxes_per_img" : 4
   },
 
