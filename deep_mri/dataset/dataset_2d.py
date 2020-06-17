@@ -3,7 +3,7 @@ import tensorflow as tf
 import os
 import math
 from enum import Enum, auto
-from deep_mri.dataset.dataset import CLASS_NAMES
+from deep_mri.dataset import CLASS_NAMES
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
