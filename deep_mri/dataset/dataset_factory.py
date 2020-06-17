@@ -4,7 +4,7 @@ from deep_mri.dataset import dataset_3d, dataset_2d, dataset_encoder
 from deep_mri.dataset.dataset import get_all_files
 
 
-def dataset_factory(dataset_name, data_path, filter_first_scan, **dataset_args):
+def dataset_factory(dataset_name, filter_first_scan, data_path='default', **dataset_args):
     if dataset_name.lower() == "3d":
         data_path = DEFAULT_PATH if data_path is None or data_path == 'default' else data_path
         files_list = get_all_files(path=data_path, filter_first_screen=filter_first_scan)

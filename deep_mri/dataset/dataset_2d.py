@@ -7,7 +7,6 @@ from deep_mri.dataset import CLASS_NAMES
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
-BATCH_SIZE = 128
 DATASET_SIZE = 21140
 
 
@@ -73,9 +72,6 @@ def _prepare_for_training(ds,
             valid_ds = valid_ds.shuffle(buffer_size=shuffle_buffer_size)
             test_ds = test_ds.shuffle(buffer_size=shuffle_buffer_size)
 
-        train_ds = train_ds.batch(BATCH_SIZE)
-        valid_ds = valid_ds.batch(BATCH_SIZE)
-        test_ds = test_ds.batch(BATCH_SIZE)
         # `prefetch` lets the dataset fetch batches in the background while the model
         # is training.
         train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
