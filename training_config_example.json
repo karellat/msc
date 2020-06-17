@@ -19,6 +19,7 @@
   "log_root" : "./logs/script",
   "log_name" : "my_encoder",
   "epochs" : 100,
+  "batch_size" : 8,
   "optimizer" : "adam",
   "loss" : "mse",
   "metrics" : ["mse"]
