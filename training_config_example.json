@@ -1,0 +1,26 @@
+{
+  "model" : "encoder_cae",
+  "model_args" : {
+    "input_shape"  : [32, 32, 32, 1],
+    "init_filters" : 256,
+    "activation"  : "relu"
+  },
+  "data_path" : "default",
+  "filter_first_scan" : false,
+  "dataset" : "encoder",
+  "dataset_args" : {
+    "normalize" : true,
+    "box_size" : 32,
+    "downscale" : null,
+    "boxes_per_img" : 4
+  },
+
+  "callbacks" : ["board", "save", "lr_poly", "early_stop"],
+  "log_root" : "./logs/script",
+  "log_name" : "my_encoder",
+  "epochs" : 100,
+  "optimizer" : "adam",
+  "loss" : "mse",
+  "metrics" : ["mse"]
+
+}
