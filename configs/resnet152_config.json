@@ -1,0 +1,24 @@
+{
+  "model" : "3d_resnet152",
+  "model_args" : {
+    "input_shape"  : [97, 115, 97, 1],
+    "num_ouputs" : 3
+  },
+  "dataset_path" : "default",
+  "filter_first_scan" : true,
+  "dataset" : "3d",
+  "dataset_args" : {
+    "normalize" : true,
+    "downscale_ratio" : 2
+  },
+
+  "callbacks" : ["board", "save", "early_stop"],
+  "log_root" : "./logs/resnet",
+  "log_name" : "resnet152",
+  "epochs" : 100,
+  "batch_size" : 8,
+  "optimizer" : "adam",
+  "loss" : "categorical_crossentropy",
+  "metrics" : ["accuracy", "auc"]
+
+}
