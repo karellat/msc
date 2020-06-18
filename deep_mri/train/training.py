@@ -42,8 +42,8 @@ def run_train(path_to_config):
     metrics = config['metrics']
 
     model = model_factory(model_name=model_name, **model_args)
-    logging.info(f"Model name: {model.name}")
-    logging.info(f"{model.summary}")
+    logging.warning(f"Model name: {model.name}")
+    logging.warning(f"{model.summary}")
 
     callbacks = []
     if 'board' in callbacks_names:
@@ -69,8 +69,8 @@ def run_train(path_to_config):
                               filter_first_scan=filter_first_scan,
                               data_path=dataset_path,
                               **dataset_args)
-    logging.info(f"Dataset: {dataset_name}")
-    logging.info(f"args: {dataset_args}")
+    logging.warning(f"Dataset: {dataset_name}")
+    logging.warning(f"args: {dataset_args}")
 
     if len(dataset) == 2:
         train_ds, valid_ds = dataset
