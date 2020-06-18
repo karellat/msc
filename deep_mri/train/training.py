@@ -43,7 +43,7 @@ def run_train(path_to_config):
 
     model = model_factory(model_name=model_name, **model_args)
     logging.warning(f"Model name: {model.name}")
-    logging.warning(f"{model.summary()}")
+    model.summary()
 
     callbacks = []
     if 'board' in callbacks_names:
