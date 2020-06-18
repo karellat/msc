@@ -74,7 +74,7 @@ def factory(model_name, **model_args):
         return Resnet3DBuilder.build_resnet_50(**model_args)
     elif model_name.lower() == "resnet101":
         return Resnet3DBuilder.build_resnet_101(**model_args)
-    elif model_name.lower() == "resnet154":
+    elif model_name.lower() == "resnet152":
         return Resnet3DBuilder.build_resnet_152(**model_args)
     else:
         raise Exception(f"Unknown 3d model : {model_name}")
