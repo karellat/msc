@@ -1,6 +1,7 @@
 import tensorflow as tf
 from deep_mri.model_zoo.resnet3d import Resnet3DBuilder
 
+
 def batch_norm_conv(input, filters, kernel, name, activation):
     layer = tf.keras.layers.Convolution3D(filters, kernel, name=name, activation=None)(input)
     layer = tf.keras.layers.BatchNormalization()(layer)
@@ -59,9 +60,39 @@ def payan_montana_model_pretrained_conv(path_to_model, input_shape=(97, 115, 97,
     return big_model
 
 
+def encoder_fc(encoder_model_path,
+               pretrained_layers=['conv1', 'maxp1', 'conv2', 'maxp2', 'conv3', 'maxp3'],
+               input_shape=(93, 115, 93, 1),
+               fc_units=800):
+    pretrained_model = tf.keras.models.load_model(encoder_model_path)
+    encoder_layer = []
+    for n in pretrained_layers:
+        layer = pretrained_model.get_layer(n)
+        if n.startswith('conv'):
+            encoder_layer.append(tf.keras.layers.Conv3D.from_config(layer.get_config()))
+        elif n.startswith('maxp'):
+            encoder_layer.append(tf.keras.layers.MaxPool3D.from_config(layer.get_config()))
+
+    encoder_layer.append(tf.keras.layers.Flatten())
+    encoder_layer.append(tf.keras.layers.Dense(fc_units, activation='relu'))
+    encoder_layer.append(tf.keras.layers.Dense(3, activation='softmax'))
+
+    model = tf.keras.Sequential([tf.keras.layers.Input(shape=input_shape)] + encoder_layer)
+
+    for n in pretrained_layers:
+        w = pretrained_model.get_layer(n).get_weights()
+        layer = model.get_layer(n)
+        layer.set_weights(w)
+        layer.trainable = False
+
+    return model
+
+
 def factory(model_name, **model_args):
     if model_name.lower() == "payan":
         return payan_montana_model(**model_args)
+    elif model_name.lower() == "encoderfc":
+        return encoder_fc(**model_args)
     elif model_name.lower() == "pretrained_payan":
         return payan_montana_model_pretrained_conv(**model_args)
     elif model_name.lower() == "resnet":

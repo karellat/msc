@@ -80,9 +80,39 @@ class PayanEncoder(tf.keras.Model):
         return out_l
 
 
+def my_encoder(init_filters=256,
+               input_shape=(32, 32, 32, 1)):
+    pretrained_layers = ['conv1', 'maxp1', 'conv2', 'maxp2', 'conv3', 'maxp3']
+    return tf.keras.Sequential([
+        tf.keras.layers.Input(input_shape),
+        tf.keras.layers.Conv3D(filters=init_filters,
+                               kernel_size=3,
+                               strides=1,
+                               activation='relu',
+                               name=pretrained_layers[0]),
+        tf.keras.layers.MaxPool3D(3, name=pretrained_layers[1]),
+        tf.keras.layers.Conv3D(filters=init_filters * 2,
+                               kernel_size=3,
+                               strides=1,
+                               activation='relu',
+                               name=pretrained_layers[2]),
+        tf.keras.layers.MaxPool3D(2, name=pretrained_layers[3]),
+        tf.keras.layers.Conv3D(filters=init_filters * 4,
+                               kernel_size=3,
+                               activation='relu',
+                               name=pretrained_layers[4]),
+        tf.keras.layers.MaxPool3D(2, name=pretrained_layers[5]),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(np.product(input_shape), activation='relu'),
+        tf.keras.layers.Reshape(input_shape)
+    ])
+
+
 def factory(model_name, **model_args):
     if model_name.lower() == 'baseline':
         return autoencoder_baseline(**model_args)
+    elif model_name.lower() == 'myencoder':
+        return my_encoder(**model_args)
     elif model_name.lower() == 'payan':
         return PayanEncoder(**model_args)
     elif model_name.lower() == "cae":
