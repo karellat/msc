@@ -5,8 +5,8 @@
     "init_filters" : 256,
   },
   "dataset_path" : "default",
-  "train_filter_first_scan" : true,
-  "valid_filter_first_scan" : true,
+  "train_filter_first_screen" : true,
+  "valid_filter_first_screen" : true,
   "dataset" : "encoder",
   "dataset_args" : {
     "normalize" : true,

@@ -28,8 +28,8 @@ def run_train(path_to_config):
     log_name = f"{timestamp}-{config['log_name']}"
     log_dir = os.path.join(log_root, log_name)
     # Dataset setting
-    assert ("dataset_path" in config) and ("train_filter_first_scan" in config) and (
-                "valid_filter_first_scan" in config)
+    assert ("dataset_path" in config) and ("train_filter_first_screen" in config) and (
+                "valid_filter_first_screen" in config)
     assert ("dataset" in config) and ('dataset_args' in config)
     dataset_path = config['dataset_path']
     train_filter_first_screen = config['train_filter_first_screen']
