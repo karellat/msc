@@ -6,7 +6,8 @@
     "activation"  : "relu"
   },
   "dataset_path" : "default",
-  "filter_first_scan" : false,
+  "train_filter_first_scan" : true,
+  "valid_filter_first_scan" : true,
   "dataset" : "encoder",
   "dataset_args" : {
     "normalize" : true,

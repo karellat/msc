@@ -15,21 +15,28 @@ def run_train(path_to_config):
 
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M")
 
+    assert ("filter_first_scan" not in config), "Deprecated options used in config"
+    # Model setting
     assert ('model' in config) and ('model_args' in config)
     model_name = config['model']
     model_args = config['model_args']
     assert "callbacks" in config
     callbacks_names = config['callbacks']
+    # Logs setting
     assert ("log_root" in config) and ("log_name" in config)
     log_root = config['log_root']
     log_name = f"{timestamp}-{config['log_name']}"
     log_dir = os.path.join(log_root, log_name)
-    assert ("dataset_path" in config) and ("filter_first_scan" in config)
+    # Dataset setting
+    assert ("dataset_path" in config) and ("train_filter_first_scan" in config) and (
+                "valid_filter_first_scan" in config)
     assert ("dataset" in config) and ('dataset_args' in config)
     dataset_path = config['dataset_path']
-    filter_first_scan = config['filter_first_scan']
+    train_filter_first_screen = config['train_filter_first_screen']
+    valid_filter_first_screen = config['valid_filter_first_screen']
     dataset_name = config['dataset']
     dataset_args = config['dataset_args']
+    # Training  setting
     assert "batch_size" in config
     batch_size = config['batch_size']
     assert "epochs" in config
@@ -66,7 +73,8 @@ def run_train(path_to_config):
         callbacks.append(tf.keras.callbacks.EarlyStopping(patience=10))
 
     dataset = dataset_factory(dataset_name=dataset_name,
-                              filter_first_scan=filter_first_scan,
+                              train_filter_first_screen=train_filter_first_screen,
+                              valid_filter_first_screen=valid_filter_first_screen,
                               data_path=dataset_path,
                               **dataset_args)
     logging.warning(f"Dataset: {dataset_name}")

@@ -6,6 +6,8 @@
   },
   "dataset_path" : "default",
   "filter_first_scan" : true,
+  "train_filter_first_scan" : true,
+  "valid_filter_first_scan" : true,
   "dataset" : "3d",
   "dataset_args" : {
     "normalize" : true,
