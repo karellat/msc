@@ -57,12 +57,12 @@ def run_train(path_to_config):
             tf.keras.callbacks.ModelCheckpoint(os.path.join(log_dir, 'models'),
                                                save_best_only=True)
         )
-    if 'lr_poly':
+    if 'lr_poly' in callbacks_names:
         schedular = tf.keras.optimizers.schedules.PolynomialDecay(initial_learning_rate=0.001,
                                                                   decay_steps=epochs,
                                                                   end_learning_rate=0.00001)
         callbacks.append(tf.keras.callbacks.LearningRateScheduler(schedule=schedular))
-    if 'early_stop':
+    if 'early_stop' in callbacks_names:
         callbacks.append(tf.keras.callbacks.EarlyStopping(patience=10))
 
     dataset = dataset_factory(dataset_name=dataset_name,
