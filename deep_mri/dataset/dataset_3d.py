@@ -52,44 +52,19 @@ def _merge_items(dictionary):
     return items
 
 
-def factory(files_list,
+def factory(train_files,
+            valid_files,
             img_shape=(193, 229, 193, 1),
             downscale_ratio=1,
             normalize=True,
             shuffle=True,
-            return_testset=False,
             seed=42):
     rnd = random.Random(seed)
     output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
-    scans = {c: [] for c in CLASS_NAMES}
-    for f in files_list:
-        target = CLASS_NAMES[np.argmax(_get_label_str(f))]
-        scans[target].append(f)
 
-    groups_count = np.array([len(scans[key]) for key in scans.keys()])
-    for count, group in zip(groups_count, scans.keys()):
-        logging.info(f'{group.upper()} count: {count}')
-
-    num_folds = 10
-    folds_size = np.ceil(groups_count / num_folds).astype(int)
-    # shuffle
     if shuffle:
-        for k in scans.keys():
-            random.shuffle(scans[k])
-
-    if return_testset:
-        train_files = {key: scans[key][fold_size * 2:] for key, fold_size in zip(scans.keys(), folds_size)}
-        test_files = {key: scans[key][0:fold_size] for key, fold_size in zip(scans.keys(), folds_size)}
-        valid_files = {key: scans[key][fold_size:fold_size * 2] for key, fold_size in zip(scans.keys(), folds_size)}
-    else:
-        train_files = {key: scans[key][fold_size:] for key, fold_size in zip(scans.keys(), folds_size)}
-        valid_files = {key: scans[key][0:fold_size] for key, fold_size in zip(scans.keys(), folds_size)}
-
-    train_files = _merge_items(train_files)
-    valid_files = _merge_items(valid_files)
-
-    rnd.shuffle(train_files)
-    rnd.shuffle(valid_files)
+        rnd.shuffle(train_files)
+        rnd.shuffle(valid_files)
 
     train_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
@@ -103,16 +78,4 @@ def factory(files_list,
     train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
     valid_ds = valid_ds.prefetch(buffer_size=AUTOTUNE)
 
-    if return_testset:
-        test_files = _merge_items(test_files)
-        if shuffle:
-            rnd.shuffle(test_files)
-        test_ds = tf.data.Dataset.from_generator(_generator,
-                                                 output_types=(tf.float32, tf.bool),
-                                                 output_shapes=(output_shape, (3,)),
-                                                 args=[test_files, normalize, downscale_ratio])
-        test_ds = test_ds.prefetch(buffer_size=AUTOTUNE)
-
-        return train_ds, valid_ds, test_ds
-    else:
-        return train_ds, valid_ds
+    return train_ds, valid_ds

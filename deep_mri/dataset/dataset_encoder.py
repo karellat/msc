@@ -5,7 +5,7 @@ import random
 from nilearn.image import resample_img
 
 from deep_mri.dataset import AUTOTUNE
-from deep_mri.dataset.dataset import train_valid_split_mri_files, load_files_to_dataset
+from deep_mri.dataset.dataset import load_files_to_dataset
 
 def _get_3d_boxes(img_array, N, box_size=5, max_tries=100):
     assert len(img_array.shape) == 3
@@ -42,8 +42,7 @@ def _generator(files_list, normalize, box_size, boxes_per_img, downscale_ratio):
             yield (tensor, tensor)
 
 
-def factory(files_list, normalize=True, box_size=5, downscale_ratio=None, boxes_per_img=100):
-    train_files, valid_files = train_valid_split_mri_files(files_list, return_test=False)
+def factory(train_files, valid_files, normalize=True, box_size=5, downscale_ratio=None, boxes_per_img=100):
     train_ds = load_files_to_dataset(train_files, len(train_files) * boxes_per_img, _generator, normalize=normalize,
                                      box_size=box_size, downscale_ratio=downscale_ratio, boxes_per_img=boxes_per_img)
     valid_ds = load_files_to_dataset(valid_files, len(valid_files) * boxes_per_img, _generator, normalize=normalize,
