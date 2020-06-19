@@ -120,7 +120,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
         else:
             assert visit != 1, "None seen imgs"
             logging.error(f"Image {image_id} without first visit, subject {subject}")
-            if train_filter_first_screen:
+            if not train_filter_first_screen:
                 logging.error(f"{image_id} appending to train set")
                 train_files.append(f)
 

@@ -26,6 +26,6 @@ def dataset_factory(dataset_name,
         train_files, valid_files = get_train_valid_files(path=data_path,
                                                          train_filter_first_screen=train_filter_first_screen,
                                                          valid_filter_first_screen=valid_filter_first_screen)
-        return dataset_encoder.factory(files_list, **dataset_args)
+        return dataset_encoder.factory(train_files, valid_files, **dataset_args)
     else:
         raise Exception(f"Unknown type of dataset {dataset_name}")
