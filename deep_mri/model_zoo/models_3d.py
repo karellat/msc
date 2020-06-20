@@ -88,7 +88,44 @@ def encoder_fc(encoder_model_path,
     return model
 
 
+def martin_model(input_shape=(97, 115, 97, 1),
+                 init_filters=256,
+                 conv_layers=5,
+                 conv_kernel=2,
+                 conv_activation='relu',
+                 conv_stride=2,
+                 conv_to_fc=None):
+    convs = []
+    for i in range(conv_layers):
+        convs.append(tf.keras.layers.Conv3D(init_filters * (2 ** i),
+                                            conv_kernel,
+                                            conv_stride,
+                                            activation=conv_activation,
+                                            padding='same'))
+
+    layers = [
+        tf.keras.layers.Input(input_shape),
+        *convs,
+    ]
+    if conv_to_fc == 'avg':
+        layers.append(tf.keras.layers.AveragePooling3D())
+    elif conv_to_fc == 'max':
+        layers.append(tf.keras.layers.MaxPool3D())
+    elif conv_to_fc == None:
+        pass
+    else:
+        raise NotImplementedError(f'Unknown conv to fc transition {conv_to_fc}')
+    model = tf.keras.Sequential(layers + [
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(3, activation='softmax')
+    ])
+
+    return model
+
+
 def factory(model_name, **model_args):
+    if model_name.lower() == "martin":
+        return martin_model(**model_args)
     if model_name.lower() == "payan":
         return payan_montana_model(**model_args)
     elif model_name.lower() == "encoderfc":
