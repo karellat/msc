@@ -2,7 +2,7 @@
   "model" : "encoder_myencoder",
   "model_args" : {
     "input_shape"  : [32, 32, 32, 1],
-    "init_filters" : 256,
+    "init_filters" : 256
   },
   "dataset_path" : "default",
   "train_filter_first_screen" : true,

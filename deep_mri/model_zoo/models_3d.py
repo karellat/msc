@@ -117,6 +117,7 @@ def martin_model(input_shape=(97, 115, 97, 1),
         raise NotImplementedError(f'Unknown conv to fc transition {conv_to_fc}')
     model = tf.keras.Sequential(layers + [
         tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(800, activation='relu'),
         tf.keras.layers.Dense(3, activation='softmax')
     ])
 
