@@ -17,8 +17,8 @@
   },
 
   "callbacks" : ["board", "save", "early_stop"],
-  "log_root" : "./logs/resnet",
-  "log_name" : "resnet152",
+  "log_root" : "./logs/baseline",
+  "log_name" : "payan_DP",
   "epochs" : 100,
   "batch_size" : 8,
   "optimizer" : "adam",
