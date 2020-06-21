@@ -10,7 +10,7 @@ def batch_norm_conv(input, filters, kernel, name, activation):
 
 def payan_montana_model(input_shape=(97, 115, 97, 1),
                         conv_filters_count=150,
-                        batch_norm=True,
+                        batch_norm=False,
                         dropout=0.5,
                         fc_size=800):
     # TODO: add paper name
