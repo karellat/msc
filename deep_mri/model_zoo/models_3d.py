@@ -60,6 +60,29 @@ def payan_montana_model_pretrained_conv(path_to_model, input_shape=(97, 115, 97,
     return big_model
 
 
+def encoder_baseline(input_shape=(97, 115, 97, 1),
+                     init_filters=150,
+                     fc_size=500,
+                     dropout=0.5):
+    input_layer = tf.keras.layers.Input(input_shape)
+    conv1_layer = tf.keras.layers.Conv3D(filters=init_filters,
+                                         kernel_size=3,
+                                         strides=1,
+                                         activation='elu', )(input_layer)
+    conv1_layer = tf.keras.layers.MaxPool3D(3)(conv1_layer)
+    conv2_layer = tf.keras.layers.Conv3D(filters=init_filters,
+                                         kernel_size=3,
+                                         strides=1,
+                                         activation='tanh', )(input_layer)
+    conv2_layer = tf.keras.layers.MaxPool3D(3)(conv2_layer)
+    mul_layer = tf.keras.layers.Multiply()([conv1_layer, conv2_layer])
+    flat_layer = tf.keras.layers.Flatten()(mul_layer)
+    fc_layer = tf.keras.layers.Dense(fc_size, name=f'FC-{fc_size}', activation='relu')(flat_layer)
+    drop_layer = tf.keras.layers.Dropout(dropout)(fc_layer)
+    output_layer = tf.keras.layers.Dense(3, name='Classification', activation='softmax')(drop_layer)
+    return tf.keras.Model(inputs=input_layer, outputs=output_layer)
+
+
 def encoder_fc(encoder_model_path,
                pretrained_layers=['conv1', 'maxp1', 'conv2', 'maxp2', 'conv3', 'maxp3'],
                input_shape=(93, 115, 93, 1),
@@ -127,8 +150,10 @@ def martin_model(input_shape=(97, 115, 97, 1),
 def factory(model_name, **model_args):
     if model_name.lower() == "martin":
         return martin_model(**model_args)
-    if model_name.lower() == "payan":
+    elif model_name.lower() == "payan":
         return payan_montana_model(**model_args)
+    elif model_name.lower("baseline"):
+        return encoder_baseline(**model_args)
     elif model_name.lower() == "encoderfc":
         return encoder_fc(**model_args)
     elif model_name.lower() == "pretrained_payan":
