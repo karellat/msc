@@ -152,7 +152,7 @@ def factory(model_name, **model_args):
         return martin_model(**model_args)
     elif model_name.lower() == "payan":
         return payan_montana_model(**model_args)
-    elif model_name.lower("baseline"):
+    elif model_name.lower() == "baseline":
         return encoder_baseline(**model_args)
     elif model_name.lower() == "encoderfc":
         return encoder_fc(**model_args)
