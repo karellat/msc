@@ -1,0 +1,27 @@
+{
+  "model" : "3d_baseline",
+  "model_args" : {
+    "input_shape"  : [97, 115, 97, 1],
+    "init_filters" = 150
+    "dropout" : 0.5,
+    "fc_size" : 500
+  },
+  "dataset_path" : "default",
+  "train_filter_first_screen" : true,
+  "valid_filter_first_screen" : true,
+  "dataset" : "3d",
+  "dataset_args" : {
+    "normalize" : true,
+    "downscale_ratio" : 2
+  },
+
+  "callbacks" : ["board", "save", "early_stop"],
+  "log_root" : "./logs/baseline",
+  "log_name" : "mul-elu-tanh-fc",
+  "epochs" : 100,
+  "batch_size" : 8,
+  "optimizer" : "adam",
+  "loss" : "categorical_crossentropy",
+  "metrics" : ["accuracy", "AUC"]
+
+}
