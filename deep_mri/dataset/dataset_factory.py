@@ -1,5 +1,5 @@
 import tensorflow as tf
-from deep_mri.dataset import DEFAULT_PATH, DEFAULT_2D_PATH
+from deep_mri.dataset import DEFAULT_PATH, DEFAULT_2D_PATH, DEFAULT_CSV_PATH
 from deep_mri.dataset import dataset_3d, dataset_2d, dataset_encoder
 from deep_mri.dataset.dataset import get_train_valid_files
 
@@ -10,7 +10,7 @@ def dataset_factory(dataset_name,
                     data_path='default',
                     data_csv_path='default',
                     **dataset_args):
-    data_path = DEFAULT_PATH if data_path is None or data_path == 'default' else data_path
+    data_csv_path = DEFAULT_CSV_PATH if data_csv_path is None or data_csv_path == 'default' else data_csv_path
     if dataset_name.lower() == "3d":
         data_path = DEFAULT_PATH if data_path is None or data_path == 'default' else data_path
         train_files, valid_files = get_train_valid_files(path=data_path,
