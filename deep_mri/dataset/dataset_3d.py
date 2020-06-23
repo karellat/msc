@@ -9,14 +9,15 @@ from deep_mri.dataset import CLASS_NAMES
 
 BUFFER_SIZE = 64
 AUTOTUNE = tf.data.experimental.AUTOTUNE
+DEFAULT_CLASS_FOLDER = -3
 
 
-def _get_label_tf(file_path, class_folder=3):
+def _get_label_tf(file_path, class_folder=DEFAULT_CLASS_FOLDER):
     parts = tf.strings.split(file_path, os.path.sep)
     return parts[class_folder] == CLASS_NAMES
 
 
-def _get_label_str(file_path, class_folder=3):
+def _get_label_str(file_path, class_folder=DEFAULT_CLASS_FOLDER):
     parts = file_path.split(os.path.sep)
     return parts[class_folder] == CLASS_NAMES
 
@@ -40,7 +41,7 @@ def _generator(file_list, normalize, downscale_ratio):
 
 
 def _process_path(file_path, normalize, downscale_ratio):
-    label = _get_label_tf(file_path, class_folder=3)
+    label = _get_label_tf(file_path)
     img = _decode_img(file_path, normalize, downscale_ratio)
     return img, label
 

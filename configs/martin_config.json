@@ -10,6 +10,7 @@
                  "conv_to_fc":null
   },
   "dataset_path" : "default",
+  "data_csv_path" : "default",
   "train_filter_first_screen" : true,
   "valid_filter_first_screen" : true,
   "dataset" : "3d",

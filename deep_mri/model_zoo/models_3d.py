@@ -83,6 +83,12 @@ def encoder_baseline(input_shape=(97, 115, 97, 1),
     return tf.keras.Model(inputs=input_layer, outputs=output_layer)
 
 
+def clone_layer_from_model(model, layer_name):
+    pretrained_layer = model.get_layer(name=layer_name)
+    new_layer = type(pretrained_layer).from_config(pretrained_layer.get_config())
+    return new_layer, pretrained_layer.get_weights()
+
+
 def encoder_fc(encoder_model_path,
                pretrained_layers=['conv1', 'maxp1', 'conv2', 'maxp2', 'conv3', 'maxp3'],
                input_shape=(93, 115, 93, 1),

@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 DEFAULT_PATH = '/ADNI/minc_beast/*/*/*.nii'
+DEFAULT_CSV_PATH = '/ADNI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv'
 DEFAULT_2D_PATH = '/ADNI/slice_minc/*/*/*/*.png'
 
 CLASS_NAMES = np.array(['ad', 'mci', 'cn'])

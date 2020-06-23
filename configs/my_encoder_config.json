@@ -5,6 +5,7 @@
     "init_filters" : 256
   },
   "dataset_path" : "default",
+  "data_csv_path" : "default",
   "train_filter_first_screen" : true,
   "valid_filter_first_screen" : true,
   "dataset" : "encoder",
