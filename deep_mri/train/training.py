@@ -31,7 +31,9 @@ def run_train(path_to_config):
     assert ("dataset_path" in config) and ("train_filter_first_screen" in config) and (
                 "valid_filter_first_screen" in config)
     assert ("dataset" in config) and ('dataset_args' in config)
+    assert ("data_csv_path" in config)
     dataset_path = config['dataset_path']
+    data_csv_path = config['data_csv_path']
     train_filter_first_screen = config['train_filter_first_screen']
     valid_filter_first_screen = config['valid_filter_first_screen']
     dataset_name = config['dataset']
@@ -75,6 +77,7 @@ def run_train(path_to_config):
     dataset = dataset_factory(dataset_name=dataset_name,
                               train_filter_first_screen=train_filter_first_screen,
                               valid_filter_first_screen=valid_filter_first_screen,
+                              data_csv_path=data_csv_path,
                               data_path=dataset_path,
                               **dataset_args)
     logging.warning(f"Dataset: {dataset_name}")
