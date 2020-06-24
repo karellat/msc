@@ -1,4 +1,5 @@
 import tensorflow as tf
+import tensorflow_addons as tfa
 from deep_mri.model_zoo.resnet3d import Resnet3DBuilder
 
 
@@ -146,16 +147,63 @@ def martin_model(input_shape=(97, 115, 97, 1),
         raise NotImplementedError(f'Unknown conv to fc transition {conv_to_fc}')
     model = tf.keras.Sequential(layers + [
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(800, activation='relu'),
+        tf.keras.layers.Dense(400, activation='relu'),
         tf.keras.layers.Dense(3, activation='softmax')
     ])
 
     return model
 
 
+def liu_model(input_shape=(97, 115, 97, 1), f=8):
+    return tf.keras.Sequential(
+        [
+            tf.keras.layers.Input(input_shape),
+            tf.keras.layers.Conv3D(filters=f * 4,
+                                   kernel_size=1,
+                                   padding='same',
+                                   strides=1,
+                                   activation=None,
+                                   dilation_rate=1),
+            tfa.layers.InstanceNormalization(),
+            tf.keras.layers.Activation('relu', name='relu'),
+            tf.keras.layers.MaxPool3D(pool_size=3, strides=2),
+            tf.keras.layers.Conv3D(filters=f * 32,
+                                   kernel_size=3,
+                                   padding='valid',
+                                   strides=1,
+                                   activation=None,
+                                   dilation_rate=2),
+            tfa.layers.InstanceNormalization(),
+            tf.keras.layers.Activation('relu', name='relu2'),
+            tf.keras.layers.MaxPool3D(pool_size=3, strides=2),
+            tf.keras.layers.Conv3D(filters=f * 64,
+                                   kernel_size=5,
+                                   padding='same',
+                                   strides=1,
+                                   activation=None,
+                                   dilation_rate=2),
+            tfa.layers.InstanceNormalization(),
+            tf.keras.layers.Activation('relu', name='relu3'),
+            tf.keras.layers.MaxPool3D(pool_size=3, strides=2),
+            tf.keras.layers.Conv3D(filters=f * 64,
+                                   kernel_size=3,
+                                   padding='same',
+                                   strides=1,
+                                   activation=None,
+                                   dilation_rate=2),
+            tfa.layers.InstanceNormalization(),
+            tf.keras.layers.Activation('relu', name='relu4'),
+            tf.keras.layers.MaxPool3D(pool_size=5, strides=2, padding='same'),
+            tf.keras.layers.Dense(1024),
+            tf.keras.layers.Dense(3, activation='softmax')
+        ])
+
+
 def factory(model_name, **model_args):
     if model_name.lower() == "martin":
         return martin_model(**model_args)
+    elif model_name.lower() == 'liu':
+        return liu_model(**model_args)
     elif model_name.lower() == "payan":
         return payan_montana_model(**model_args)
     elif model_name.lower() == "baseline":

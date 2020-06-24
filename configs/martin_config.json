@@ -3,8 +3,8 @@
   "model_args" : {
     "input_shape"  : [97, 115, 97, 1],
                 "init_filters":256,
-                 "conv_layers":5,
-                 "conv_kernel":2,
+                 "conv_layers":2,
+                 "conv_kernel":3,
                  "conv_activation":"relu",
                  "conv_stride":2,
                  "conv_to_fc":null
