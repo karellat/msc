@@ -194,6 +194,7 @@ def liu_model(input_shape=(97, 115, 97, 1), f=8):
             tfa.layers.InstanceNormalization(),
             tf.keras.layers.Activation('relu', name='relu4'),
             tf.keras.layers.MaxPool3D(pool_size=5, strides=2, padding='same'),
+            tf.keras.layers.Flatten(),
             tf.keras.layers.Dense(1024),
             tf.keras.layers.Dense(3, activation='softmax')
         ])
