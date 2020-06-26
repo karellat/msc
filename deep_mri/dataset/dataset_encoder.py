@@ -7,11 +7,13 @@ from nilearn.image import resample_img
 from deep_mri.dataset import AUTOTUNE
 from deep_mri.dataset.dataset import load_files_to_dataset
 
-def _get_3d_boxes(img_array, N, box_size=5, max_tries=100):
+
+def _get_3d_boxes(img_array, N, box_size=5, max_tries=100, include_zeros=True):
     assert len(img_array.shape) == 3
     default_shape = img_array.shape
     boxes = []
-    for _ in range(N - 1):
+    r = range(N - 1) if include_zeros else range(N)
+    for _ in r:
         box = np.zeros((box_size, box_size, box_size, 1))
         tries = 0
         while np.count_nonzero(box) == 0:
@@ -23,12 +25,13 @@ def _get_3d_boxes(img_array, N, box_size=5, max_tries=100):
             z = random.randint(0, default_shape[2] - box_size - 1)
             box = img_array[x:x + box_size, y:y + box_size, z:z + box_size]
         boxes.append(box)
-    # Zero matrix 
-    boxes.append(np.zeros((box_size, box_size, box_size)))
+    # Zero matrix
+    if include_zeros:
+        boxes.append(np.zeros((box_size, box_size, box_size)))
     return boxes
 
 
-def _generator(files_list, normalize, box_size, boxes_per_img, downscale_ratio):
+def _generator(files_list, normalize, box_size, boxes_per_img, downscale_ratio, include_zeros=True):
     for file_name in files_list:
         img = nib.load(file_name)
         if downscale_ratio is not None and downscale_ratio != 1.0:
@@ -42,11 +45,14 @@ def _generator(files_list, normalize, box_size, boxes_per_img, downscale_ratio):
             yield (tensor, tensor)
 
 
-def factory(train_files, valid_files, normalize=True, box_size=5, downscale_ratio=None, boxes_per_img=100):
+def factory(train_files, valid_files, normalize=True, box_size=5, downscale_ratio=None, boxes_per_img=100,
+            include_zeros=True):
     train_ds = load_files_to_dataset(train_files, len(train_files) * boxes_per_img, _generator, normalize=normalize,
-                                     box_size=box_size, downscale_ratio=downscale_ratio, boxes_per_img=boxes_per_img)
+                                     box_size=box_size, downscale_ratio=downscale_ratio, boxes_per_img=boxes_per_img,
+                                     include_zeros=include_zeros)
     valid_ds = load_files_to_dataset(valid_files, len(valid_files) * boxes_per_img, _generator, normalize=normalize,
-                                     box_size=box_size, downscale_ratio=downscale_ratio, boxes_per_img=boxes_per_img)
+                                     box_size=box_size, downscale_ratio=downscale_ratio, boxes_per_img=boxes_per_img,
+                                     include_zeros=include_zeros)
 
     train_ds = train_ds.prefetch(AUTOTUNE)
     valid_ds = valid_ds.prefetch(AUTOTUNE)
