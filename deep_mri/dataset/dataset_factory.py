@@ -17,6 +17,8 @@ def dataset_factory(dataset_name,
                                                          csv_path=data_csv_path,
                                                          train_filter_first_screen=train_filter_first_screen,
                                                          valid_filter_first_screen=valid_filter_first_screen)
+        assert len(train_files) > 0
+        assert len(valid_files) > 0
         return dataset_3d.factory(train_files, valid_files, **dataset_args)
     elif dataset_name.lower() == "2d":
         data_path = DEFAULT_2D_PATH if data_path is None or data_path == 'default' else data_path
@@ -25,6 +27,8 @@ def dataset_factory(dataset_name,
                                                          train_filter_first_screen=train_filter_first_screen,
                                                          valid_filter_first_screen=valid_filter_first_screen,
                                                          img_group_fnc=lambda x: _get_image_group(x, class_folder=-4))
+        assert len(train_files) > 0
+        assert len(valid_files) > 0
         return dataset_2d.factory(train_files, valid_files, **dataset_args)
     elif dataset_name.lower() == "encoder":
         data_path = DEFAULT_PATH if data_path is None or data_path == 'default' else data_path
@@ -32,6 +36,8 @@ def dataset_factory(dataset_name,
                                                          csv_path=data_csv_path,
                                                          train_filter_first_screen=train_filter_first_screen,
                                                          valid_filter_first_screen=valid_filter_first_screen)
+        assert len(train_files) > 0
+        assert len(valid_files) > 0
         return dataset_encoder.factory(train_files, valid_files, **dataset_args)
     else:
         raise Exception(f"Unknown type of dataset {dataset_name}")

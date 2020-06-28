@@ -6,6 +6,7 @@
     "feature_trainable" : false,
     "fc_count" : 1024
   },
+  "init_lr" : 0.001,
   "dataset_path" : "default",
   "data_csv_path" : "default",
   "train_filter_first_screen" : false,

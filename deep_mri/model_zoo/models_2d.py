@@ -19,6 +19,6 @@ def transfer_model(feature_extractor_url,
 
 def factory(model_name, **model_args):
     if model_name.lower() == "transfer":
-        transfer_model(**model_args)
+        return transfer_model(**model_args)
     else:
         raise Exception(f"Unknown 3d model : {model_name}")
