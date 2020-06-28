@@ -1,0 +1,27 @@
+{
+  "model" : "str_mytest",
+  "model_args" : {
+    "input_shape"  : [193, 193, 3],
+    "layers_text" :"C2-16-1-1-valid-relu;C2-32-3-1-valid-relu;PMAX2-3-2-valid;C2-64-3-1-valid-relu;PMAX2-3-2-valid;C2-128-3-1-valid-relu;PMAX2-3-2-valid;C2-256-3-1-valid-relu;PMAX2-3-2-valid;C2-512-3-1-valid-relu;PMAX2-3-2-valid;C2-1024-3-1-valid-relu"
+  },
+  "init_lr" : 0.001,
+  "dataset_path" : "default",
+  "data_csv_path" : "default",
+  "train_filter_first_screen" : false,
+  "valid_filter_first_screen" : false,
+  "dataset" : "2d",
+  "dataset_args" : {
+    "img_size" : 193,
+    "shuffle" : true
+  },
+
+  "callbacks" : ["board", "save"],
+  "log_root" : "./logs/2d",
+  "log_name" : "transfer",
+  "epochs" : 100,
+  "batch_size" : 1,
+  "optimizer" : "adam",
+  "loss" : "categorical_crossentropy",
+  "metrics" : ["accuracy", "AUC"]
+
+}
