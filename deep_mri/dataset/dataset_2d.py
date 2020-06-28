@@ -29,7 +29,7 @@ def _generator(file_list, img_size, channels):
 
 def factory(train_files, valid_files, img_size=193, channels=3, shuffle=True, seed=42):
     rnd = random.Random(seed)
-    img_shape = np.array((img_size, img_size, 3)).astype(int)
+    img_shape = np.array((img_size, img_size, channels)).astype(int)
     if shuffle:
         rnd.shuffle(train_files)
         rnd.shuffle(valid_files)
