@@ -34,11 +34,6 @@ logger.warning(f"MCI images {len(mci_img_ids)}, CN images {len(cn_img_ids)}, AD 
 
 import os
 import nipype.interfaces.io as nio
-import logging
-import matplotlib.pyplot as plt
-import numpy as np
-import nibabel as nb
-from src.preprocess import RescaleImage
 
 id_lists["test"] = id_lists['ad'][:2]
 
@@ -51,7 +46,6 @@ input_path = INPUT_PATH
 
 from nipype import SelectFiles, Node, Workflow, MapNode, IdentityInterface
 from nipype.interfaces.fsl import BET, Info, FNIRT, ApplyWarp
-from nipype.interfaces.base import BaseInterfaceInputSpec, BaseInterface, File, TraitedSpec, traits, isdefined
 
 logger.warning(f"{str(iterables)}")
 

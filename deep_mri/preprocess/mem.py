@@ -8,8 +8,6 @@ logger.setLevel(logging.INFO)
 
 import pandas as pd
 import re
-import os
-from deep_mri.preprocess.nipype_ext import *
 df = pd.read_csv(CSV_PATH)
 
 all_files = []
@@ -34,7 +32,7 @@ logger.warning(f"MCI images {len(mci_img_ids)}, CN images {len(cn_img_ids)}, AD 
 import os
 import nipype.interfaces.io as nio
 from nipype import SelectFiles, Node, Workflow, IdentityInterface
-
+from .nipype_ext import Nii2Mnc, MincBeast, MincProduct, BeastNormalize, Mnc2Nii
 
 id_lists["test"] = id_lists['ad'][:10] 
 
@@ -72,6 +70,7 @@ beast = Node(MincBeast(library_dir="/opt/minc-1.9.15/share/beast-library-1.1/"),
 product = Node(MincProduct(), name="product_node") 
 
 mncnii = Node(Mnc2Nii(), name="mnc_2_nii_node")
+
 
 # Sink
 sink = Node(interface=nio.DataSink(),
