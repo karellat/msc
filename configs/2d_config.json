@@ -1,11 +1,31 @@
 {
-  "model" : "2d_transfer",
-  "model_args" : {
-    "feature_extractor_url" : "https://tfhub.dev/tensorflow/efficientnet/b3/feature-vector/1",
-    "input_shape"  : [193, 193, 3],
-    "feature_trainable" : false,
-    "fc_count" : 1024
-  },
+  "model" : [ "2d_transfer","2d_transfer","2d_transfer","2d_transfer"],
+  "model_args" : [ {
+            "feature_extractor_url" : "https://tfhub.dev/tensorflow/efficientnet/b3/feature-vector/1",
+            "input_shape"  : [193, 193, 3],
+            "feature_trainable" : false,
+            "fc_count" : 1024
+        },
+        {
+            "feature_extractor_url" : "https://tfhub.dev/google/imagenet/inception_v2/feature_vector/4",
+            "input_shape"  : [193, 193, 3],
+            "feature_trainable" : false,
+            "fc_count" : 1024
+        },
+        {
+            "feature_extractor_url" : "https://tfhub.dev/google/inaturalist/inception_v3/feature_vector/4",
+            "input_shape"  : [193, 193, 3],
+            "feature_trainable" : false,
+            "fc_count" : 1024
+        },
+        {
+            "feature_extractor_url" : "https://tfhub.dev/google/bit/m-r101x3/1",
+            "input_shape"  : [193, 193, 3],
+            "feature_trainable" : false,
+            "fc_count" : 1024
+        }
+],
+
   "init_lr" : 0.001,
   "dataset_path" : "default",
   "data_csv_path" : "default",
@@ -19,11 +39,13 @@
 
   "callbacks" : ["board", "save"],
   "log_root" : "./logs/2d",
-  "log_name" : "transfer",
-  "epochs" : 100,
-  "batch_size" : 1,
+  "log_name" : [ "2d_efficientnet",
+                "2d_inception_v2",
+                "2d_inception_v3",
+                "2d_r101" ],
+  "epochs" : 32,
+  "batch_size" : 16,
   "optimizer" : "adam",
   "loss" : "categorical_crossentropy",
   "metrics" : ["accuracy", "AUC"]
-
 }

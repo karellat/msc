@@ -25,7 +25,7 @@ def run_train(path_to_config):
     # Logs setting
     assert ("log_root" in config) and ("log_name" in config)
     log_root = config['log_root']
-    log_name = f"{timestamp}-{config['log_name']}"
+    log_name = config['log_name']
     # Dataset setting
     assert ("dataset_path" in config) and ("train_filter_first_screen" in config) and (
             "valid_filter_first_screen" in config)
@@ -37,6 +37,10 @@ def run_train(path_to_config):
     valid_filter_first_screen = config['valid_filter_first_screen']
     dataset_name = config['dataset']
     dataset_args = config['dataset_args']
+    if 'dropping_group' in config:
+        dropping_group = config['dropping_group']
+    else:
+        dropping_group = None
     # Training  setting
     assert "batch_size" in config
     batch_size = config['batch_size']
@@ -88,6 +92,7 @@ def run_train(path_to_config):
         dataset = dataset_factory(dataset_name=dataset_name,
                                   train_filter_first_screen=train_filter_first_screen,
                                   valid_filter_first_screen=valid_filter_first_screen,
+                                  dropping_group=dropping_group,
                                   data_csv_path=data_csv_path,
                                   data_path=dataset_path,
                                   **dataset_args)

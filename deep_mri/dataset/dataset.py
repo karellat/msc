@@ -58,10 +58,11 @@ def get_train_valid_files(path=DEFAULT_PATH,
                           valid_filter_first_screen=False,
                           valid_train_ratio=0.2,
                           shuffle=False,
-                          dropping_groups=[],
+                          dropping_group=None,
                           im_id_fnc=_get_image_id,
                           img_group_fnc=_get_image_group):
-    assert len(dropping_groups) <= 1, "Less than 2 groups remains"
+
+    assert dropping_group not in CLASS_NAMES, f"Uknown group to drop {dropping_group}"
     files_list = glob.glob(path)
     # meta info
     df = pd.read_csv(csv_path)
@@ -109,7 +110,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
         subject = meta_info[image_id]['Subject']
         visit = meta_info[image_id]['Visit']
         # Drop unwanted groups
-        if target in dropping_groups:
+        if target == dropping_group:
             continue
         if subject in train_subjects:
             if train_filter_first_screen and visit != 1:
