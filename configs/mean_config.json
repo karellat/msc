@@ -15,10 +15,10 @@
   "train_filter_first_screen" : false,
   "valid_filter_first_screen" : false,
   "dataset" : "2d",
+  "dropping_group" : "MCI",
   "dataset_args" : {
     "img_size" : 193,
     "shuffle" : true,
-    "dropping_group" : "MCI",
     "transform" : "mean"
   },
 

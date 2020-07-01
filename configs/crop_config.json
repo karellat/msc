@@ -14,11 +14,11 @@
   "data_csv_path" : "default",
   "train_filter_first_screen" : false,
   "valid_filter_first_screen" : false,
+  "dropping_group" : "MCI",
   "dataset" : "2d",
   "dataset_args" : {
     "img_size" : 193,
     "shuffle" : true,
-    "dropping_group" : "MCI",
     "transform" : "crop"
   },
 
