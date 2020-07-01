@@ -67,10 +67,11 @@ def factory(train_files, valid_files, dropping_group=None, img_size=193, channel
         rnd.shuffle(train_files)
         rnd.shuffle(valid_files)
 
+    transform_fnc = _aug_factory(transform)
     train_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(img_shape, (3,)),
-                                              args=[train_files, img_size, channels, class_names, transform])
+                                              args=[train_files, img_size, channels, class_names, transform_fnc])
     valid_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(img_shape, (3,)),
