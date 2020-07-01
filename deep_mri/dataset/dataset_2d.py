@@ -54,7 +54,7 @@ def _aug_factory(name, image):
     elif name == 'crop':
         return tf.image.resize(
             tf.image.random_crop(image, size=tf.constant([96, 96, 3])),
-            image.shape[:-1])
+            image.shape[:-1]) / 255
     else:
         raise Exception(f"Unknown data augmentation function {name}")
 

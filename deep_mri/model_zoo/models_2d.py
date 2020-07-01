@@ -5,7 +5,9 @@ import tensorflow as tf
 def transfer_model(feature_extractor_url,
                    input_shape=(193, 193, 3),
                    feature_trainable=False,
-                   fc_count=1024):
+                   fc_count=1024,
+                   num_outputs=3):
+    assert num_outputs > 1
     feature_extractor_layer = hub.KerasLayer(feature_extractor_url,
                                              input_shape=input_shape,
                                              trainable=feature_trainable)
@@ -13,7 +15,7 @@ def transfer_model(feature_extractor_url,
         feature_extractor_layer,
         tf.keras.layers.Dense(fc_count, activation='relu'),
         tf.keras.layers.Dropout(0.5),
-        tf.keras.layers.Dense(3, activation='softmax')
+        tf.keras.layers.Dense(num_outputs, activation='softmax')
     ])
 
 
