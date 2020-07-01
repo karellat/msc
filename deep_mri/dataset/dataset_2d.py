@@ -36,6 +36,7 @@ def _generator(file_list, img_size, channels, class_names, transform):
 
 def _aug_factory(name, image):
     # TODO: Remove fixed values
+    name = str(name.decode()).lower()
     if name == 'saturation':
         return tf.image.adjust_saturation(image, 2)
     elif name == 'brightness':
@@ -51,9 +52,9 @@ def _aug_factory(name, image):
     elif name == 'contrast_down':
         return tf.image.adjust_contrast(image, 0.8)
     elif name == 'crop':
-        return tf.resize(
+        return tf.image.resize(
             tf.image.random_crop(image, size=tf.constant([96, 96, 3])),
-            x.shape[:-1])
+            image.shape[:-1])
     else:
         raise Exception(f"Unknown data augmentation function {name}")
 
