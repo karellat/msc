@@ -21,7 +21,7 @@ def dataset_factory(dataset_name,
                                                          valid_filter_first_screen=valid_filter_first_screen)
         assert len(train_files) > 0
         assert len(valid_files) > 0
-        return dataset_3d.factory(train_files, valid_files, **dataset_args)
+        return dataset_3d.factory(train_files, valid_files, dropping_group=dropping_group, **dataset_args)
     elif dataset_name.lower() == "2d":
         data_path = DEFAULT_2D_PATH if data_path is None or data_path == 'default' else data_path
         train_files, valid_files = get_train_valid_files(path=data_path,
@@ -32,7 +32,7 @@ def dataset_factory(dataset_name,
                                                          img_group_fnc=lambda x: _get_image_group(x, class_folder=-4))
         assert len(train_files) > 0
         assert len(valid_files) > 0
-        return dataset_2d.factory(train_files, valid_files, **dataset_args)
+        return dataset_2d.factory(train_files, valid_files, dropping_group=dropping_group, **dataset_args)
     elif dataset_name.lower() == "encoder":
         data_path = DEFAULT_PATH if data_path is None or data_path == 'default' else data_path
         train_files, valid_files = get_train_valid_files(path=data_path,
@@ -42,6 +42,6 @@ def dataset_factory(dataset_name,
                                                          valid_filter_first_screen=valid_filter_first_screen)
         assert len(train_files) > 0
         assert len(valid_files) > 0
-        return dataset_encoder.factory(train_files, valid_files, **dataset_args)
+        return dataset_encoder.factory(train_files, valid_files, dropping_group=dropping_group, **dataset_args)
     else:
         raise Exception(f"Unknown type of dataset {dataset_name}")

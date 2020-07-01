@@ -10,6 +10,7 @@
   "data_csv_path" : "default",
   "train_filter_first_screen" : true,
   "valid_filter_first_screen" : true,
+  "dropping_group" : "MCI",
   "dataset" : "3d",
   "dataset_args" : {
     "normalize" : true,
