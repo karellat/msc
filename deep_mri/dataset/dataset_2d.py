@@ -15,7 +15,7 @@ def _process_path(file_path, img_size, channels, class_names, transform):
     img = tf.io.read_file(file_path)
     img = tf.io.decode_image(img, channels=channels)
     if transform is not None:
-        img = transform
+        img = transform(img)
     img = tf.image.convert_image_dtype(img, tf.float32)
     img = tf.image.resize_with_crop_or_pad(img,
                                            target_height=img_size,
