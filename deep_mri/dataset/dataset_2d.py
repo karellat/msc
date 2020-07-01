@@ -24,7 +24,7 @@ def _process_path(file_path, img_size, channels, class_names, transform):
     return img, label
 
 
-def _generator(file_list, img_size, channels, class_names, transform):
+def _generator(file_list, img_size, channels, class_names, transform=None):
     for file_name in file_list:
         # Return both transformed and normal img
         img, label = _process_path(file_name, img_size, channels, class_names, transform=None)
@@ -75,7 +75,7 @@ def factory(train_files, valid_files, dropping_group=None, img_size=193, channel
     valid_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(img_shape, (3,)),
-                                              args=[valid_files, img_size, channels, class_names, None])
+                                              args=[valid_files, img_size, channels, class_names])
 
     train_ds = train_ds.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
     valid_ds = valid_ds.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
