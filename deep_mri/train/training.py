@@ -52,6 +52,7 @@ def run_train(path_to_config):
     loss = config["loss"]
     assert "metrics" in config
     metrics = config['metrics']
+    init_lr = config['init_lr'] if "init_lr" in config else 0.001
 
     if isinstance(model_name, list):
         assert isinstance(model_args, list)
@@ -82,9 +83,9 @@ def run_train(path_to_config):
                                                    save_best_only=True)
             )
         if 'lr_poly' in callbacks_names:
-            schedular = tf.keras.optimizers.schedules.PolynomialDecay(initial_learning_rate=0.001,
+            schedular = tf.keras.optimizers.schedules.PolynomialDecay(initial_learning_rate=init_lr,
                                                                       decay_steps=epochs,
-                                                                      end_learning_rate=0.00001)
+                                                                      end_learning_rate=init_lr/100)
             callbacks.append(tf.keras.callbacks.LearningRateScheduler(schedule=schedular))
         if 'early_stop' in callbacks_names:
             callbacks.append(tf.keras.callbacks.EarlyStopping(patience=10))
@@ -109,6 +110,8 @@ def run_train(path_to_config):
         model.compile(optimizer=optimizer,
                       loss=loss,
                       metrics=metrics)
+
+        model.optimizer.learning_rate = init_lr
 
         model.fit(train_ds.batch(batch_size),
                   epochs=epochs,
