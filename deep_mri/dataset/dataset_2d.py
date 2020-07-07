@@ -35,8 +35,11 @@ def _generator(file_list, target_list, img_size, channels, class_names, shuffle=
         str_target = str(target, 'utf-8')
         assert str_target == _get_image_group(str_file_name, -4)
         assert meta_info[_get_image_id(str_file_name)]['Group'] == str_target
+        logging.error(f"{str_target}, {_get_image_group(str_file_name, -4)}")
         # Return both transformed and normal img
         img, label = _process_path(file_name, target, img_size, channels, class_names, transform=None)
+        logging.error(class_names)
+        logging.error(label)
         yield img, label
         if transform is not None:
             img, label = _process_path(file_name, target, img_size, channels, class_names, transform)
