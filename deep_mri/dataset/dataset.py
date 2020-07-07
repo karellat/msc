@@ -15,6 +15,10 @@ from deep_mri.dataset import DEFAULT_PATH, CLASS_NAMES, DEFAULT_CSV_PATH
 DEFAULT_CLASS_FOLDER = -3
 
 
+def _get_label_tf(target_name, class_names):
+    return target_name == class_names
+
+
 def _merge_items(dictionary):
     items = []
     for key in dictionary.keys():
@@ -175,4 +179,8 @@ def get_train_valid_files(path=DEFAULT_PATH,
             if not valid_filter_first_screen:
                 valid_files = valid_files + non_first_visit_files
 
-        return train_files, valid_files
+        # Prepare targets
+        train_targets = list(map(img_group_fnc, train_files))
+        valid_targets = list(map(img_group_fnc, valid_files))
+
+        return train_files, train_targets, valid_files, valid_targets

@@ -1,24 +1,10 @@
 import tensorflow as tf
-import os
 import numpy as np
 from nilearn.image import resample_img
 import nibabel as nib
 import random
-from deep_mri.dataset import CLASS_NAMES
-
-BUFFER_SIZE = 64
-AUTOTUNE = tf.data.experimental.AUTOTUNE
-DEFAULT_CLASS_FOLDER = -3
-
-
-def _get_label_tf(file_path, class_names, class_folder=DEFAULT_CLASS_FOLDER):
-    parts = tf.strings.split(file_path, os.path.sep)
-    return parts[class_folder] == class_names
-
-
-def _get_label_str(file_path, class_names, class_folder=DEFAULT_CLASS_FOLDER):
-    parts = file_path.split(os.path.sep)
-    return parts[class_folder] == class_names
+from deep_mri.dataset import AUTOTUNE
+from deep_mri.dataset.dataset import _get_label_tf
 
 
 def _decode_img(path, normalize, downscale_ratio):
@@ -32,29 +18,24 @@ def _decode_img(path, normalize, downscale_ratio):
     return tensor
 
 
-def _generator(file_list, normalize, downscale_ratio, class_names):
-    for file_name in file_list:
+def _generator(file_list, target_list, normalize, downscale_ratio, class_names):
+    for file_name, target in zip(file_list, target_list):
         file_name = file_name.decode('utf-8')
-        img, label = _process_path(file_name, normalize, downscale_ratio, class_names)
+        img, label = _process_path(file_name, target, normalize, downscale_ratio, class_names)
         yield (img, label)
 
 
-def _process_path(file_path, normalize, downscale_ratio, class_names):
-    label = _get_label_tf(file_path, class_names)
+def _process_path(file_path, target, normalize, downscale_ratio, class_names):
+    label = _get_label_tf(target, class_names)
     img = _decode_img(file_path, normalize, downscale_ratio)
     return img, label
 
 
-def _merge_items(dictionary):
-    items = []
-    for key in dictionary.keys():
-        items += dictionary[key]
-    return items
-
-
 def factory(train_files,
+            train_targets,
             valid_files,
-            dropping_group=None,
+            valid_targets,
+            class_names,
             img_shape=(193, 229, 193, 1),
             downscale_ratio=1,
             normalize=True,
@@ -69,12 +50,14 @@ def factory(train_files,
 
     train_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
-                                              output_shapes=(output_shape, (3,)),
-                                              args=[train_files, normalize, downscale_ratio, dropping_group])
+                                              output_shapes=(output_shape, (len(class_names),)),
+                                              args=[train_files, train_targets, normalize, downscale_ratio,
+                                                    class_names])
     valid_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
-                                              output_shapes=(output_shape, (3,)),
-                                              args=[valid_files, normalize, downscale_ratio, dropping_group])
+                                              output_shapes=(output_shape, (len(class_names),)),
+                                              args=[valid_files, valid_targets, normalize, downscale_ratio,
+                                                    class_names])
 
     train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
     valid_ds = valid_ds.prefetch(buffer_size=AUTOTUNE)
