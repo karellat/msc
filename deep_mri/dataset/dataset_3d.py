@@ -32,7 +32,7 @@ def _generator(file_list, target_list, normalize, downscale_ratio, class_names):
         file_name = str(file_name, 'utf-8')
         target = str(target, 'utf-8')
         assert target == _get_image_group(file_name, -3)
-        assert meta_info[_get_image_id(file_list)]['Group'] == target
+        assert meta_info[_get_image_id(file_name)]['Group'] == target
         file_name = file_name.decode('utf-8')
         img, label = _process_path(file_name, target, normalize, downscale_ratio, class_names)
         yield (img, label)

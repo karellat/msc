@@ -33,7 +33,7 @@ def _generator(file_list, target_list, img_size, channels, class_names, transfor
         file_name = str(file_name, 'utf-8')
         target = str(target, 'utf-8')
         assert target == _get_image_group(file_name, -4)
-        assert meta_info[_get_image_id(file_list)]['Group'] == target
+        assert meta_info[_get_image_id(file_name)]['Group'] == target
         # Return both transformed and normal img
         img, label = _process_path(file_name, target, img_size, channels, class_names, transform=None)
         yield img, label
