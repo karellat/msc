@@ -61,7 +61,8 @@ def factory(train_files, train_targets, valid_files, valid_targets, class_names,
         rnd.shuffle(train_files)
         rnd.shuffle(valid_files)
 
-    if transform is None:
+
+    if transform is not None:
         #TODO: Solve the None string retype
         train_ds = tf.data.Dataset.from_generator(_generator,
                                                   output_types=(tf.float32, tf.bool),
