@@ -21,7 +21,7 @@ def _process_path(file_path, target, img_size, channels, class_names, transform)
     return img, label
 
 
-def _generator(file_list, target_list, img_size, channels, class_names, transform=None, shuffle=True):
+def _generator(file_list, target_list, img_size, channels, class_names, shuffle=True, transform=None):
     df = pd.read_csv('/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv')
     df = df.set_index('Image Data ID')
     df['Group'] = df['Group'].str.lower()
@@ -31,7 +31,6 @@ def _generator(file_list, target_list, img_size, channels, class_names, transfor
     for file_name, target in file_label_list:
         # TODO: Remove
 
-        logging.error(f"{file_name}-{target}")
         file_name = str(file_name, 'utf-8')
         target = str(target, 'utf-8')
         assert target == _get_image_group(file_name, -4)

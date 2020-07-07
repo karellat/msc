@@ -30,7 +30,6 @@ def _generator(file_list, target_list, normalize, downscale_ratio, class_names):
     file_label_list = list(zip(file_list, target_list))
     rnd.shuffle(file_label_list)
     for file_name, target in file_label_list:
-        logging.error(f"{file_name}-{target}")
         file_name = str(file_name, 'utf-8')
         target = str(target, 'utf-8')
         assert target == _get_image_group(file_name, -3)
@@ -56,6 +55,7 @@ def factory(train_files,
             normalize=True):
     output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
 
+    # TODO: Add shuffle
     train_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(output_shape, (len(class_names),)),
