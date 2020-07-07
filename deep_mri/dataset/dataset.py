@@ -12,8 +12,6 @@ from enum import Enum, auto
 
 from deep_mri.dataset import DEFAULT_PATH, CLASS_NAMES, DEFAULT_CSV_PATH
 
-DEFAULT_CLASS_FOLDER = -3
-
 
 def _get_label_tf(target_name, class_names):
     return target_name == class_names
@@ -52,7 +50,7 @@ def _get_image_id(name):
     return int(re.search('_image_id_([0-9]*)', name).group(1))
 
 
-def _get_image_group(file_path, class_folder=DEFAULT_CLASS_FOLDER):
+def _get_image_group(file_path, class_folder):
     parts = file_path.split(os.path.sep)
     assert np.sum(parts[class_folder] == CLASS_NAMES) == 1
     return parts[class_folder] == CLASS_NAMES

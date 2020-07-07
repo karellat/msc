@@ -37,6 +37,10 @@ def run_train(path_to_config):
     valid_filter_first_screen = config['valid_filter_first_screen']
     dataset_name = config['dataset']
     dataset_args = config['dataset_args']
+    if 'group_folder' in config:
+        group_folder = config['group_folder']
+    else:
+        group_folder = None
     if 'dropping_group' in config:
         dropping_group = config['dropping_group']
     else:
@@ -96,6 +100,7 @@ def run_train(path_to_config):
                                   dropping_group=dropping_group,
                                   data_csv_path=data_csv_path,
                                   data_path=dataset_path,
+                                  group_folder=group_folder,
                                   **dataset_args)
         logging.warning(f"Dataset: {dataset_name}")
         logging.warning(f"args: {dataset_args}")
