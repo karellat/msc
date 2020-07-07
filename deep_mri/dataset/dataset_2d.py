@@ -2,11 +2,7 @@ import numpy as np
 import tensorflow as tf
 from deep_mri.dataset.dataset import _get_label_tf
 import tensorflow_addons as tfa
-# TODO: Remove
-from deep_mri.dataset.dataset import _get_image_group, _get_image_id
-import pandas as pd
 import random as rnd
-import logging
 
 def _process_path(file_path, target, img_size, channels, class_names, transform):
     img = tf.io.read_file(file_path)
@@ -22,26 +18,12 @@ def _process_path(file_path, target, img_size, channels, class_names, transform)
 
 
 def _generator(file_list, target_list, img_size, channels, class_names, shuffle=True, transform=None):
-    df = pd.read_csv('/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv')
-    df = df.set_index('Image Data ID')
-    df['Group'] = df['Group'].str.lower()
-    meta_info = df[['Visit', 'Group', 'Subject']].to_dict('index')
     file_label_list = list(zip(file_list, target_list))
-    rnd.shuffle(file_label_list)
+    if shuffle:
+        rnd.shuffle(file_label_list)
     for file_name, target in file_label_list:
-        # TODO: Remove
-
-        str_file_name = str(file_name, 'utf-8')
-        str_target = str(target, 'utf-8')
-        assert str_target == _get_image_group(str_file_name, -4)
-        assert meta_info[_get_image_id(str_file_name)]['Group'] == str_target
-        logging.error(f"{str_target}, {_get_image_group(str_file_name, -4)}")
         # Return both transformed and normal img
         img, label = _process_path(file_name, target, img_size, channels, class_names, transform=None)
-        logging.error(class_names)
-        logging.error(label)
-        logging.error(tf.reduce_mean(img))
-        logging.error(tf.math.reduce_std(img))
         yield img, label
         if transform is not None:
             img, label = _process_path(file_name, target, img_size, channels, class_names, transform)
