@@ -13,9 +13,10 @@ def dataset_factory(dataset_name,
                     dropping_group=None,
                     group_folder=None,
                     **dataset_args):
+    dropping_group = dropping_group.lower()
     data_csv_path = DEFAULT_CSV_PATH if data_csv_path is None or data_csv_path == 'default' else data_csv_path
     class_names = CLASS_NAMES if dropping_group is None else np.array(
-        [g for g in CLASS_NAMES if g != dropping_group.lower()])
+        [g for g in CLASS_NAMES if g != dropping_group])
     group_folder = -3 if group_folder is None else group_folder
     if dataset_name.lower() == "3d":
         data_path = DEFAULT_PATH if data_path is None or data_path == 'default' else data_path
