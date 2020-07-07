@@ -1,4 +1,3 @@
-import random
 import numpy as np
 import tensorflow as tf
 from deep_mri.dataset.dataset import _get_label_tf
@@ -53,14 +52,8 @@ def _aug_factory(name, image):
         raise Exception(f"Unknown data augmentation function {name}")
 
 
-def factory(train_files, train_targets, valid_files, valid_targets, class_names, img_size=193, channels=3,
-            shuffle=True, transform=None, seed=42):
-    rnd = random.Random(seed)
+def factory(train_files, train_targets, valid_files, valid_targets, class_names, img_size=193, channels=3, transform=None):
     img_shape = np.array((img_size, img_size, channels)).astype(int)
-    if shuffle:
-        rnd.shuffle(train_files)
-        rnd.shuffle(valid_files)
-
 
     if transform is not None:
         #TODO: Solve the None string retype

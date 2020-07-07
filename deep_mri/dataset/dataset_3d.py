@@ -2,7 +2,6 @@ import tensorflow as tf
 import numpy as np
 from nilearn.image import resample_img
 import nibabel as nib
-import random
 from deep_mri.dataset import AUTOTUNE
 from deep_mri.dataset.dataset import _get_label_tf
 
@@ -38,15 +37,9 @@ def factory(train_files,
             class_names,
             img_shape=(193, 229, 193, 1),
             downscale_ratio=1,
-            normalize=True,
-            shuffle=True,
-            seed=42):
-    rnd = random.Random(seed)
-    output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
+            normalize=True):
 
-    if shuffle:
-        rnd.shuffle(train_files)
-        rnd.shuffle(valid_files)
+    output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
 
     train_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
