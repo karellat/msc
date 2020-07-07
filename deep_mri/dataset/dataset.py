@@ -149,6 +149,8 @@ def get_train_valid_files(path=DEFAULT_PATH,
         for f in files_list:
             image_id = int(im_id_fnc(f))
             target = _get_image_group(f, group_folder)
+            if target == dropping_group:
+                continue
             assert target == meta_info[image_id]['Group']
             visit = meta_info[image_id]['Visit']
             if (train_filter_first_screen or valid_filter_first_screen) and visit == 1:
