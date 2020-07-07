@@ -31,10 +31,10 @@ def _generator(file_list, target_list, img_size, channels, class_names, shuffle=
     for file_name, target in file_label_list:
         # TODO: Remove
 
-        file_name = str(file_name, 'utf-8')
-        target = str(target, 'utf-8')
-        assert target == _get_image_group(file_name, -4)
-        assert meta_info[_get_image_id(file_name)]['Group'] == target
+        str_file_name = str(file_name, 'utf-8')
+        str_target = str(target, 'utf-8')
+        assert str_target == _get_image_group(str_file_name, -4)
+        assert meta_info[_get_image_id(str_file_name)]['Group'] == str_target
         # Return both transformed and normal img
         img, label = _process_path(file_name, target, img_size, channels, class_names, transform=None)
         yield img, label
