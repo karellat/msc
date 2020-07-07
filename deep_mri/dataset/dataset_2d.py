@@ -3,6 +3,7 @@ import tensorflow as tf
 from deep_mri.dataset.dataset import _get_label_tf
 import tensorflow_addons as tfa
 import random as rnd
+import logging
 
 def _process_path(file_path, target, img_size, channels, class_names, transform):
     img = tf.io.read_file(file_path)
@@ -24,9 +25,11 @@ def _generator(file_list, target_list, img_size, channels, class_names, shuffle=
     for file_name, target in file_label_list:
         # Return both transformed and normal img
         img, label = _process_path(file_name, target, img_size, channels, class_names, transform=None)
+        logging.error(label)
         yield img, label
         if transform is not None:
             img, label = _process_path(file_name, target, img_size, channels, class_names, transform)
+            logging.error(label)
             yield img, label
 
 
