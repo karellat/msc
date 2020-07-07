@@ -95,6 +95,8 @@ def config_to_model(config):
 
     model.optimizer.learning_rate = init_lr
 
+    return model
+
 
 def config_epochs(config):
     return int(config_get_field(config, "epochs"))

@@ -53,7 +53,7 @@ def _get_image_id(name):
 def _get_image_group(file_path, class_folder):
     parts = file_path.split(os.path.sep)
     assert np.sum(parts[class_folder] == CLASS_NAMES) == 1
-    return parts[class_folder] == CLASS_NAMES
+    return CLASS_NAMES[np.argmax(parts[class_folder] == CLASS_NAMES)]
 
 
 class ShuffleStrategy(Enum):
@@ -70,7 +70,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
                           shuffle=False,
                           dropping_group=None,
                           im_id_fnc=_get_image_id,
-                          img_group_fnc=_get_image_group):
+                          group_folder=-3):
     assert dropping_group not in CLASS_NAMES, f"Unknown group to drop {dropping_group}"
     assert isinstance(shuffle_stategy, ShuffleStrategy)
 
@@ -85,7 +85,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
         subjects = {c: [] for c in CLASS_NAMES}
         for f in files_list:
             image_id = int(im_id_fnc(f))
-            target = CLASS_NAMES[np.argmax(img_group_fnc(f))]
+            target = _get_image_group(f, group_folder)
             assert target == meta_info[image_id]['Group']
             subject = meta_info[image_id]['Subject']
             visit = meta_info[image_id]['Visit']
@@ -116,7 +116,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
         valid_files = []
         for f in files_list:
             image_id = int(im_id_fnc(f))
-            target = CLASS_NAMES[np.argmax(img_group_fnc(f))]
+            target = _get_image_group(f, group_folder)
             assert target == meta_info[image_id]['Group']
             subject = meta_info[image_id]['Subject']
             visit = meta_info[image_id]['Visit']
@@ -138,8 +138,8 @@ def get_train_valid_files(path=DEFAULT_PATH,
                     logging.error(f"{image_id} appending to train set")
                     train_files.append(f)
 
-        train_targets = list(map(img_group_fnc, train_files))
-        valid_targets = list(map(img_group_fnc, valid_files))
+        train_targets = list(map(lambda x: _get_image_group(x, group_folder), train_files))
+        valid_targets = list(map(lambda x: _get_image_group(x, group_folder), valid_files))
 
         return train_files, train_targets, valid_files, valid_targets
     else:
@@ -148,7 +148,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
         non_first_visit_files = []
         for f in files_list:
             image_id = int(im_id_fnc(f))
-            target = CLASS_NAMES[np.argmax(img_group_fnc(f))]
+            target = _get_image_group(f, group_folder)
             assert target == meta_info[image_id]['Group']
             visit = meta_info[image_id]['Visit']
             if (train_filter_first_screen or valid_filter_first_screen) and visit == 1:
@@ -181,7 +181,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
                 valid_files = valid_files + non_first_visit_files
 
         # Prepare targets
-        train_targets = list(map(img_group_fnc, train_files))
-        valid_targets = list(map(img_group_fnc, valid_files))
+        train_targets = list(map(lambda x: _get_image_group(x, group_folder), train_files))
+        valid_targets = list(map(lambda x: _get_image_group(x, group_folder), valid_files))
 
         return train_files, train_targets, valid_files, valid_targets

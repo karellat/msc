@@ -24,9 +24,7 @@ def dataset_factory(dataset_name,
                                                                                        dropping_group=dropping_group,
                                                                                        train_filter_first_screen=train_filter_first_screen,
                                                                                        valid_filter_first_screen=valid_filter_first_screen,
-                                                                                       img_group_fnc=lambda
-                                                                                           x: _get_image_group(x,
-                                                                                                               group_folder))
+                                                                                       group_folder=group_folder)
         assert len(train_files) > 0
         assert len(valid_files) > 0
         return dataset_3d.factory(train_files, train_targets, valid_files, valid_targets, class_names, **dataset_args)
@@ -37,9 +35,7 @@ def dataset_factory(dataset_name,
                                                                                        train_filter_first_screen=train_filter_first_screen,
                                                                                        valid_filter_first_screen=valid_filter_first_screen,
                                                                                        dropping_group=dropping_group,
-                                                                                       img_group_fnc=lambda
-                                                                                           x: _get_image_group(x,
-                                                                                                               group_folder))
+                                                                                       group_folder=group_folder)
         assert len(train_files) > 0
         assert len(valid_files) > 0
         return dataset_2d.factory(train_files, train_targets, valid_files, valid_targets, class_names, **dataset_args)
@@ -50,8 +46,7 @@ def dataset_factory(dataset_name,
                                                                train_filter_first_screen=train_filter_first_screen,
                                                                valid_filter_first_screen=valid_filter_first_screen,
                                                                dropping_group=dropping_group,
-                                                               img_group_fnc=lambda
-                                                                   x: _get_image_group(x, group_folder))
+                                                               group_folder=group_folder)
         assert len(train_files) > 0
         assert len(valid_files) > 0
         return dataset_encoder.factory(train_files, valid_files, **dataset_args)
