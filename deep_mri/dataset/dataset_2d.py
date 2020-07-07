@@ -2,7 +2,10 @@ import numpy as np
 import tensorflow as tf
 from deep_mri.dataset.dataset import _get_label_tf
 import tensorflow_addons as tfa
-
+# TODO: Remove
+from deep_mri.dataset.dataset import _get_image_group, _get_image_id
+import pandas as pd
+import random as rnd
 
 def _process_path(file_path, target, img_size, channels, class_names, transform):
     img = tf.io.read_file(file_path)
@@ -17,8 +20,18 @@ def _process_path(file_path, target, img_size, channels, class_names, transform)
     return img, label
 
 
-def _generator(file_list, target_list, img_size, channels, class_names, transform=None):
-    for file_name, target in zip(file_list, target_list):
+def _generator(file_list, target_list, img_size, channels, class_names, transform=None, shuffle=True):
+    df = pd.read_csv('/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv')
+    df = df.set_index('Image Data ID')
+    df['Group'] = df['Group'].str.lower()
+    meta_info = df[['Visit', 'Group', 'Subject']].to_dict('index')
+    file_label_list = list(zip(file_list, target_list))
+    rnd.shuffle(file_label_list)
+    for file_name, target in file_label_list:
+        # TODO: Remove
+
+        assert target == _get_image_group(file_name, -4)
+        assert meta_info[_get_image_id(file_list)]['Group'] == target
         # Return both transformed and normal img
         img, label = _process_path(file_name, target, img_size, channels, class_names, transform=None)
         yield img, label
@@ -52,25 +65,29 @@ def _aug_factory(name, image):
         raise Exception(f"Unknown data augmentation function {name}")
 
 
-def factory(train_files, train_targets, valid_files, valid_targets, class_names, img_size=193, channels=3, transform=None):
+def factory(train_files, train_targets, valid_files, valid_targets, class_names, img_size=193, channels=3, shuffle=True,
+            transform=None):
     img_shape = np.array((img_size, img_size, channels)).astype(int)
 
     if transform is not None:
-        #TODO: Solve the None string retype
+        # TODO: Solve the None string retype
         train_ds = tf.data.Dataset.from_generator(_generator,
                                                   output_types=(tf.float32, tf.bool),
                                                   output_shapes=(img_shape, (len(class_names),)),
                                                   args=[train_files, train_targets, img_size, channels, class_names,
+                                                        shuffle,
                                                         transform])
     else:
         train_ds = tf.data.Dataset.from_generator(_generator,
                                                   output_types=(tf.float32, tf.bool),
                                                   output_shapes=(img_shape, (len(class_names),)),
-                                                  args=[train_files, train_targets, img_size, channels, class_names])
+                                                  args=[train_files, train_targets, img_size, channels, class_names,
+                                                        shuffle])
     valid_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(img_shape, (len(class_names),)),
-                                              args=[valid_files, valid_targets, img_size, channels, class_names])
+                                              args=[valid_files, valid_targets, img_size, channels, class_names,
+                                                    shuffle])
 
     train_ds = train_ds.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
     valid_ds = valid_ds.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)

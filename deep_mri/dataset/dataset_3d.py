@@ -4,7 +4,10 @@ from nilearn.image import resample_img
 import nibabel as nib
 from deep_mri.dataset import AUTOTUNE
 from deep_mri.dataset.dataset import _get_label_tf
-
+# TODO: Remove
+from deep_mri.dataset.dataset import _get_image_group, _get_image_id
+import pandas as pd
+import random as rnd
 
 def _decode_img(path, normalize, downscale_ratio):
     img = nib.load(path)
@@ -18,7 +21,16 @@ def _decode_img(path, normalize, downscale_ratio):
 
 
 def _generator(file_list, target_list, normalize, downscale_ratio, class_names):
-    for file_name, target in zip(file_list, target_list):
+    df = pd.read_csv('/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv')
+    df = df.set_index('Image Data ID')
+    df['Group'] = df['Group'].str.lower()
+    meta_info = df[['Visit', 'Group', 'Subject']].to_dict('index')
+    file_label_list = list(zip(file_list, target_list))
+    rnd.shuffle(file_label_list)
+    for file_name, target in file_label_list:
+
+        assert target == _get_image_group(file_name, -3)
+        assert meta_info[_get_image_id(file_list)]['Group'] == target
         file_name = file_name.decode('utf-8')
         img, label = _process_path(file_name, target, normalize, downscale_ratio, class_names)
         yield (img, label)
@@ -38,7 +50,6 @@ def factory(train_files,
             img_shape=(193, 229, 193, 1),
             downscale_ratio=1,
             normalize=True):
-
     output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
 
     train_ds = tf.data.Dataset.from_generator(_generator,
