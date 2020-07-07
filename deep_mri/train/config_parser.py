@@ -101,9 +101,9 @@ def config_epochs(config):
 
 
 def config_batch_size(config):
-    return int(config_get_field(config, ""))
+    return int(config_get_field(config, "batch_size"))
 
 
 def config_get_field(config, name):
-    assert name in config
+    assert name in config, f"{name} not in config."
     return config[name]

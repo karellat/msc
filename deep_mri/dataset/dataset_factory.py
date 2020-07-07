@@ -1,3 +1,5 @@
+import numpy as np
+
 from deep_mri.dataset import DEFAULT_PATH, DEFAULT_2D_PATH, DEFAULT_CSV_PATH, CLASS_NAMES
 from deep_mri.dataset import dataset_3d, dataset_2d, dataset_encoder
 from deep_mri.dataset.dataset import get_train_valid_files, _get_image_group
@@ -12,7 +14,8 @@ def dataset_factory(dataset_name,
                     group_folder=None,
                     **dataset_args):
     data_csv_path = DEFAULT_CSV_PATH if data_csv_path is None or data_csv_path == 'default' else data_csv_path
-    class_names = CLASS_NAMES if dropping_group is None else CLASS_NAMES.remove(dropping_group)
+    class_names = CLASS_NAMES if dropping_group is None else np.array(
+        [g for g in CLASS_NAMES if g != dropping_group.lower()])
     group_folder = -3 if group_folder is None else group_folder
     if dataset_name.lower() == "3d":
         data_path = DEFAULT_PATH if data_path is None or data_path == 'default' else data_path
