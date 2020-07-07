@@ -71,7 +71,8 @@ def get_train_valid_files(path=DEFAULT_PATH,
                           dropping_group=None,
                           im_id_fnc=_get_image_id,
                           group_folder=-3):
-    assert dropping_group in CLASS_NAMES, f"Unknown group to drop {dropping_group}"
+    if dropping_group is not None:
+        assert dropping_group in CLASS_NAMES, f"Unknown group to drop {dropping_group}"
     assert isinstance(shuffle_stategy, ShuffleStrategy)
 
     files_list = glob.glob(path)
