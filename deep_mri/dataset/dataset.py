@@ -65,7 +65,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
                           csv_path=DEFAULT_CSV_PATH,
                           train_filter_first_screen=True,
                           valid_filter_first_screen=False,
-                          shuffle_stategy=ShuffleStrategy.SHUFFLE_SUBJECTS,
+                          shuffle_strategy=ShuffleStrategy.SHUFFLE_SUBJECTS,
                           valid_train_ratio=0.2,
                           shuffle=False,
                           dropping_group=None,
@@ -73,7 +73,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
                           group_folder=-3):
     if dropping_group is not None:
         assert dropping_group in CLASS_NAMES, f"Unknown group to drop {dropping_group}"
-    assert isinstance(shuffle_stategy, ShuffleStrategy)
+    assert isinstance(shuffle_strategy, ShuffleStrategy)
 
     files_list = glob.glob(path)
     # meta info
@@ -81,7 +81,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
     df = df.set_index('Image Data ID')
     df['Group'] = df['Group'].str.lower()
     meta_info = df[['Visit', 'Group', 'Subject']].to_dict('index')
-    if shuffle_stategy == ShuffleStrategy.SHUFFLE_SUBJECTS:
+    if shuffle_strategy == ShuffleStrategy.SHUFFLE_SUBJECTS:
         # Split into groups by subject id
         subjects = {c: [] for c in CLASS_NAMES}
         for f in files_list:

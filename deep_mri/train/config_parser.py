@@ -24,13 +24,17 @@ def config_to_ds(config):
         dropping_group = config['dropping_group']
     else:
         dropping_group = None
-
+    if 'shuffle_strategy':
+        shuffle_strategy = config['shuffle_strategy']
+    else:
+        shuffle_strategy = None
     train_ds, valid_ds = dataset_factory(dataset_name=dataset_name,
                                          train_filter_first_screen=train_filter_first_screen,
                                          valid_filter_first_screen=valid_filter_first_screen,
                                          dropping_group=dropping_group,
                                          data_csv_path=data_csv_path,
                                          data_path=dataset_path,
+                                         shuffle_strategy=shuffle_strategy,
                                          group_folder=group_folder,
                                          **dataset_args)
 
