@@ -73,7 +73,7 @@ def get_train_valid_files(path=DEFAULT_PATH,
                           dropping_group=None,
                           im_id_fnc=_get_image_id,
                           img_group_fnc=_get_image_group):
-    assert dropping_group not in CLASS_NAMES, f"Uknown group to drop {dropping_group}"
+    assert dropping_group not in CLASS_NAMES, f"Unknown group to drop {dropping_group}"
     assert isinstance(shuffle_stategy, ShuffleStrategy)
 
     files_list = glob.glob(path)
@@ -140,7 +140,10 @@ def get_train_valid_files(path=DEFAULT_PATH,
                     logging.error(f"{image_id} appending to train set")
                     train_files.append(f)
 
-        return train_files, valid_files
+        train_targets = list(map(img_group_fnc, train_files))
+        valid_targets = list(map(img_group_fnc, valid_files))
+
+        return train_files, train_targets, valid_files, valid_targets
     else:
         # Split into groups by subject id
         groups = {c: [] for c in CLASS_NAMES}
