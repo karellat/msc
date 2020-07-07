@@ -29,8 +29,8 @@ def _generator(file_list, target_list, normalize, downscale_ratio, class_names):
     rnd.shuffle(file_label_list)
     for file_name, target in file_label_list:
 
-        file_name = file_name.decode('utf-8')
-        target = target.decode('utf-8')
+        file_name = file_name.numpy.decode('utf-8')
+        target = target.numpy.decode('utf-8')
         assert target == _get_image_group(file_name, -3)
         assert meta_info[_get_image_id(file_list)]['Group'] == target
         file_name = file_name.decode('utf-8')

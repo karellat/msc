@@ -30,8 +30,8 @@ def _generator(file_list, target_list, img_size, channels, class_names, transfor
     for file_name, target in file_label_list:
         # TODO: Remove
 
-        file_name = file_name.decode('utf-8')
-        target = target.decode('utf-8')
+        file_name = file_name.numpy.decode('utf-8')
+        target = target.numpy.decode('utf-8')
         assert target == _get_image_group(file_name, -4)
         assert meta_info[_get_image_id(file_list)]['Group'] == target
         # Return both transformed and normal img
