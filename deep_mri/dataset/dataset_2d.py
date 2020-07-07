@@ -40,6 +40,7 @@ def _generator(file_list, target_list, img_size, channels, class_names, shuffle=
         img, label = _process_path(file_name, target, img_size, channels, class_names, transform=None)
         logging.error(class_names)
         logging.error(label)
+        logging.error(img)
         yield img, label
         if transform is not None:
             img, label = _process_path(file_name, target, img_size, channels, class_names, transform)
