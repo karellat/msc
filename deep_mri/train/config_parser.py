@@ -24,7 +24,7 @@ def config_to_ds(config):
         dropping_group = config['dropping_group']
     else:
         dropping_group = None
-    if 'shuffle_strategy':
+    if 'shuffle_strategy' in config:
         shuffle_strategy = config['shuffle_strategy']
     else:
         shuffle_strategy = None
