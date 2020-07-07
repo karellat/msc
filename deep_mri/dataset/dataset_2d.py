@@ -6,6 +6,7 @@ import tensorflow_addons as tfa
 from deep_mri.dataset.dataset import _get_image_group, _get_image_id
 import pandas as pd
 import random as rnd
+import logging
 
 def _process_path(file_path, target, img_size, channels, class_names, transform):
     img = tf.io.read_file(file_path)
@@ -30,6 +31,7 @@ def _generator(file_list, target_list, img_size, channels, class_names, transfor
     for file_name, target in file_label_list:
         # TODO: Remove
 
+        logging.error(f"{file_name}-{target}")
         file_name = str(file_name, 'utf-8')
         target = str(target, 'utf-8')
         assert target == _get_image_group(file_name, -4)

@@ -8,6 +8,8 @@ from deep_mri.dataset.dataset import _get_label_tf
 from deep_mri.dataset.dataset import _get_image_group, _get_image_id
 import pandas as pd
 import random as rnd
+import logging
+
 
 def _decode_img(path, normalize, downscale_ratio):
     img = nib.load(path)
@@ -28,7 +30,7 @@ def _generator(file_list, target_list, normalize, downscale_ratio, class_names):
     file_label_list = list(zip(file_list, target_list))
     rnd.shuffle(file_label_list)
     for file_name, target in file_label_list:
-
+        logging.error(f"{file_name}-{target}")
         file_name = str(file_name, 'utf-8')
         target = str(target, 'utf-8')
         assert target == _get_image_group(file_name, -3)
