@@ -1,7 +1,10 @@
 import os
-from deep_mri.dataset import dataset_factory
+from deep_mri.dataset import dataset_factory, CLASS_NAMES
 import tensorflow as tf
+import numpy as np
+
 from deep_mri.model_zoo import model_factory
+from .callbacks import SaveConfigCallback, DummyPredictorCallback, ConfusionMatrixCallback
 
 
 def config_to_ds(config):
@@ -41,7 +44,7 @@ def config_to_ds(config):
     return train_ds, valid_ds
 
 
-def config_to_callbacks(config):
+def config_to_callbacks(config, train_ds, valid_ds, class_names):
     assert "callbacks" in config
     callbacks_names = config['callbacks'] if 'callbacks' in config else []
     # Logs setting
@@ -65,14 +68,39 @@ def config_to_callbacks(config):
             tf.keras.callbacks.ModelCheckpoint(os.path.join(log_dir, 'models'),
                                                save_best_only=True)
         )
+    if 'save_config' in callbacks_names:
+        log_root = config['log_root']
+        log_name = config['log_name']
+        log_dir = os.path.join(log_root, log_name)
+        callbacks.append(
+            SaveConfigCallback(log_dir, config)
+        )
+    if 'dummy' in callbacks_names:
+        callbacks.append(
+            DummyPredictorCallback(train_ds, valid_ds)
+        )
+    if 'cm' in callbacks_names:
+        log_root = config['log_root']
+        log_name = config['log_name']
+        log_dir = os.path.join(log_root, log_name)
+        if 'dropping_group' in config:
+            dropping_group = config['dropping_group']
+            dropping_group = dropping_group.lower()
+            class_names = np.array([g for g in CLASS_NAMES if g != dropping_group])
+            assert dropping_group in CLASS_NAMES, f"Unknown group to drop {dropping_group}"
+        else:
+            class_names = CLASS_NAMES
+        callbacks.append(
+            ConfusionMatrixCallback(valid_ds, class_names, log_dir)
+        )
     if 'lr_poly' in callbacks_names:
         assert "epochs" in config
         epochs = config["epochs"]
         init_lr = config['init_lr'] if "init_lr" in config else 0.001
-        schedular = tf.keras.optimizers.schedules.PolynomialDecay(initial_learning_rate=init_lr,
+        scheduler = tf.keras.optimizers.schedules.PolynomialDecay(initial_learning_rate=init_lr,
                                                                   decay_steps=epochs,
                                                                   end_learning_rate=init_lr / 100)
-        callbacks.append(tf.keras.callbacks.LearningRateScheduler(schedule=schedular))
+        callbacks.append(tf.keras.callbacks.LearningRateScheduler(schedule=scheduler))
     if 'early_stop' in callbacks_names:
         callbacks.append(tf.keras.callbacks.EarlyStopping(patience=10))
 

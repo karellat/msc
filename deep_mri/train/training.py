@@ -18,7 +18,7 @@ def run_train(path_to_config, overriding_config):
 
     train_ds, valid_ds = config_to_ds(config)
     model = config_to_model(config)
-    callbacks = config_to_callbacks(config)
+    callbacks = config_to_callbacks(config, train_ds, valid_ds)
     batch_size = config_batch_size(config)
     epochs = config_epochs(config)
 
