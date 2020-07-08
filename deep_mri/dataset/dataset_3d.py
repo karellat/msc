@@ -4,15 +4,11 @@ from nilearn.image import resample_img
 import nibabel as nib
 from deep_mri.dataset import AUTOTUNE
 from deep_mri.dataset.dataset import _get_label_tf
-# TODO: Remove
-from deep_mri.dataset.dataset import _get_image_group, _get_image_id
-import pandas as pd
 import random as rnd
-import logging
 
 
 def _decode_img(path, normalize, downscale_ratio):
-    img = nib.load(str(path,'utf-8'))
+    img = nib.load(str(path, 'utf-8'))
     if downscale_ratio is not None and downscale_ratio != 1:
         img = resample_img(img, target_affine=np.eye(3) * downscale_ratio)
     tensor = tf.convert_to_tensor(img.get_fdata(), tf.float32)
@@ -22,18 +18,11 @@ def _decode_img(path, normalize, downscale_ratio):
     return tensor
 
 
-def _generator(file_list, target_list, normalize, downscale_ratio, class_names):
-    df = pd.read_csv('/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv')
-    df = df.set_index('Image Data ID')
-    df['Group'] = df['Group'].str.lower()
-    meta_info = df[['Visit', 'Group', 'Subject']].to_dict('index')
+def _generator(file_list, target_list, normalize, downscale_ratio, class_names, shuffle):
     file_label_list = list(zip(file_list, target_list))
-    rnd.shuffle(file_label_list)
+    if shuffle:
+        rnd.shuffle(file_label_list)
     for file_name, target in file_label_list:
-        str_file_name = str(file_name, 'utf-8')
-        str_target = str(target, 'utf-8')
-        assert str_target == _get_image_group(str_file_name, -3)
-        assert meta_info[_get_image_id(str_file_name)]['Group'] == str_target
         img, label = _process_path(file_name, target, normalize, downscale_ratio, class_names)
         yield (img, label)
 
@@ -51,20 +40,20 @@ def factory(train_files,
             class_names,
             img_shape=(193, 229, 193, 1),
             downscale_ratio=1,
-            normalize=True):
+            normalize=True,
+            shuffle=True):
     output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
 
-    # TODO: Add shuffle
     train_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(output_shape, (len(class_names),)),
                                               args=[train_files, train_targets, normalize, downscale_ratio,
-                                                    class_names])
+                                                    class_names, shuffle])
     valid_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(output_shape, (len(class_names),)),
                                               args=[valid_files, valid_targets, normalize, downscale_ratio,
-                                                    class_names])
+                                                    class_names, shuffle])
 
     train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
     valid_ds = valid_ds.prefetch(buffer_size=AUTOTUNE)
