@@ -85,8 +85,6 @@ class ConfusionMatrixCallback(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
         pred_raw = self.model.predict(self.ds.batch(1))
         pred = np.argmax(pred_raw, axis=1)
-        print(pred)
-        print(self.labels)
         cm = sklearn.metrics.confusion_matrix(self.labels, pred)
         figure = plot_confusion_matrix(cm, self.class_names)
         img = plot_to_image(figure)
