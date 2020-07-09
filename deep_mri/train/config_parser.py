@@ -44,7 +44,7 @@ def config_to_ds(config):
     return train_ds, valid_ds
 
 
-def config_to_callbacks(config, train_ds, valid_ds, class_names):
+def config_to_callbacks(config, train_ds, valid_ds):
     assert "callbacks" in config
     callbacks_names = config['callbacks'] if 'callbacks' in config else []
     # Logs setting
