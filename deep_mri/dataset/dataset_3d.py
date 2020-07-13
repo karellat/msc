@@ -60,3 +60,34 @@ def factory(train_files,
     valid_ds = valid_ds.prefetch(buffer_size=AUTOTUNE)
 
     return train_ds, valid_ds
+
+
+def _encoder_generator(file_list, normalize, out_shape, shuffle):
+    if shuffle:
+        rnd.shuffle(file_list)
+    for file_name in file_list:
+        img = _decode_img(file_name, normalize, out_shape)
+        yield (img, img)
+
+
+def encoder_factory(train_files,
+                    valid_files,
+                    img_shape=(193, 229, 193, 1),
+                    downscale_ratio=1,
+                    normalize=True,
+                    shuffle=True):
+    output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
+
+    train_ds = tf.data.Dataset.from_generator(_encoder_generator,
+                                              output_types=(tf.float32, tf.bool),
+                                              output_shapes=(output_shape, output_shape),
+                                              args=[train_files, normalize, output_shape[:-1], shuffle])
+    valid_ds = tf.data.Dataset.from_generator(_encoder_generator,
+                                              output_types=(tf.float32, tf.bool),
+                                              output_shapes=(output_shape, output_shape),
+                                              args=[valid_files, normalize, output_shape[:-1], shuffle])
+
+    train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
+    valid_ds = valid_ds.prefetch(buffer_size=AUTOTUNE)
+
+    return train_ds, valid_ds
