@@ -11,7 +11,7 @@ def _decode_img(path, normalize, out_shape):
     path = str(path, 'utf-8')
     img = Image(path)
     if out_shape is not None:
-        img, _ = resample.resample(img, out_shape)
+        img, _ = resample.resample(np.array(img), out_shape)
     tensor = tf.convert_to_tensor(img.data, tf.float32)
     tensor = tf.expand_dims(tensor, -1)
     if normalize:
@@ -48,12 +48,12 @@ def factory(train_files,
     train_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(output_shape, (len(class_names),)),
-                                              args=[train_files, train_targets, normalize, output_shape,
+                                              args=[train_files, train_targets, normalize, output_shape[:-1],
                                                     class_names, shuffle])
     valid_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
                                               output_shapes=(output_shape, (len(class_names),)),
-                                              args=[valid_files, valid_targets, normalize, output_shape,
+                                              args=[valid_files, valid_targets, normalize, output_shape[:-1],
                                                     class_names, shuffle])
 
     train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
