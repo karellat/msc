@@ -11,8 +11,8 @@ def _decode_img(path, normalize, out_shape):
     path = str(path, 'utf-8')
     img = Image(path)
     if out_shape is not None:
-        img, _ = resample.resample(np.array(img), out_shape)
-    tensor = tf.convert_to_tensor(img.data, tf.float32)
+        img, _ = resample.resample(img, out_shape)
+    tensor = tf.convert_to_tensor(np.array(img.data), tf.float32)
     tensor = tf.expand_dims(tensor, -1)
     if normalize:
         tensor /= 255.0

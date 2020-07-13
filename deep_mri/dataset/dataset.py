@@ -134,9 +134,9 @@ def get_train_valid_files(path=DEFAULT_PATH,
                 valid_files.append(f)
             else:
                 assert visit != 1, "None seen imgs"
-                logging.error(f"Image {image_id} without first visit, subject {subject}")
+                logging.info(f"Image {image_id} without first visit, subject {subject}")
                 if not train_filter_first_screen:
-                    logging.error(f"{image_id} appending to train set")
+                    logging.info(f"{image_id} appending to train set")
                     train_files.append(f)
 
         train_targets = list(map(lambda x: _get_image_group(x, group_folder), train_files))
