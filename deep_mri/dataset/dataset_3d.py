@@ -72,11 +72,10 @@ def _encoder_generator(file_list, normalize, out_shape, shuffle):
 
 def encoder_factory(train_files,
                     valid_files,
-                    img_shape=(193, 229, 193, 1),
-                    downscale_ratio=1,
+                    output_shape=(193, 229, 193, 1),
                     normalize=True,
                     shuffle=True):
-    output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
+    output_shape = np.array(output_shape).astype(int)
 
     train_ds = tf.data.Dataset.from_generator(_encoder_generator,
                                               output_types=(tf.float32, tf.bool),
