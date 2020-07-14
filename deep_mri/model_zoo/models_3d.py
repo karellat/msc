@@ -272,7 +272,7 @@ class _ResnetBlock(tf.keras.Model):
 
 def karasawa_model(input_shape):
     return tf.keras.Sequential([
-        tf.keras.layers.Input([96, 96, 64, 1]),
+        tf.keras.layers.Input(input_shape),
         tf.keras.layers.Conv3D(16, 5, strides=2, activation='relu', padding='same'),
         _ResnetBlock(3, 16),
         _ResnetBlock(3, 16),
