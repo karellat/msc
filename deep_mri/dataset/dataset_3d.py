@@ -41,9 +41,11 @@ def factory(train_files,
             class_names,
             img_shape=(193, 229, 193, 1),
             downscale_ratio=1,
+            output_shape=None,
             normalize=True,
             shuffle=True):
-    output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
+    if output_shape is None:
+        output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
 
     train_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
