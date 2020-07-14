@@ -200,9 +200,23 @@ def liu_model(input_shape=(97, 115, 97, 1), f=8):
         ])
 
 
+def hosseini_encoder_1(input_shape):
+    outputs = []
+    input_layer = tf.keras.layers.Input(input_shape)
+    for i in range(8):
+        layer = tf.keras.layers.Conv3D(1, 3, 1, 'same', activation='relu')(input_layer)
+        layer = tf.keras.layers.MaxPool3D(2, 2, )(layer)
+        layer = tf.keras.layers.Conv3DTranspose(1, 3, 2, 'same', activation='relu')(layer)
+        outputs.append(layer)
+    add_layer = tf.keras.layers.Add()(outputs)
+    return tf.keras.Model(inputs=input_layer, outputs=add_layer)
+
+
 def factory(model_name, **model_args):
     if model_name.lower() == "martin":
         return martin_model(**model_args)
+    elif model_name.lower() == 'hosseini1':
+        return hosseini_encoder_1(**model_args)
     elif model_name.lower() == 'liu':
         return liu_model(**model_args)
     elif model_name.lower() == "payan":
