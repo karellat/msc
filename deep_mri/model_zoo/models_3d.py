@@ -212,10 +212,102 @@ def hosseini_encoder_1(input_shape):
     return tf.keras.Model(inputs=input_layer, outputs=add_layer)
 
 
+def hosseini_encoder_2(input_shape):
+    outputs = []
+    input_layer = tf.keras.layers.Input(input_shape)
+    for i in range(8):
+        layer = tf.keras.layers.Conv3D(1, 3, 1, 'same', activation='relu')(input_layer)
+        layer = tf.keras.layers.MaxPool3D(2, 2, )(layer)
+        layer = tf.keras.layers.Conv3D(1, 3, 1, 'same', activation='relu')(layer)
+        layer = tf.keras.layers.MaxPool3D(2, 2, )(layer)
+        layer = tf.keras.layers.Conv3DTranspose(1, 3, 2, 'same', activation='relu')(layer)
+        layer = tf.keras.layers.Conv3DTranspose(1, 3, 2, 'same', activation='relu')(layer)
+        outputs.append(layer)
+    add_layer = tf.keras.layers.Add()(outputs)
+    return tf.keras.Model(inputs=input_layer, outputs=add_layer)
+
+
+def hosseini_encoder_3(input_shape):
+    outputs = []
+    input_layer = tf.keras.layers.Input(input_shape)
+    for i in range(8):
+        layer = tf.keras.layers.Conv3D(1, 3, 1, 'same', activation='relu')(input_layer)
+        layer = tf.keras.layers.MaxPool3D(2, 2, )(layer)
+        layer = tf.keras.layers.Conv3D(1, 3, 1, 'same', activation='relu')(layer)
+        layer = tf.keras.layers.MaxPool3D(2, 2, )(layer)
+        layer = tf.keras.layers.Conv3D(1, 3, 1, 'same', activation='relu')(layer)
+        layer = tf.keras.layers.MaxPool3D(2, 2, )(layer)
+        layer = tf.keras.layers.Conv3DTranspose(1, 3, 2, 'same', activation='relu')(layer)
+        layer = tf.keras.layers.Conv3DTranspose(1, 3, 2, 'same', activation='relu')(layer)
+        layer = tf.keras.layers.Conv3DTranspose(1, 3, 2, 'same', activation='relu')(layer)
+        outputs.append(layer)
+    add_layer = tf.keras.layers.Add()(outputs)
+    return tf.keras.Model(inputs=input_layer, outputs=add_layer)
+
+
+class _ResnetBlock(tf.keras.Model):
+    def __init__(self, kernel_size, filters, enlarge=False, strides=1):
+        super(_ResnetBlock, self).__init__(name='')
+
+        self.conva = tf.keras.layers.Conv3D(filters, kernel_size, activation='relu', padding='same')
+        self.convb = tf.keras.layers.Conv3D(filters, kernel_size, strides=strides, activation=None, padding='same')
+        if enlarge:
+            self.conv = tf.keras.layers.Conv3D(filters, 1, strides=strides, activation=None, padding='same')
+        else:
+            self.conv = None
+        self.acti = tf.keras.layers.Activation('relu')
+        self.add = tf.keras.layers.Add()
+
+    def call(self, input_tensor, training=False):
+        x = self.conva(input_tensor)
+        x = self.convb(x)
+
+        if self.conv is not None:
+            input_tensor = self.conv(input_tensor)
+        x = self.add([x, input_tensor])
+        x = self.acti(x)
+
+        return x
+
+
+def karasawa_model(input_shape):
+    return tf.keras.Sequential([
+        tf.keras.layers.Input([96, 96, 64, 1]),
+        tf.keras.layers.Conv3D(16, 5, strides=2, activation='relu', padding='same'),
+        _ResnetBlock(3, 16),
+        _ResnetBlock(3, 16),
+        _ResnetBlock(3, 32, enlarge=True, strides=2),
+        _ResnetBlock(3, 32),
+        _ResnetBlock(3, 32),
+        _ResnetBlock(3, 32),
+        _ResnetBlock(3, 64, enlarge=True, strides=2),
+        _ResnetBlock(3, 64),
+        _ResnetBlock(3, 64),
+        _ResnetBlock(3, 64),
+        _ResnetBlock(3, 64),
+        _ResnetBlock(3, 64),
+        _ResnetBlock(3, 128, enlarge=True, strides=2),
+        _ResnetBlock(3, 128),
+        _ResnetBlock(3, 128),
+        _ResnetBlock(3, 128),
+        _ResnetBlock(3, 128, enlarge=True, strides=2),
+        tf.keras.layers.Dropout(0.5),
+        tf.keras.layers.AveragePooling3D(),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(3, activation='softmax')
+    ])
+
+
 def factory(model_name, **model_args):
     if model_name.lower() == "martin":
         return martin_model(**model_args)
+    elif model_name.lower() == 'karasawa':
+        return karasawa_model(**model_args)
     elif model_name.lower() == 'hosseini1':
+        return hosseini_encoder_1(**model_args)
+    elif model_name.lower() == 'hosseini2':
+        return hosseini_encoder_1(**model_args)
+    elif model_name.lower() == 'hosseini3':
         return hosseini_encoder_1(**model_args)
     elif model_name.lower() == 'liu':
         return liu_model(**model_args)
