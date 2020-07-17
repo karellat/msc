@@ -80,6 +80,26 @@ class PayanEncoder(tf.keras.Model):
         return out_l
 
 
+def payan2():
+    input_layer = tf.keras.layers.Input((5, 5, 5, 1))
+    conv1 = tf.keras.layers.Conv3D(150, 5, activation='sigmoid', padding='same',
+                                   kernel_regularizer=tf.keras.regularizers.l2(0.1))(input_layer)
+    conv2 = tf.keras.layers.Conv3D(150, 5, activation='sigmoid', padding='same',
+                                   kernel_regularizer=tf.keras.regularizers.l2(0.1))(input_layer)
+    conv3 = tf.keras.layers.Conv3D(150, 5, activation='sigmoid', padding='same',
+                                   kernel_regularizer=tf.keras.regularizers.l2(0.1))(input_layer)
+
+    max1 = tf.keras.layers.MaxPool3D(5)(conv1)
+    max2 = tf.keras.layers.MaxPool3D(5)(conv2)
+    max3 = tf.keras.layers.MaxPool3D(5)(conv3)
+    conc = tf.keras.layers.Concatenate()([max1, max2, max3])
+    flat = tf.keras.layers.Flatten()(conc)
+    fc = tf.keras.layers.Dense(125, activation='sigmoid')(flat)
+    rs = tf.keras.layers.Reshape((5, 5, 5, 1))(fc)
+
+    return tf.keras.Model(inputs=input_layer, outputs=rs)
+
+
 def my_encoder(init_filters=256,
                input_shape=(32, 32, 32, 1)):
     pretrained_layers = ['conv1', 'maxp1', 'conv2', 'maxp2', 'conv3', 'maxp3']
@@ -115,6 +135,8 @@ def factory(model_name, **model_args):
         return my_encoder(**model_args)
     elif model_name.lower() == 'payan':
         return PayanEncoder(**model_args)
+    elif model_name.lower() == 'payan2':
+        return payan2(**model_args)
     elif model_name.lower() == "cae":
         return cae(**model_args)
     else:
