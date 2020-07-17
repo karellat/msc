@@ -14,7 +14,6 @@ def payan_montana_model(input_shape=(97, 115, 97, 1),
                         batch_norm=False,
                         dropout=0.5,
                         fc_size=800):
-    # TODO: add paper name
     assert len(input_shape) == 4
 
     input_layer = tf.keras.layers.Input(input_shape, name=f'Input')
@@ -306,9 +305,9 @@ def factory(model_name, **model_args):
     elif model_name.lower() == 'hosseini1':
         return hosseini_encoder_1(**model_args)
     elif model_name.lower() == 'hosseini2':
-        return hosseini_encoder_1(**model_args)
+        return hosseini_encoder_2(**model_args)
     elif model_name.lower() == 'hosseini3':
-        return hosseini_encoder_1(**model_args)
+        return hosseini_encoder_3(**model_args)
     elif model_name.lower() == 'liu':
         return liu_model(**model_args)
     elif model_name.lower() == "payan":
