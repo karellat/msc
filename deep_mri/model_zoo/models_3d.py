@@ -244,6 +244,25 @@ def hosseini_encoder_3(input_shape):
     return tf.keras.Model(inputs=input_layer, outputs=add_layer)
 
 
+def hosseini_classifier(input_shape):
+    outputs = []
+    input_layer = tf.keras.layers.Input(input_shape)
+    for i in range(8):
+        layer = tf.keras.layers.Conv3D(1, 3, 1, 'same', activation='relu')(input_layer)
+        layer = tf.keras.layers.MaxPool3D(2, 2, )(layer)
+        layer = tf.keras.layers.Conv3D(1, 3, 1, 'same', activation='relu')(layer)
+        layer = tf.keras.layers.MaxPool3D(2, 2, )(layer)
+        layer = tf.keras.layers.Conv3D(1, 3, 1, 'same', activation='relu')(layer)
+        layer = tf.keras.layers.MaxPool3D(2, 2, )(layer)
+        outputs.append(layer)
+    concat_layer = tf.keras.layers.Concatenate()(outputs)
+    flat_layer = tf.keras.layers.Flatten()(concat_layer)
+    fc1 = tf.keras.layers.Dense(2000, activation='relu')(flat_layer)
+    fc2 = tf.keras.layers.Dense(500, activation='relu')(fc1)
+    class_layer = tf.keras.layers.Dense(3, activation='relu')(fc2)
+    return tf.keras.Model(inputs=input_layer, outputs=class_layer)
+
+
 class _ResnetBlock(tf.keras.Model):
     def __init__(self, kernel_size, filters, enlarge=False, strides=1):
         super(_ResnetBlock, self).__init__(name='')
@@ -307,6 +326,8 @@ def factory(model_name, **model_args):
     elif model_name.lower() == 'hosseini2':
         return hosseini_encoder_2(**model_args)
     elif model_name.lower() == 'hosseini3':
+        return hosseini_encoder_3(**model_args)
+    elif model_name.lower() == 'hosseiniclass':
         return hosseini_encoder_3(**model_args)
     elif model_name.lower() == 'liu':
         return liu_model(**model_args)
