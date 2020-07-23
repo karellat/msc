@@ -259,7 +259,7 @@ def hosseini_classifier(input_shape):
     flat_layer = tf.keras.layers.Flatten()(concat_layer)
     fc1 = tf.keras.layers.Dense(2000, activation='relu')(flat_layer)
     fc2 = tf.keras.layers.Dense(500, activation='relu')(fc1)
-    class_layer = tf.keras.layers.Dense(3, activation='relu')(fc2)
+    class_layer = tf.keras.layers.Dense(3, activation='softmax')(fc2)
     return tf.keras.Model(inputs=input_layer, outputs=class_layer)
 
 
