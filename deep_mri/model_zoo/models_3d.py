@@ -328,7 +328,7 @@ def factory(model_name, **model_args):
     elif model_name.lower() == 'hosseini3':
         return hosseini_encoder_3(**model_args)
     elif model_name.lower() == 'hosseiniclass':
-        return hosseini_encoder_3(**model_args)
+        return hosseini_classifier(**model_args)
     elif model_name.lower() == 'liu':
         return liu_model(**model_args)
     elif model_name.lower() == "payan":
