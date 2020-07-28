@@ -16,7 +16,7 @@ all_files = []
 for (dirpath, dirnames, filenames) in os.walk(INPUT_PATH):
     for f in filenames:
         if f.endswith("nii"):
-            for i in re.split("_|\.", f):
+            for i in re.split("[_.]", f):
                 if re.search("^I[0-9]+$", i):
                     all_files.append(int(i[1:]))
 all_files = set(all_files)

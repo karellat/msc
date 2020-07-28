@@ -16,7 +16,7 @@ all_files = []
 for (dirpath, dirnames, filenames) in os.walk(INPUT_PATH):
     for f in filenames:
         if f.endswith("nii"):
-            all_files.append(int(re.split("_|\.", f)[-2][1:]))
+            all_files.append(int(re.split("[_.]", f)[-2][1:]))
 all_files = set(all_files)
 
 mci_img_ids = list(set(df.loc[df['Group'] == 'MCI']['Image Data ID'].unique()) & all_files)
