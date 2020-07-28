@@ -34,7 +34,7 @@ logger.warning(f"MCI images {len(mci_img_ids)}, CN images {len(cn_img_ids)}, AD 
 import os
 import nipype.interfaces.io as nio
 from nipype import SelectFiles, Node, Workflow, IdentityInterface
-from .nipype_ext import Nii2Mnc, MincBeast, MincProduct, BeastNormalize, Mnc2Nii
+from deep_mri.preprocess.nipype_ext import Nii2Mnc, MincBeast, MincProduct, BeastNormalize, Mnc2Nii
 
 id_lists["test"] = id_lists['ad'][:10]
 

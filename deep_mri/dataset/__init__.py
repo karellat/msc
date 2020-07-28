@@ -1,3 +1,8 @@
+"""
+Module for the data operations such as loading, data augmentation, rescaling.
+Creates tensorflow Dataset instances to provide simple usage in training cycle.
+It can used either as part of the training module or as separated functions for loading the preprocessed datasets.
+"""
 import tensorflow as tf
 import numpy as np
 
