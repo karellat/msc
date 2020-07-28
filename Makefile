@@ -1,17 +1,15 @@
 ADNI_DATA='/data/tkarella/ADNI/MRI/'
 CON_NAME="tkarellla_con"
-
-ifeq (, $(shell which nvidia-docker))
-	DOCKER=docker
-else
-	DOCKER=nvidia-docker
-endif
+DOCKER=docker
 
 build: 
 	docker build --tag my_neuro .
 
 # Fixing mounting wsl fsl 
 SOURCE_PATH=$(shell pwd | sed 's/^\/mnt//g')
+
+generate_doc:
+    pdoc --html --output-dir docs --force deep_mri
 
 run_docker: 
 	$(DOCKER) run \
