@@ -12,10 +12,6 @@ def run_train(path_to_config, overriding_config):
         logging.warning(f"Overriding config {key} to {value}")
         config[key] = value
 
-    # TODO: Copy config callback
-    # TODO: Other stats,
-    # TODO: Iterate over various stuff
-
     train_ds, valid_ds = config_to_ds(config)
     model = config_to_model(config)
     callbacks = config_to_callbacks(config, train_ds, valid_ds)

@@ -121,4 +121,4 @@ def string_to_model(model_name, layers_text, input_shape, num_output=3):
         layers.append(last_layer)
     last_layer = tf.keras.layers.Flatten()(last_layer)
     output_layer = tf.keras.layers.Dense(num_output, activation='softmax')(last_layer)
-    return tf.keras.Model(inputs=input_layer, outputs=output_layer,name=model_name)
+    return tf.keras.Model(inputs=input_layer, outputs=output_layer, name=model_name)

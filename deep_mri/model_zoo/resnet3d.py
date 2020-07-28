@@ -83,14 +83,14 @@ def basic_block(filters,
                                            )(input)
         else:
             conv1 = _conv3d_relu(filters=filters,
-                                    kernel_size=(3, 3, 3),
-                                    strides=strides,
-                                    kernel_regularizer=kernel_regularizer
-                                    )(input)
+                                 kernel_size=(3, 3, 3),
+                                 strides=strides,
+                                 kernel_regularizer=kernel_regularizer
+                                 )(input)
 
         residual = _conv3d_relu(filters=filters, kernel_size=(3, 3, 3),
-                                   kernel_regularizer=kernel_regularizer
-                                   )(conv1)
+                                kernel_regularizer=kernel_regularizer
+                                )(conv1)
         return _shortcut3d(input, residual)
 
     return f
@@ -102,16 +102,16 @@ def bottleneck(filters, strides=(1, 1, 1), kernel_regularizer='l2',
 
     def f(input):
         conv_1_1 = _conv3d_relu(filters=filters, kernel_size=(1, 1, 1),
-                                       strides=strides,
-                                       kernel_regularizer=kernel_regularizer
-                                       )(input)
+                                strides=strides,
+                                kernel_regularizer=kernel_regularizer
+                                )(input)
 
         conv_3_3 = _conv3d_relu(filters=filters, kernel_size=(3, 3, 3),
-                                   kernel_regularizer=kernel_regularizer
-                                   )(conv_1_1)
+                                kernel_regularizer=kernel_regularizer
+                                )(conv_1_1)
         residual = _conv3d_relu(filters=filters * 4, kernel_size=(1, 1, 1),
-                                   kernel_regularizer=kernel_regularizer
-                                   )(conv_3_3)
+                                kernel_regularizer=kernel_regularizer
+                                )(conv_3_3)
 
         return _shortcut3d(input, residual)
 
@@ -168,9 +168,9 @@ class Resnet3DBuilder(object):
         input = tf.keras.Input(shape=input_shape)
         # first conv
         conv1 = _conv3d_relu(filters=first_filters, kernel_size=(7, 7, 7),
-                                strides=(2, 2, 2),
-                                kernel_regularizer="l2"
-                                )(input)
+                             strides=(2, 2, 2),
+                             kernel_regularizer="l2"
+                             )(input)
         pool1 = tf.keras.layers.MaxPooling3D(pool_size=(3, 3, 3), strides=(2, 2, 2),
                                              padding="same")(conv1)
 

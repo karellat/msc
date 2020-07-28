@@ -1,6 +1,5 @@
 import click
 
-
 from deep_mri.train.training import run_train
 
 

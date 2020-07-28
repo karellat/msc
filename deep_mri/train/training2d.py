@@ -8,7 +8,8 @@ from sklearn.metrics import confusion_matrix
 from deep_mri.dataset.dataset import ImgReshape
 import itertools
 
-# Functions 
+
+# Functions
 def plot_to_image(figure):
     """Converts the matplotlib plot specified by 'figure' to a PNG image and
     returns it. The supplied figure is closed and inaccessible after this call."""
@@ -24,6 +25,7 @@ def plot_to_image(figure):
     # Add the batch dimension
     image = tf.expand_dims(image, 0)
     return image
+
 
 def plot_confusion_matrix(cm, class_names):
     """
@@ -55,8 +57,9 @@ def plot_confusion_matrix(cm, class_names):
     plt.xlabel('Predicted label')
     return figure
 
+
 def log_confusion_matrix(epoch, logs):
-  # Use the model to predict the values from the validation dataset.
+    # Use the model to predict the values from the validation dataset.
     test_pred_raw = model.predict(valid_ds)
     test_pred = np.argmax(test_pred_raw, axis=1)
     labels = np.concatenate(list(valid_ds.map(lambda img, label: label).as_numpy_iterator()))
@@ -70,7 +73,8 @@ def log_confusion_matrix(epoch, logs):
     # Log the confusion matrix as an image summary.
     with file_writer_cm.as_default():
         tf.summary.image("Confusion Matrix", cm_image, step=epoch)
-        
+
+
 def lr_schedule(epoch):
     """
     Returns a custom learning rate that decreases as epochs progress.
@@ -78,38 +82,39 @@ def lr_schedule(epoch):
     learning_rate = 0.001
     if epoch > 70:
         learning_rate = learning_rate * (0.96 ** (epoch - 70))
- 
+
     tf.summary.scalar('learning rate', data=learning_rate, step=epoch)
     return learning_rate
 
-# Preprocessing 
+
+# Preprocessing
 
 # Iterate over preprecessing 
 urls = [
 
-        #"https://tfhub.dev/tensorflow/resnet_50/feature_vector/1",
-        #"https://tfhub.dev/google/imagenet/inception_resnet_v2/feature_vector/4",
-        #"https://tfhub.dev/google/imagenet/resnet_v1_152/feature_vector/4",
-        #"https://tfhub.dev/google/tf2-preview/inception_v3/feature_vector/4",
-        #"https://tfhub.dev/google/inaturalist/inception_v3/feature_vector/4",
-        #"https://tfhub.dev/google/bit/m-r50x1/1",
-        #"https://tfhub.dev/google/imagenet/pnasnet_large/feature_vector/4",
-        #"https://tfhub.dev/tensorflow/efficientnet/b7/feature-vector/1",
-        #"https://tfhub.dev/tensorflow/efficientnet/b1/feature-vector/1",
-        #"https://tfhub.dev/tensorflow/efficientnet/b2/feature-vector/1",
-        #"https://tfhub.dev/tensorflow/efficientnet/b4/feature-vector/1",
-        "https://tfhub.dev/tensorflow/efficientnet/b3/feature-vector/1",
-        "https://tfhub.dev/tensorflow/efficientnet/b0/feature-vector/1",
-        "https://tfhub.dev/tensorflow/efficientnet/b6/feature-vector/1",
-        #"https://tfhub.dev/google/imagenet/mobilenet_v1_100_128/feature_vector/4",
-        ]
+    # "https://tfhub.dev/tensorflow/resnet_50/feature_vector/1",
+    # "https://tfhub.dev/google/imagenet/inception_resnet_v2/feature_vector/4",
+    # "https://tfhub.dev/google/imagenet/resnet_v1_152/feature_vector/4",
+    # "https://tfhub.dev/google/tf2-preview/inception_v3/feature_vector/4",
+    # "https://tfhub.dev/google/inaturalist/inception_v3/feature_vector/4",
+    # "https://tfhub.dev/google/bit/m-r50x1/1",
+    # "https://tfhub.dev/google/imagenet/pnasnet_large/feature_vector/4",
+    # "https://tfhub.dev/tensorflow/efficientnet/b7/feature-vector/1",
+    # "https://tfhub.dev/tensorflow/efficientnet/b1/feature-vector/1",
+    # "https://tfhub.dev/tensorflow/efficientnet/b2/feature-vector/1",
+    # "https://tfhub.dev/tensorflow/efficientnet/b4/feature-vector/1",
+    "https://tfhub.dev/tensorflow/efficientnet/b3/feature-vector/1",
+    "https://tfhub.dev/tensorflow/efficientnet/b0/feature-vector/1",
+    "https://tfhub.dev/tensorflow/efficientnet/b6/feature-vector/1",
+    # "https://tfhub.dev/google/imagenet/mobilenet_v1_100_128/feature_vector/4",
+]
 
 EPOCHS = 300
-#TODO:  Solve smaller nets
+# TODO:  Solve smaller nets
 non_compatible = ["https://tfhub.dev/google/imagenet/mobilenet_v2_050_96/feature_vector/4",
                   "https://tfhub.dev/google/imagenet/mobilenet_v2_075_96/feature_vector/4"]
 
-out_shapes= [ (193, 193), (229, 229), (331, 331), (128,128), (224,224)]
+out_shapes = [(193, 193), (229, 229), (331, 331), (128, 128), (224, 224)]
 reshape_methods = [ImgReshape.RESIZE_CROP_PAD, ImgReshape.RESIZE, ImgReshape.RESIZE_PAD]
 
 for url, out_shape, reshape_method in itertools.product(urls, out_shapes, reshape_methods):
@@ -121,14 +126,13 @@ for url, out_shape, reshape_method in itertools.product(urls, out_shapes, reshap
                                                  trainable=False)
 
         model = tf.keras.Sequential([
-          feature_extractor_layer,
-          tf.keras.layers.Dense(1024, activation='relu'), 
-          tf.keras.layers.Dropout(0.5),
-          tf.keras.layers.Dense(3, activation="softmax")
+            feature_extractor_layer,
+            tf.keras.layers.Dense(1024, activation='relu'),
+            tf.keras.layers.Dropout(0.5),
+            tf.keras.layers.Dense(3, activation="softmax")
         ])
 
         model.summary()
-
 
         LOG_DIR = f"tf_shapes/logs/{url.split('/')[-4]}_{url.split('/')[-3]}_{out_shape}_{str(reshape_method).split('.')[-1]}"
         MODELS_DIR = LOG_DIR + "/models"
@@ -147,7 +151,7 @@ for url, out_shape, reshape_method in itertools.product(urls, out_shapes, reshap
                       loss=tf.keras.losses.CategoricalCrossentropy(),
                       metrics=[tf.keras.metrics.CategoricalAccuracy()])
 
-        #TODO: set up learning rate 
+        # TODO: set up learning rate
 
         model.fit(train_ds,
                   validation_data=valid_ds,
