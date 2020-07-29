@@ -151,7 +151,6 @@ for url, out_shape, reshape_method in itertools.product(urls, out_shapes, reshap
                       loss=tf.keras.losses.CategoricalCrossentropy(),
                       metrics=[tf.keras.metrics.CategoricalAccuracy()])
 
-        # TODO: set up learning rate
 
         model.fit(train_ds,
                   validation_data=valid_ds,

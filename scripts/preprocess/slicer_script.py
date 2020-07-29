@@ -1,5 +1,11 @@
 INPUT_PATH = "/ADNI/minc_beast"
 CSV_PATH = "/ADNI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv"
+# Input
+image_format = '*/*_I{image_id}_*.nii'
+diagnosis = 'mci'
+input_path = f'/ADNI/minc_beast/{diagnosis}'
+axis = 2
+output_path = f'/ADNI/slice_minc/{diagnosis}'
 
 import logging
 
@@ -9,6 +15,9 @@ logger.setLevel(logging.INFO)
 import pandas as pd
 import re
 import os
+from nipype import MapNode, Node, Workflow, IdentityInterface, SelectFiles
+import nipype.interfaces.io as nio
+from deep_mri.preprocess.nipype_ext import EntropyBySlice, ArgSort, Slicer2D
 
 df = pd.read_csv(CSV_PATH)
 
@@ -33,18 +42,7 @@ id_lists = {
 
 logger.warning(f"MCI images {len(mci_img_ids)}, CN images {len(cn_img_ids)}, AD images {len(ad_img_ids)}")
 
-from nipype import MapNode, Node, Workflow, IdentityInterface, SelectFiles
-import nipype.interfaces.io as nio
-from deep_mri.preprocess.nipype_ext2 import EntropyBySlice, ArgSort, Slicer2D
-
-# Input
-image_format = '*/*_I{image_id}_*.nii'
-diagnosis = 'mci'
 iterables = id_lists[diagnosis]
-input_path = f'/ADNI/minc_beast/{diagnosis}'
-axis = 2
-output_path = f'/ADNI/slice_minc/{diagnosis}'
-
 # Iterables
 infosource = Node(IdentityInterface(fields=['image_id']),
                   name="infosource")

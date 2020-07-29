@@ -1,8 +1,10 @@
 INPUT_PATH = "/ADNI/ADNI"
 CSV_PATH = "/ADNI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv"
 OUTPUT_PATH = "/ADNI/minc_beast"
+diagnosis = "mci"
 
 import logging
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -38,7 +40,6 @@ from deep_mri.preprocess.nipype_ext import Nii2Mnc, MincBeast, MincProduct, Beas
 
 id_lists["test"] = id_lists['ad'][:10]
 
-diagnosis = "mci"
 output_dir = os.path.join(OUTPUT_PATH, diagnosis)
 iterables = id_lists[diagnosis]
 new_shape = (192, 192, 160)

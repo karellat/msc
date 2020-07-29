@@ -1,6 +1,8 @@
 INPUT_PATH = "/ADNI/ADNI"
 CSV_PATH = "/ADNI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv"
 OUTPUT_PATH = "/ADNI/corregistered_ADNI"
+ATLAS = "/ADNI/mni_icbm152_nl_VI_nifti/icbm_avg_152_t1_tal_nlin_symmetric_VI.nii"
+diagnosis = "ad"
 
 import logging
 
@@ -35,22 +37,17 @@ logger.warning(f"MCI images {len(mci_img_ids)}, CN images {len(cn_img_ids)}, AD 
 import os
 import nipype.interfaces.io as nio
 
-id_lists["test"] = id_lists['ad'][:2]
-
-diagnosis = "test"
 output_dir = os.path.join(OUTPUT_PATH, diagnosis)
 iterables = id_lists[diagnosis]
 new_shape = (192, 192, 160)
 image_format = '*_S_*/*/*/S*/*_I{image_id}.nii'
 input_path = INPUT_PATH
 
-from nipype import SelectFiles, Node, Workflow, MapNode, IdentityInterface
+from nipype import SelectFiles, Node, Workflow, IdentityInterface
 from nipype.interfaces.fsl import BET, Info, FNIRT, ApplyWarp
 
 logger.warning(f"{str(iterables)}")
 
-# Template coregistra
-template = Info.standard_image('MNI152_T1_1mm_brain.nii.gz')
 # Input
 infosource = Node(IdentityInterface(fields=['image_id']),
                   name="infosource")
@@ -62,13 +59,13 @@ input_node = Node(SelectFiles({'anat': image_format},
 
 # Calculate coregistration 
 coregistration = Node(
-    FNIRT(ref_file="/ADNI/mni_icbm152_nl_VI_nifti/icbm_avg_152_t1_tal_nlin_symmetric_VI.nii",
+    FNIRT(ref_file=ATLAS,
           field_file=True,
           fieldcoeff_file=True),
     name='fslreg',
     iterfield=['in_file'])
-# Aplicate coregistration 
-apply_warp = Node(ApplyWarp(ref_file="/ADNI/mni_icbm152_nl_VI_nifti/icbm_avg_152_t1_tal_nlin_symmetric_VI.nii"),
+# Apply coregistration
+apply_warp = Node(ApplyWarp(ref_file=ATLAS),
                   name='warp',
                   iterfield=['in_file'])
 
@@ -89,8 +86,6 @@ wf.connect(infosource, "image_id", input_node, "image_id")
 wf.connect(input_node, "anat", coregistration, "in_file")
 wf.connect(input_node, "anat", apply_warp, "in_file")
 wf.connect(coregistration, "field_file", apply_warp, "field_file")
-# wf.connect(apply_warp, "out_file", skullstrip, "in_file")
-# wf.connect(skullstrip, "out_file",sink, "@out_file")
-wf.connect(apply_warp, "out_file", sink, "@out_file")
-
+wf.connect(apply_warp, "out_file", skullstrip, "in_file")
+wf.connect(skullstrip, "out_file", sink, "@out_file")
 wf.run()
