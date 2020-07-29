@@ -1,111 +1,94 @@
 import tensorflow as tf
-import os
 import numpy as np
-from nilearn.image import resample_img
-import nibabel as nib
-import glob
-import logging
-import random
-
-DEFAULT_PATH = "/ADNI/minc_beast/*/*/*.nii"
-CLASS_NAMES = np.array(['ad', 'mci', 'cn'])
-BUFFER_SIZE = 64
-AUTOTUNE = tf.data.experimental.AUTOTUNE
+from deep_mri.dataset import AUTOTUNE
+from deep_mri.dataset.dataset import _get_label_tf
+import random as rnd
+from fsl.utils.image import resample
+from fsl.data.image import Image
 
 
-def get_label_tf(file_path, class_folder=3):
-    parts = tf.strings.split(file_path, os.path.sep)
-    return parts[class_folder] == CLASS_NAMES
-
-
-def get_label_str(file_path, class_folder=3):
-    parts = file_path.split(os.path.sep)
-    return parts[class_folder] == CLASS_NAMES
-
-
-def decode_img(path, normalize, downscale_ratio):
-    img = nib.load(path)
-    if downscale_ratio is not None and downscale_ratio != 1:
-        img = resample_img(img, target_affine=np.eye(3) * downscale_ratio)
-    tensor = tf.convert_to_tensor(img.get_fdata(), tf.float32)
+def _decode_img(path, normalize, out_shape):
+    path = str(path, 'utf-8')
+    img = Image(path)
+    if out_shape is not None:
+        img, _ = resample.resample(img, out_shape)
+    tensor = tf.convert_to_tensor(np.array(img.data), tf.float32)
     tensor = tf.expand_dims(tensor, -1)
     if normalize:
         tensor /= 255.0
     return tensor
 
 
-def generator(file_list, normalize, downscale_ratio):
-    for file_name in file_list:
-        file_name = file_name.decode('utf-8')
-        img, label = process_path(file_name, normalize, downscale_ratio)
+def _generator(file_list, target_list, normalize, out_shape, class_names, shuffle):
+    file_label_list = list(zip(file_list, target_list))
+    if shuffle:
+        rnd.shuffle(file_label_list)
+    for file_name, target in file_label_list:
+        img, label = _process_path(file_name, target, normalize, out_shape, class_names)
         yield (img, label)
 
 
-def process_path(file_path, normalize, downscale_ratio):
-    label = get_label_tf(file_path, class_folder=3)
-    img = decode_img(file_path, normalize, downscale_ratio)
+def _process_path(file_path, target, normalize, out_shape, class_names):
+    label = _get_label_tf(target, class_names)
+    img = _decode_img(file_path, normalize, out_shape)
     return img, label
 
 
-def _merge_items(dictionary):
-    items = []
-    for key in dictionary.keys():
-        items += dictionary[key]
-    return items
+def factory(train_files,
+            train_targets,
+            valid_files,
+            valid_targets,
+            class_names,
+            img_shape=(193, 229, 193, 1),
+            downscale_ratio=1,
+            output_shape=None,
+            normalize=True,
+            shuffle=True):
+    if output_shape is None:
+        output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
 
-
-def get_3d_dataset(files_list,
-                   img_shape=(193, 229, 193, 1),
-                   downscale_ratio=1,
-                   normalize=True,
-                   shuffle=True,
-                   seed=42):
-    rnd = random.Random(seed)
-    output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
-    scans = {c: [] for c in CLASS_NAMES}
-    for f in files_list:
-        target = CLASS_NAMES[np.argmax(get_label_str(f))]
-        scans[target].append(f)
-
-    groups_count = np.array([len(scans[key]) for key in scans.keys()])
-    for count, group in zip(groups_count, scans.keys()):
-        logging.info(f'{group.upper()} count: {count}')
-
-    num_folds = 10
-    folds_size = np.ceil(groups_count / num_folds).astype(int)
-    # shuffle
-    if shuffle:
-        for k in scans.keys():
-            random.shuffle(scans[k])
-
-    train_files = {key: scans[key][fold_size * 2:] for key, fold_size in zip(scans.keys(), folds_size)}
-    test_files = {key: scans[key][0:fold_size] for key, fold_size in zip(scans.keys(), folds_size)}
-    valid_files = {key: scans[key][fold_size:fold_size * 2] for key, fold_size in zip(scans.keys(), folds_size)}
-
-    train_files = _merge_items(train_files)
-    test_files = _merge_items(test_files)
-    valid_files = _merge_items(valid_files)
-
-    if shuffle:
-        rnd.shuffle(train_files)
-        rnd.shuffle(test_files)
-        rnd.shuffle(valid_files)
-
-    train_ds = tf.data.Dataset.from_generator(generator,
+    train_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
-                                              output_shapes=(output_shape, (3,)),
-                                              args=[train_files, normalize, downscale_ratio])
-    test_ds = tf.data.Dataset.from_generator(generator,
-                                             output_types=(tf.float32, tf.bool),
-                                             output_shapes=(output_shape, (3,)),
-                                             args=[test_files, normalize, downscale_ratio])
-    valid_ds = tf.data.Dataset.from_generator(generator,
+                                              output_shapes=(output_shape, (len(class_names),)),
+                                              args=[train_files, train_targets, normalize, output_shape[:-1],
+                                                    class_names, shuffle])
+    valid_ds = tf.data.Dataset.from_generator(_generator,
                                               output_types=(tf.float32, tf.bool),
-                                              output_shapes=(output_shape, (3,)),
-                                              args=[valid_files, normalize, downscale_ratio])
+                                              output_shapes=(output_shape, (len(class_names),)),
+                                              args=[valid_files, valid_targets, normalize, output_shape[:-1],
+                                                    class_names, shuffle])
 
     train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
-    test_ds = test_ds.prefetch(buffer_size=AUTOTUNE)
     valid_ds = valid_ds.prefetch(buffer_size=AUTOTUNE)
 
-    return train_ds, valid_ds, test_ds
+    return train_ds, valid_ds
+
+
+def _encoder_generator(file_list, normalize, out_shape, shuffle):
+    if shuffle:
+        rnd.shuffle(file_list)
+    for file_name in file_list:
+        img = _decode_img(file_name, normalize, out_shape)
+        yield (img, img)
+
+
+def encoder_factory(train_files,
+                    valid_files,
+                    output_shape=(193, 229, 193, 1),
+                    normalize=True,
+                    shuffle=True):
+    output_shape = np.array(output_shape).astype(int)
+
+    train_ds = tf.data.Dataset.from_generator(_encoder_generator,
+                                              output_types=(tf.float32, tf.bool),
+                                              output_shapes=(output_shape, output_shape),
+                                              args=[train_files, normalize, output_shape[:-1], shuffle])
+    valid_ds = tf.data.Dataset.from_generator(_encoder_generator,
+                                              output_types=(tf.float32, tf.bool),
+                                              output_shapes=(output_shape, output_shape),
+                                              args=[valid_files, normalize, output_shape[:-1], shuffle])
+
+    train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
+    valid_ds = valid_ds.prefetch(buffer_size=AUTOTUNE)
+
+    return train_ds, valid_ds

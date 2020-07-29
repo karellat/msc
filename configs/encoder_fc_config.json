@@ -1,0 +1,27 @@
+{
+  "model" : "3d_encoderfc",
+  "model_args" : {
+    "encoder_model_path" : "logs/2020-06-18-20-55-my_encoder/models",
+    "input_shape"  : [97, 115, 97, 1],
+    "num_outputs" : 3
+  },
+  "dataset_path" : "default",
+  "data_csv_path" : "default",
+  "train_filter_first_screen" : true,
+  "valid_filter_first_screen" : true,
+  "dataset" : "3d",
+  "dataset_args" : {
+    "normalize" : true,
+    "downscale_ratio" : 2
+  },
+
+  "callbacks" : ["board", "save", "early_stop"],
+  "log_root" : "./logs/encoder_fc",
+  "log_name" : "test",
+  "epochs" : 100,
+  "batch_size" : 8,
+  "optimizer" : "adam",
+  "loss" : "categorical_crossentropy",
+  "metrics" : ["accuracy", "AUC"]
+
+}

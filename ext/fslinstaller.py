@@ -31,6 +31,7 @@ code = locale.getpreferredencoding()
 
 try:
     import json
+
     HAS_JSON = True
 except Exception:
     HAS_JSON = False
@@ -42,8 +43,8 @@ fsli_C_WARN = 3
 CURRENT = 0
 UPDATE = 1
 UPGRADE = 2
-BOURNE_SHELLS = ('sh', 'bash', 'zsh', 'ksh', 'dash', )
-C_SHELLS = ('csh', 'tcsh', )
+BOURNE_SHELLS = ('sh', 'bash', 'zsh', 'ksh', 'dash',)
+C_SHELLS = ('csh', 'tcsh',)
 
 
 class Version(object):
@@ -183,6 +184,7 @@ def memoize(f):
         if key not in cache:
             cache[key] = f(*args, **kwargs)
         return cache[key]
+
     return g
 
 
@@ -241,36 +243,42 @@ class MsgUser(object):
     def message(cls, msg):
         if cls.__quiet:
             return
-        print msg
+        print
+        msg
 
     @classmethod
     def question(cls, msg):
-        print msg,
+        print
+        msg,
 
     @classmethod
     def skipped(cls, msg):
         if cls.__quiet:
             return
-        print "".join(
+        print
+        "".join(
             (shell_colours.mfg_kbg, "[Skipped] ", shell_colours.default, msg))
 
     @classmethod
     def ok(cls, msg):
         if cls.__quiet:
             return
-        print "".join(
+        print
+        "".join(
             (shell_colours.gfg_kbg, "[OK] ", shell_colours.default, msg))
 
     @classmethod
     def failed(cls, msg):
-        print "".join(
+        print
+        "".join(
             (shell_colours.rfg_kbg, "[FAILED] ", shell_colours.default, msg))
 
     @classmethod
     def warning(cls, msg):
         if cls.__quiet:
             return
-        print "".join(
+        print
+        "".join(
             (shell_colours.bfg_kbg,
              shell_colours.bold,
              "[Warning]",
@@ -311,7 +319,7 @@ class Progress_bar(object):
                 sys.stdout.write(cr)
                 sys.stdout.flush()
             elif self.numeric:
-                sys.stdout.write(" " * (len(str(self.max))*2 + 8))
+                sys.stdout.write(" " * (len(str(self.max)) * 2 + 8))
                 sys.stdout.write(cr)
                 sys.stdout.flush()
             elif self.percentage:
@@ -339,7 +347,7 @@ class RunCommandError(Exception):
 
 
 class Spinner(object):
-    spinner = itertools.cycle(('-', '\\', '|', '/', ))
+    spinner = itertools.cycle(('-', '\\', '|', '/',))
     busy = False
     delay = 0.2
 
@@ -654,11 +662,11 @@ def move_file(from_file, to_file, requires_root=False):
                 else:
                     try:
                         run_cmd_dropstdout("/bin/cp %s %s" % (
-                                from_file, to_file), as_root=False)
+                            from_file, to_file), as_root=False)
                     except RunCommandError, e:
                         MsgUser.debug(e)
                         raise MoveFileError("Failed to copy from %s (%s)" % (
-                                from_file, str(e)))
+                            from_file, str(e)))
                     os.remove(from_file)
             else:
                 raise
@@ -723,7 +731,7 @@ def add_to_file(fname, add_lines, requires_root):
             os.remove(tmpfname)
             MsgUser.debug(e)
             raise AddToFileError("Failed to add to file %s (%s)" % (
-                    fname, str(e)))
+                fname, str(e)))
     except IOError, e:
         MsgUser.debug(e.strerror + tmpfname + fname)
         raise AddToFileError("Failed to add to file %s" % (fname))
@@ -778,7 +786,7 @@ class Host(object):
         if hasattr(platform, 'linux_distribution'):
             # We have a modern python (>2.4)
             (vendor, version, _) = platform.linux_distribution(
-                                                full_distribution_name=0)
+                full_distribution_name=0)
         else:
             (vendor, version, _) = platform.dist()
         vendor = vendor.lower()
@@ -1162,9 +1170,9 @@ def get_fsldir(specified_dir=None, install=False):
                 "%s isn't a directory" %
                 parent)
         if (os.path.exists(directory) and not
-                os.path.exists(os.path.join(
-                        directory, 'etc', 'fslversion'
-                ))):
+        os.path.exists(os.path.join(
+            directory, 'etc', 'fslversion'
+        ))):
             raise GetFslDirError(
                 "%s exists and doesn't appear to be an installed FSL folder" %
                 directory)
@@ -1173,8 +1181,8 @@ def get_fsldir(specified_dir=None, install=False):
         if install is False:
             if not check_fsl_install(specified_dir):
                 raise GetFslDirError(
-                        "%s isn't an 'fsl' folder" %
-                        specified_dir)
+                    "%s isn't an 'fsl' folder" %
+                    specified_dir)
         else:
             validate_fsldir(specified_dir)
         return specified_dir
@@ -1213,7 +1221,7 @@ def get_fsldir(specified_dir=None, install=False):
         valid_dir = False
         while not valid_dir:
             fsldir = Settings.inst_qus.ask_question(
-                    'inst_loc', default=fsldir)
+                'inst_loc', default=fsldir)
             try:
                 validate_fsldir(fsldir)
                 valid_dir = True
@@ -1240,8 +1248,8 @@ FSL install folder or a folder that doesn't already exist.''')
                     fsldir = None
         else:
             raise GetFslDirError(
-                    "I can't locate FSL, try again using '-d <FSLDIR>' "
-                    "to specify where to find the FSL install")
+                "I can't locate FSL, try again using '-d <FSLDIR>' "
+                "to specify where to find the FSL install")
     return fsldir
 
 
@@ -1257,8 +1265,8 @@ def archive_version(archive):
             return Version(vstring)
         except ValueError:
             raise NotAFslVersion(
-                    "%s doesn't look like "
-                    "a version number" % (vstring))
+                "%s doesn't look like "
+                "a version number" % (vstring))
 
 
 class NotAFslVersion(Exception):
@@ -1281,15 +1289,15 @@ def get_installed_version(fsldir):
             version = Version(v_string.strip())
         except ValueError:
             raise NotAFslVersion(
-                    "%s not a valid "
-                    "version string" % (v_string.strip()))
+                "%s not a valid "
+                "version string" % (v_string.strip()))
     else:
         MsgUser.debug(
-                "No version information found - "
-                "is this actually an FSL dir?")
+            "No version information found - "
+            "is this actually an FSL dir?")
         raise GetInstalledVersionError(
-                "Cannot find the version information - "
-                "is this actually an FSL dir?")
+            "Cannot find the version information - "
+            "is this actually an FSL dir?")
     MsgUser.debug("Found version %s" % (version))
     return version
 
@@ -1332,7 +1340,7 @@ def self_update(server_url):
                     url=file_url,
                     localf=tmpfname)
                 if (
-                    file_checksum(tmpfname, installer['checksum_type']) !=
+                        file_checksum(tmpfname, installer['checksum_type']) !=
                         installer['checksum']):
                     raise SelfUpdateError(
                         "Found update to installer but download "
@@ -1340,14 +1348,14 @@ def self_update(server_url):
             except DownloadFileError, e:
                 if Settings.mirror != Settings.main_mirror:
                     MsgUser.warning(
-                            "Download from mirror failed, re-trying from "
-                            "main FSL download site")
+                        "Download from mirror failed, re-trying from "
+                        "main FSL download site")
                     Settings.mirror = Settings.main_mirror
                 else:
                     MsgUser.debug("Failed to update installer %s." % (str(e)))
                     raise SelfUpdateError(
-                            'Found update to installer but unable to '
-                            'download the new version. Please try again.')
+                        'Found update to installer but unable to '
+                        'download the new version. Please try again.')
             else:
                 downloaded = True
         # Now run the new installer
@@ -1401,14 +1409,14 @@ def get_releases(server_url):
     if alias_t in os_definition.keys():
         if str(t_version) in os_definition[alias_t]:
             os_parent = os_definition[alias_t][
-                            str(t_version)]['parent']
+                str(t_version)]['parent']
             os_definition = manifest[computer.o_s][os_parent]
 
     if computer.arch not in os_definition.keys():
         raise UnsupportedOs("%s %s not supported" % (
-                                computer.vendor,
-                                computer.arch
-                            ))
+            computer.vendor,
+            computer.arch
+        ))
 
     os_def = os_definition[computer.arch]
     while t_version > 0:
@@ -1420,15 +1428,15 @@ def get_releases(server_url):
             break
     if t_version == 0:
         raise UnsupportedOs("%s %s not supported" % (
-                                computer.vendor,
-                                computer.version.major
-                                ))
+            computer.vendor,
+            computer.version.major
+        ))
     elif t_version != computer.version.major:
         MsgUser.warning(
-                        "%s %s not officially supported "
-                        "- trying to locate support for an earlier "
-                        "version - this may not work" % (
-                                computer.vendor, computer.version.major))
+            "%s %s not officially supported "
+            "- trying to locate support for an earlier "
+            "version - this may not work" % (
+                computer.vendor, computer.version.major))
     return os_definition[computer.arch][str(t_version)]
 
 
@@ -1483,9 +1491,9 @@ def install_installer(fsldir):
     as_root = False
     installer = os.path.abspath(__file__)
     MsgUser.debug(
-            "Copying fslinstaller (%s) to %s" % (
-                    installer,
-                    targetfolder))
+        "Copying fslinstaller (%s) to %s" % (
+            installer,
+            targetfolder))
     if not is_writeable(targetfolder):
         if not is_writeable_as_root(targetfolder):
             raise InstallInstallerError("Cannot write to folder as root user.")
@@ -1581,7 +1589,7 @@ def check_fsl_install(fsldir):
     MsgUser.debug("Checking %s is an FSL install" % (fsldir))
     if os.path.isdir(fsldir):
         if os.path.exists(
-            os.path.join(fsldir, 'etc', 'fslversion')
+                os.path.join(fsldir, 'etc', 'fslversion')
         ):
             return True
     return False
@@ -1589,7 +1597,7 @@ def check_fsl_install(fsldir):
 
 def fsl_downloadname(suffix, version):
     return 'fsl-%s-%s' % (
-            version, suffix)
+        version, suffix)
 
 
 class Settings(object):
@@ -1652,7 +1660,7 @@ class Settings(object):
 
 
 def get_json(web_url):
-    MsgUser.debug("Opening "+web_url)
+    MsgUser.debug("Opening " + web_url)
     try:
         url = open_url(web_url)
         return json.load(url)
@@ -1677,6 +1685,7 @@ def get_json(web_url):
 
 class AutoDict(dict):
     '''Automatically create a nested dict'''
+
     def __getitem__(self, item):
         try:
             return dict.__getitem__(self, item)
@@ -1696,7 +1705,7 @@ class AutoDict(dict):
 
 
 def get_csv_dict(web_url):
-    MsgUser.debug("Opening "+web_url)
+    MsgUser.debug("Opening " + web_url)
 
     try:
         url = open_url(web_url)
@@ -1724,9 +1733,9 @@ def get_csv_dict(web_url):
                     base_dict = dict(zip(items, items))
                     a_dict[
                         str(line[0])][
-                            str(line[1])][
-                                str(line[2])][
-                                    str(line[3])] = base_dict
+                        str(line[1])][
+                        str(line[2])][
+                        str(line[3])] = base_dict
                 else:
                     items = iter(line[5:])
                     base_dict = dict(zip(items, items))
@@ -1735,10 +1744,10 @@ def get_csv_dict(web_url):
                             (line[0], line[1], line[2], line[3], line[4])))
                     a_dict[
                         str(line[0])][
-                            str(line[1])][
-                                str(line[2])][
-                                    str(line[3])][
-                                        str(line[4])] = base_dict
+                        str(line[1])][
+                        str(line[2])][
+                        str(line[3])][
+                        str(line[4])] = base_dict
     except OpenUrlError, e:
         raise ServerFailure(str(e))
     MsgUser.debug(a_dict)
@@ -1787,9 +1796,8 @@ def download_release(
         server_url=Settings.mirror, to_temp=False,
         request_version=None, skip_verify=False,
         keep=False, source_code=False, feeds=False):
-
     (version, details) = get_web_version_and_details(
-            server_url, request_version)
+        server_url, request_version)
     if request_version is None:
         request_version = str(version)
 
@@ -1846,10 +1854,10 @@ def download_release(
                     "- cannot overwrite" % local_filename)
 
     MsgUser.debug(
-            "Downloading to file %s "
-            "(this may take some time)." % (local_filename))
+        "Downloading to file %s "
+        "(this may take some time)." % (local_filename))
     MsgUser.message(
-            "Downloading...")
+        "Downloading...")
 
     downloaded = False
     while downloaded is False:
@@ -1860,16 +1868,16 @@ def download_release(
                 url=file_url,
                 localf=local_filename)
             if (not skip_verify and
-                (details['checksum'] !=
-                    file_checksum(local_filename, details['checksum_type']))):
+                    (details['checksum'] !=
+                     file_checksum(local_filename, details['checksum_type']))):
                 raise DownloadError('Downloaded file fails checksum')
             MsgUser.ok("File downloaded")
         except DownloadFileError, e:
             MsgUser.debug(str(e))
             if Settings.mirror != Settings.main_mirror:
                 MsgUser.warning(
-                        "Download from mirror failed, re-trying from "
-                        "main FSL download site")
+                    "Download from mirror failed, re-trying from "
+                    "main FSL download site")
                 Settings.mirror = Settings.main_mirror
             else:
                 raise DownloadError(str(e))
@@ -1972,8 +1980,8 @@ def fix_fsldir(shell, fsldir):
     (_, match, replace) = shell_config(shell, fsldir)
     profile = get_profile(shell)
     MsgUser.debug(
-            "Editing %s, replacing line beginning:%s with %s." %
-            (profile, match, replace))
+        "Editing %s, replacing line beginning:%s with %s." %
+        (profile, match, replace))
     try:
         edit_file(profile, line_starts_replace, match, replace, False)
     except EditFileError, e:
@@ -2035,11 +2043,11 @@ def configure_matlab(fsldir, m_startup='', c_file=True):
             create_file(m_startup, mlines, False)
         except (OSError, CreateFileError), e:
             MsgUser.debug(
-                    'Unable to create ~/matlab folder or startup.m file,'
-                    ' cannot configure (%).' % (str(e)))
+                'Unable to create ~/matlab folder or startup.m file,'
+                ' cannot configure (%).' % (str(e)))
             raise ConfigureMatlabError(
-                    "Unable to create your ~/matlab folder or startup.m, "
-                    "so cannot configure MATLAB for FSL.")
+                "Unable to create your ~/matlab folder or startup.m, "
+                "so cannot configure MATLAB for FSL.")
     else:
         MsgUser.debug('MATLAB may not be installed, doing nothing.')
         raise ConfigureMatlabWarn("I can't tell if you have MATLAB installed.")
@@ -2079,18 +2087,18 @@ def setup_system_environment(fsldir):
                     # If there is an fsl.(c)sh then just fix
                     # the entry for FSLDIR
                     MsgUser.debug(
-                            "Fixing %s for FSLDIR location." % (this_profile))
+                        "Fixing %s for FSLDIR location." % (this_profile))
                     try:
                         edit_file(
-                                this_profile, line_starts_replace,
-                                match, replace, sudo)
+                            this_profile, line_starts_replace,
+                            match, replace, sudo)
                     except EditFileError, e:
                         exceptions.append(str(e))
                 else:
                     # No need to do anything
                     MsgUser.debug(
-                            "%s already configured - skipping." %
-                            (this_profile))
+                        "%s already configured - skipping." %
+                        (this_profile))
                     skips.append(profile)
             else:
                 # Create the file
@@ -2134,7 +2142,7 @@ def setup_environment(fsldir=None, system=False, with_matlab=False):
             create_file(profile, profile_lines, False)
         except CreateFileError, e:
             raise SetupEnvironmentError(
-                    "Unable to create profile %s" % (profile))
+                "Unable to create profile %s" % (profile))
     else:
         # Check if user already has FSLDIR set
         MsgUser.message("Setting up FSL software...")
@@ -2147,8 +2155,8 @@ def setup_environment(fsldir=None, system=False, with_matlab=False):
                 add_fsldir(user_shell, fsldir)
         except (AddFslDirError, FixFslDirError), e:
             raise SetupEnvironmentError(
-                    "Unable to update your profile %s"
-                    " with FSL settings" % (profile))
+                "Unable to update your profile %s"
+                " with FSL settings" % (profile))
 
     if with_matlab:
         MsgUser.debug("Setting up MATLAB")
@@ -2186,7 +2194,7 @@ def archive_type(archive):
     except RunCommandError, e:
         raise UnknownArchiveType(str(e))
     file_type = file_type.lower()
-    for f_type in ('gzip', 'bzip2', 'zip', ):
+    for f_type in ('gzip', 'bzip2', 'zip',):
         if f_type in file_type:
             return archive_types[f_type]
     raise UnknownArchiveType(archive)
@@ -2202,7 +2210,7 @@ def post_install(
         as_root = True
     else:
         raise PostInstallError(
-                "Unable to write to target folder (%s)" % (fsldir))
+            "Unable to write to target folder (%s)" % (fsldir))
     install_installer(fsldir)
     script_path = os.path.join(fsldir, Settings.post_inst_dir, script)
     if x11:
@@ -2233,8 +2241,8 @@ def post_install(
             )
         # Work around for mistake in 5.0.10 post setup script
         mal = os.path.join(
-                    fsldir, Settings.post_inst_dir,
-                    'make_applications_links.sh')
+            fsldir, Settings.post_inst_dir,
+            'make_applications_links.sh')
         if (os.path.exists(mal) and
                 not file_contains(script_path, "make_applications_links.sh")):
             MsgUser.debug(
@@ -2256,11 +2264,12 @@ def post_install(
 def install_archive(archive, fsldir=None):
     def clean_up_temp():
         try:
-            safe_delete(tempfolder,  as_root)
+            safe_delete(tempfolder, as_root)
         except SafeDeleteError, sd_e:
             MsgUser.debug(
-                    "Unable to clean up temporary folder! "
-                    "%s" % (str(sd_e)))
+                "Unable to clean up temporary folder! "
+                "%s" % (str(sd_e)))
+
     if not os.path.isfile(archive):
         raise InstallError("%s isn't a file" % (archive))
     if not fsldir:
@@ -2285,10 +2294,10 @@ def install_archive(archive, fsldir=None):
         as_root = True
     else:
         raise InstallArchiveError(
-                "Unable to write to target folder (%s), "
-                "even as a super user." % (install_d))
+            "Unable to write to target folder (%s), "
+            "even as a super user." % (install_d))
     MsgUser.debug("Does %s require root for deletion? %s" % (
-            install_d, as_root))
+        install_d, as_root))
     try:
         unarchive, ua_option = archive_type(archive)
     except UnknownArchiveType, e:
@@ -2300,9 +2309,9 @@ def install_archive(archive, fsldir=None):
         run_cmd_dropstdout("mkdir %s" % (tempfolder), as_root=as_root)
     except RunCommandError, e:
         raise InstallArchiveError(
-                "Unable to create folder to install into.")
+            "Unable to create folder to install into.")
     MsgUser.debug(
-            "Unpacking %s into folder %s." % (archive, tempfolder))
+        "Unpacking %s into folder %s." % (archive, tempfolder))
     try:
         if unarchive == 'tar':
             unpack_cmd = 'tar -C %s -x %s -o -f %s' % (
@@ -2327,22 +2336,22 @@ def install_archive(archive, fsldir=None):
                 if keep_old:
                     old_version = Version('0.0.0')
                     MsgUser.warning(
-                            "The contents of %s doesn't look like an "
-                            "FSL installation! - "
-                            "moving to fsl-0.0.0" % (fsldir))
+                        "The contents of %s doesn't look like an "
+                        "FSL installation! - "
+                        "moving to fsl-0.0.0" % (fsldir))
             old_fsl = '-'.join((fsldir, str(old_version)))
             if os.path.exists(old_fsl):
                 MsgUser.debug(
-                        "Looks like there is another copy of the "
-                        "old version of FSL - deleting...")
+                    "Looks like there is another copy of the "
+                    "old version of FSL - deleting...")
                 try:
                     safe_delete(old_fsl, as_root)
                 except SafeDeleteError, e:
                     raise InstallError(
-                            ";".join((
-                                    "Install location already has a "
-                                    "%s - I've tried to delete it but"
-                                    " failed" % (old_fsl), str(e))))
+                        ";".join((
+                            "Install location already has a "
+                            "%s - I've tried to delete it but"
+                            " failed" % (old_fsl), str(e))))
 
             if keep_old:
                 try:
@@ -2368,7 +2377,7 @@ If you wish to restore it, remove %s and rename %s to %s''' % (
                     MsgUser.debug("Deleted %s." % (fsldir))
                 except SafeDeleteError, e:
                     raise InstallError(
-                            "Failed to delete %s - %s." % (fsldir, str(e)))
+                        "Failed to delete %s - %s." % (fsldir, str(e)))
         else:
             old_fsl = ''
         try:
@@ -2377,9 +2386,9 @@ If you wish to restore it, remove %s and rename %s to %s''' % (
         except MoveError, e:
             # Unable to move new install into place
             MsgUser.debug(
-                    "Move failed - %s." % (str(e)))
+                "Move failed - %s." % (str(e)))
             raise InstallError(
-                    'Failed to move new version into place.')
+                'Failed to move new version into place.')
 
     except InstallError, e:
         clean_up_temp()
@@ -2408,7 +2417,7 @@ def check_for_updates(url, fsldir, requested_v=None):
                 version = Version(requested_v)
             except NotAFslVersion:
                 raise InstallError(
-                        "%s doesn't look like a version" % requested_v)
+                    "%s doesn't look like a version" % requested_v)
 
         if version > this_version:
             # Update Available
@@ -2442,9 +2451,9 @@ def make_applications_links(fsldir, apps):
         MsgUser.debug("Looking for existing link %s" % (app_location))
         if os.path.lexists(app_location):
             MsgUser.debug(
-                    "Is a link: %s; realpath: %s" % (
-                            os.path.islink(app_location),
-                            os.path.realpath(app_location)))
+                "Is a link: %s; realpath: %s" % (
+                    os.path.islink(app_location),
+                    os.path.realpath(app_location)))
             if os.path.islink(app_location):
                 MsgUser.debug("A link already exists.")
                 if os.path.realpath(app_location) != app_target:
@@ -2454,8 +2463,8 @@ def make_applications_links(fsldir, apps):
                         run_cmd_dropstdout("rm " + app_location, as_root=True)
                     except RunCommandError, e:
                         MsgUser.debug(
-                                "Unable to remove broken"
-                                " link to %s (%s)." % (app_target, str(e)))
+                            "Unable to remove broken"
+                            " link to %s (%s)." % (app_target, str(e)))
                         results[app] = 'Unable to remove broken link to %s' % (
                             app_target)
                         create_link = False
@@ -2464,25 +2473,25 @@ def make_applications_links(fsldir, apps):
                     create_link = False
             else:
                 MsgUser.debug(
-                        "%s doesn't look like a symlink, "
-                        "so let's not delete it." % (app_location))
+                    "%s doesn't look like a symlink, "
+                    "so let's not delete it." % (app_location))
                 results[app] = (
-                    "%s is not a link so hasn't been updated to point at the "
-                    "new FSL install.") % (app_location)
+                                   "%s is not a link so hasn't been updated to point at the "
+                                   "new FSL install.") % (app_location)
                 create_link = False
         if create_link:
             MsgUser.debug('Create a link for %s' % (app))
             if os.path.exists(app_target):
                 try:
                     run_cmd_dropstdout(
-                            "ln -s %s %s" % (app_target, app_location),
-                            as_root=True)
+                        "ln -s %s %s" % (app_target, app_location),
+                        as_root=True)
                 except RunCommandError, e:
                     MsgUser.debug(
-                            "Unable to create link to %s (%s)." % (
-                                    app_target, str(e)))
+                        "Unable to create link to %s (%s)." % (
+                            app_target, str(e)))
                     results[app] = (
-                        'Unable to create link to %s.') % (app_target)
+                                       'Unable to create link to %s.') % (app_target)
             else:
                 MsgUser.debug(
                     'Unable to find application'
@@ -2511,20 +2520,20 @@ def check_X11(x11):
     if xbin != '':
         # Find out what version is installed
         x_v_cmd = [
-                '/usr/bin/mdls', '-name',
-                'kMDItemVersion', os.path.join(x11['location'], xbin)]
+            '/usr/bin/mdls', '-name',
+            'kMDItemVersion', os.path.join(x11['location'], xbin)]
         try:
             cmd = Popen(x_v_cmd, stdout=PIPE, stderr=STDOUT)
             (vstring, _) = cmd.communicate()
-        except Exception,  e:
+        except Exception, e:
             raise CheckX11Warning(
                 "Unable to check X11 version (%s)" % (str(e)))
         if cmd.returncode:
             MsgUser.debug("Error finding the version of X11 (%s)" % (vstring))
             # App found, but can't tell version, warn the user
             raise CheckX11Warning(
-                    "X11 (required for FSL GUIs) is installed but I"
-                    " can't tell what the version is.")
+                "X11 (required for FSL GUIs) is installed but I"
+                " can't tell what the version is.")
         else:
             # Returns:
             # kMDItemVersion = "2.3.6"\n
@@ -2533,21 +2542,21 @@ def check_X11(x11):
                 version = version[1:-1]
             if version in x11['bad_versions']:
                 raise CheckX11Warning(
-                        "X11 (required for FSL GUIs) is a version that"
-                        " is known to cause problems. We suggest you"
-                        " upgrade to the latest XQuartz release from "
-                        "%s" % (x11['download_url']))
+                    "X11 (required for FSL GUIs) is a version that"
+                    " is known to cause problems. We suggest you"
+                    " upgrade to the latest XQuartz release from "
+                    "%s" % (x11['download_url']))
             else:
                 MsgUser.debug(
-                        "X11 found and is not a bad version"
-                        " (%s: %s)." % (xbin, version))
+                    "X11 found and is not a bad version"
+                    " (%s: %s)." % (xbin, version))
     else:
         # No X11 found, warn the user
         raise CheckX11Warning(
-                "The FSL GUIs require the X11 window system which I can't"
-                " find in the usual places. You can download a copy from %s"
-                " - you will need to install this before the GUIs will"
-                " function" % (x11['download_url']))
+            "The FSL GUIs require the X11 window system which I can't"
+            " find in the usual places. You can download a copy from %s"
+            " - you will need to install this before the GUIs will"
+            " function" % (x11['download_url']))
 
 
 def do_install(options, settings):
@@ -2560,9 +2569,9 @@ def do_install(options, settings):
     this_computer = Host
     if not this_computer.supported:
         MsgUser.debug("Unsupported host %s %s %s" % (
-                        this_computer.o_s,
-                        this_computer.arch,
-                        this_computer.os_type))
+            this_computer.o_s,
+            this_computer.arch,
+            this_computer.os_type))
         raise InstallError(
             "Unsupported host - you could try building from source")
 
@@ -2619,17 +2628,19 @@ def do_install(options, settings):
     if my_uid != 0:
         if options.quiet:
             settings.inst_qus.defaults = True
-            print '''
-We may need administrator rights, but you have specified fully automated
-mode - you may still be asked for an admin password if required.'''
-            print '''
-To install fully automatedly, either ensure this is running as the root
-user (use sudo) or that you can write to the folder you wish to install
-FSL in.'''
+            print
+            '''
+           We may need administrator rights, but you have specified fully automated
+           mode - you may still be asked for an admin password if required.'''
+            print
+            '''
+           To install fully automatedly, either ensure this is running as the root
+           user (use sudo) or that you can write to the folder you wish to install
+           FSL in.'''
         elif (not options.download and
-                not options.list_versions and
-                not options.get_source and
-                not options.get_feeds):
+              not options.list_versions and
+              not options.get_source and
+              not options.get_feeds):
             MsgUser.warning(
                 '''Some operations of the installer require administative rights,
     for example installing into the default folder of /usr/local.
@@ -2699,7 +2710,7 @@ FSL in.'''
             download_release(request_version=options.requestversion,
                              skip_verify=options.skipchecksum)
         except DownloadFileError, e:
-            raise("Unable to download release %s" % (str(e)))
+            raise ("Unable to download release %s" % (str(e)))
         return
 
     if options.update:
@@ -2725,7 +2736,7 @@ FSL in.'''
                 skip_verify=options.skipchecksum,
                 source_code=True)
         except DownloadFileError, e:
-            raise("Unable to download source code %s" % (str(e)))
+            raise ("Unable to download source code %s" % (str(e)))
         return
 
     if options.get_feeds:
@@ -2736,13 +2747,13 @@ FSL in.'''
                 skip_verify=options.skipchecksum,
                 feeds=True)
         except DownloadFileError, e:
-            raise("Unable to download FEEDS %s" % (str(e)))
+            raise ("Unable to download FEEDS %s" % (str(e)))
         return
 
     try:
         (version, details) = get_web_version_and_details(
-                    request_version=options.requestversion
-                    )
+            request_version=options.requestversion
+        )
         if 'redirect' in details:
             MsgUser.message("Please download FSL using the instructions here:")
             MsgUser.message("%s" % (details['redirect']))
@@ -2808,7 +2819,7 @@ def parse_options(args):
     parser = OptionParser(usage=usage, version=ver)
     parser.add_option("-d", "--dest", dest="d_dir",
                       help="Install into folder given by DESTDIR - "
-                      "e.g. /usr/local/fsl",
+                           "e.g. /usr/local/fsl",
                       metavar="DESTDIR", action="store",
                       type="string")
     parser.add_option("-e", dest="env_only",
@@ -2821,40 +2832,40 @@ def parse_options(args):
                       action="version")
     parser.add_option("-c", "--checkupdate", dest='update',
                       help="Check for FSL updates -"
-                      " needs an internet connection",
+                           " needs an internet connection",
                       action="store_true")
     parser.add_option("-o", "--downloadonly", dest="download",
                       help=SUPPRESS_HELP,
                       action="store_true")
 
     advanced_group = OptionGroup(
-            parser, "Advanced Install Options",
-            "These are advanced install options")
+        parser, "Advanced Install Options",
+        "These are advanced install options")
     advanced_group.add_option(
-            "-l", "--listversions", dest="list_versions",
-            help="List available versions of FSL",
-            action="store_true")
+        "-l", "--listversions", dest="list_versions",
+        help="List available versions of FSL",
+        action="store_true")
     advanced_group.add_option(
-            "-V", "--fslversion", dest="requestversion",
-            help="Download the specific version FSLVERSION of FSL",
-            metavar="FSLVERSION", action="store",
-            type="string")
+        "-V", "--fslversion", dest="requestversion",
+        help="Download the specific version FSLVERSION of FSL",
+        metavar="FSLVERSION", action="store",
+        type="string")
     advanced_group.add_option(
-            "-s", "--source", dest="get_source",
-            help="Download source code for FSL",
-            action="store_true")
+        "-s", "--source", dest="get_source",
+        help="Download source code for FSL",
+        action="store_true")
     advanced_group.add_option(
-            "-F", "--feeds", dest="get_feeds",
-            help="Download FEEDS",
-            action="store_true")
+        "-F", "--feeds", dest="get_feeds",
+        help="Download FEEDS",
+        action="store_true")
     advanced_group.add_option(
-            "-q", "--quiet", dest='quiet',
-            help="Silence all messages - useful if scripting install",
-            action="store_true")
+        "-q", "--quiet", dest='quiet',
+        help="Silence all messages - useful if scripting install",
+        action="store_true")
     advanced_group.add_option(
-            "-p", dest="skip_env",
-            help="Don't setup the environment",
-            action="store_true")
+        "-p", dest="skip_env",
+        help="Don't setup the environment",
+        action="store_true")
     parser.add_option_group(advanced_group)
 
     debug_group = OptionGroup(
@@ -2902,7 +2913,8 @@ if __name__ == '__main__':
     (options, args) = parse_options(sys.argv[1:])
     if options.verbose:
         MsgUser.debugOn()
-        print options
+        print
+        options
     if options.quiet:
         MsgUser.quietOn()
     if options.test_csv:

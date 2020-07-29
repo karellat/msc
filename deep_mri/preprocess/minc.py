@@ -1,18 +1,18 @@
 import nipype.interfaces.io as nio
 from nipype import SelectFiles, Node, Workflow, MapNode, IdentityInterface
-from deep_mri.preprocess.nipype_ext import  Nii2Mnc, CopyDir, MincBeast, MincProduct, Mnc2Nii, BeastNormalize
+from deep_mri.preprocess.nipype_ext import Nii2Mnc, CopyDir, MincBeast, MincProduct, Mnc2Nii, BeastNormalize
+
 
 def get_preprocessing_workflow(iterables,
                                image_format,
                                input_path,
                                output_path):
-
     # Input
     infosource = Node(IdentityInterface(fields=['image_id']),
                       name="infosource")
     infosource.iterables = [('image_id', iterables)]
 
-    input_node = Node(SelectFiles({'anat' : image_format},
+    input_node = Node(SelectFiles({'anat': image_format},
                                   base_directory=input_path),
                       name="input_node")
 
@@ -38,12 +38,12 @@ def get_preprocessing_workflow(iterables,
     wf.connect(infosource, "image_id", input_node, "image_id")
     wf.connect(input_node, "anat", niimnc, "input_file")
     wf.connect(niimnc, "output_file", normalizer, "input_file")
-    wf.connect(normalizer,"output_file", copydir, "input_file")
-    wf.connect(normalizer,"output_file", beast, "input_file")
+    wf.connect(normalizer, "output_file", copydir, "input_file")
+    wf.connect(normalizer, "output_file", beast, "input_file")
     wf.connect(copydir, "new_path", beast, "library_dir")
     wf.connect(beast, "output_file", product, "mask_file")
     wf.connect(normalizer, "output_file", product, "input_file")
     wf.connect(product, "output_file", mncnii, "input_file")
-    wf.connect(mncnii,"output_file", sink,"@out_file")
+    wf.connect(mncnii, "output_file", sink, "@out_file")
 
     return wf

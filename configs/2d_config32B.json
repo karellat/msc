@@ -1,0 +1,30 @@
+{
+  "model" : "2d_transfer",
+  "model_args" : {
+    "feature_extractor_url" : "https://tfhub.dev/tensorflow/efficientnet/b3/feature-vector/1",
+    "input_shape"  : [193, 193, 3],
+    "feature_trainable" : true,
+    "fc_count" : 1024
+  },
+  "dataset_path" : "/home/karelto1/MRI/slice_minc/*/*/*/*.png",
+  "data_csv_path" : "/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv",
+  "train_filter_first_screen" : false,
+  "valid_filter_first_screen" : false,
+  "dataset" : "2d",
+  "group_folder" : -4,
+  "dataset_args" : {
+    "img_size" : 193,
+    "shuffle" : true
+  },
+
+  "callbacks" : ["board", "save", "cm" ],
+  "log_root" : "./logs/final_2d",
+  "log_name" : "efficientnet",
+  "epochs" : 100,
+  "batch_size" : 32,
+  "init_lr" : 0.001,
+  "optimizer" : "adam",
+  "loss" : "categorical_crossentropy",
+  "metrics" : ["accuracy", "AUC"]
+
+}
