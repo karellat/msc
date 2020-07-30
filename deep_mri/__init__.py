@@ -1,4 +1,6 @@
 """
+[ONLINE DOCUMENTATION](https://karellat.github.io/master_thesis)
+
 # Module
 Tools for purposes of the thesis Deep Learning for MRI data by Tomas Karella.
 

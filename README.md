@@ -1,4 +1,3 @@
-<h2>[ONLINE DOCUMENTATION](https://karellat.github.io/master_thesis) </h2>
 
 # Master Thesis
 
