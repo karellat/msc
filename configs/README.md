@@ -1,4 +1,5 @@
-# Config format
+## Configs
+<h3>Config format</h3>
 * json format
 * fields
     * MODEL
@@ -6,11 +7,11 @@
         * model_args - arguments of the model constructor
             * differs along the models
             * typically contains input_shape, number of outputs etc.
-            * for further details see model factory [docs](../docs/deep_mri/index.html) 
+            * for further details see model factory [docs](../docs/index.html) 
     * TRAINING CYCLE 
         * init_lr - learning rate value
         * callbacks - list of callback names
-            * for further details see config parser [docs](../docs/deep_mri/index.html) 
+            * for further details see config parser [docs](../docs/index.html) 
         * log_root - log root directory
         * log_name - name of the logs
         * epochs - number of epochs
@@ -27,4 +28,8 @@
         * dataset_args - arguments for the dataset constructor
             * differs along the dataset types
             * typically contains image shape, shuffle, etc
+            
+<h3>Config files</h3>
+* configs of our experiments are included in **config/our_models** directory
+* configs of using only published architectures are in **configs/published_models** directory
 

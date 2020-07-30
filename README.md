@@ -1,19 +1,17 @@
+<h2>[ONLINE DOCUMENTATION](https://karellat.github.io/master_thesis) </h2>
 # Master Thesis
-##### by Tomáš Karella
-## [DOCUMENTATION](https://karellat.github.io/master_thesis)
-This repository contains: 
-#### Directories
+<h4>by Tomáš Karella </h4>
+## Repository structure
+<h4>Directories</h4>
 * configs - example of configs for model training
-    * [docs](./configs/README.md)
 * deep_mri - python package for simple model training and preprocessing of dataset
-    * [docs](./docs/deep_mri/index.html)
 * docs - documentation of the tools library
 * examples - examples MRI images in nifty format  
-    * [docs](./examples/README.md)
 * ext - external libraries for preprocessing Dockerfile
-* scripts - examples of preprocessing scripts and variable training scripts
-    * [docs](./scripts/README.md)
-#### Files 
+* notebooks - jupyter notebooks mainly for visualization
+* scripts - preprocessing scripts and variable training scripts
+
+<h4>Files</h4>
 * conda.yml - conda enviroment containing all the required packages
 * Dockerfile - docker image created by  [NeuroDocker](https://github.com/ReproNim/neurodocker)
 * Makefile - automatized basic operation 
@@ -58,20 +56,20 @@ Standardized Image Collections:
 
 (original tutorial at http://adni.loni.usc.edu/methods/mri-tool/mri-analysis/#mri-data-set-container)
 
-## ADNI - basic info and glossary
-### INLUSIoN Criteria 
+## Basic info and glossary
+<h3>Inlusion Criteria</h3>
 - age 55-90
 - at least 6 grades education or work history
 - fluently English/Spanish
 
-### Normal controls (NL)
+<h3>Normal controls (NL)</h3>
 - no memory problems or complaints
 
-### Mild Congnitive Impairment (MCI) 
+<h3> Mild Cognitive Impairment (MCI) </h3>
 - memory problems
 - Clinical Dementia Rating 0.5
 
-### Alzheimer's Disease (AD) 
+<h3>Alzheimer's Disease (AD) </h3>
 - memory problems
 - Clinical Dementia Rating 0.5 - 1
 - Criteria of AD
@@ -88,7 +86,7 @@ Standardized Image Collections:
     * [FSL pipeline](./scripts/preprocess/fsl_pipeline.py)
     * [MINC pipeline](./scripts/preprocess/minc_pipeline.py)   
 * We also have a workflow for entropy slicing of 3D images
-    * [Slice pipeline](./scripts/preprocess/slicer_script.py)
+    * [Slice pipeline](scripts/preprocess/slicer_pipeline.py)
 ### Running
 * Create workflow or use one of ours 
 * Extract dataset to single directory preserving original structure
@@ -127,5 +125,5 @@ docker run
     * dataset
     * model 
     * training cycle 
-    * see deep_mri [docs](./docs/deep_mri/index.html) 
+    * see deep_mri [docs](docs/index.html) 
         * submodule train.config_parser
