@@ -6,6 +6,7 @@
 ## Repository structure
 
 <h4>Directories</h4>
+
 * configs - example of configs for model training
 * deep_mri - python package for simple model training and preprocessing of dataset
 * docs - documentation of the tools library
@@ -15,6 +16,7 @@
 * scripts - preprocessing scripts and variable training scripts
 
 <h4>Files</h4>
+
 * conda.yml - conda enviroment containing all the required packages
 * Dockerfile - docker image created by  [NeuroDocker](https://github.com/ReproNim/neurodocker)
 * Makefile - automatized basic operation 
