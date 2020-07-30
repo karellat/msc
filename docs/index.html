@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.4" />
+<title>deep_mri API documentation</title>
+<meta name="description" content="Module
+Tools for purposes of the thesis Deep Learning for MRI data by Tomas Karella …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>deep_mri</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="module">Module</h1>
+<p>Tools for purposes of the thesis Deep Learning for MRI data by Tomas Karella.</p>
+<p>This python library help the user with designing the Deep Learning models for MRI classification including preprocessing,
+loading data, training encoders or classifiers.</p>
+<p>The DL part is powered by the <a href="https://www.tensorflow.org">TensorFlow 2</a> framework and <a href="https://nipype.readthedocs.io/en/latest/">Nipype</a> creates
+the processing pipelines.</p>
+<h2>[ONLINE DOCUMENTATION](https://karellat.github.io/master_thesis) </h2>
+<h1 id="master-thesis">Master Thesis</h1>
+<p><h4>by Tomáš Karella </h4></p>
+<h2 id="repository-structure">Repository structure</h2>
+<p><h4>Directories</h4>
+* configs - example of configs for model training
+* deep_mri - python package for simple model training and preprocessing of dataset
+* docs - documentation of the tools library
+* examples - examples MRI images in nifty format<br>
+* ext - external libraries for preprocessing Dockerfile
+* notebooks - jupyter notebooks mainly for visualization
+* scripts - preprocessing scripts and variable training scripts</p>
+<h4>Files</h4>
+<ul>
+<li>conda.yml - conda enviroment containing all the required packages</li>
+<li>Dockerfile - docker image created by
+<a href="https://github.com/ReproNim/neurodocker">NeuroDocker</a></li>
+<li>Makefile - automatized basic operation </li>
+<li>run_train.py - python script running experiment on given config</li>
+</ul>
+<h1 id="usage">Usage</h1>
+<ol>
+<li>Obtain the MRI dataset</li>
+<li>Perform the preprocessing</li>
+<li>Train the model on processed images</li>
+</ol>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>install the Anaconda software<ul>
+<li>We recommend the <a href="https://docs.conda.io/en/latest/miniconda.html">MiniConda version</a></li>
+</ul>
+</li>
+<li>create conda environment from <strong>conda.yml</strong> file <ul>
+<li><code>conda env create -f conda.yml</code></li>
+</ul>
+</li>
+<li>(optional) Due to preprocessing the Docker tool is needed. <ul>
+<li>It is possible to compile the tools, that depends on HW, but it is far more comfortable to use our <strong>DockerImage</strong> than compile all the preprocessing tools </li>
+<li>Install <a href="https://docs.docker.com/get-docker">Docker Tool</a>) </li>
+<li>Basics of Docker can be found at <a href="https://docs.docker.com/get-started">Docker tutorial</a></li>
+<li>Build the our Docker Image and tag it with <em>DOCKER_TAG</em><ul>
+<li>move to repository directory </li>
+<li><code>docker build --tag DOCKER_TAG .</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="dataset">Dataset</h1>
+<p>open dataset <a href="http://adni.loni.usc.edu/"><strong>ADNI</strong></a></p>
+<p>''The Alzheimer's Disease Neuroimaging Initiative (ADNI) is a longitudinal multicenter study designed to develop clinical, imaging, genetic, and biochemical biomarkers for the early detection and tracking of Alzheimers disease (AD).'' </p>
+<h4 id="how-access-adni">How access <strong>ADNI</strong></h4>
+<p>enrol at <a href="https://ida.loni.usc.edu/login.jsp?project=ADNI">https://ida.loni.usc.edu/login.jsp?project=ADNI</a></p>
+<h4 id="image-collection">Image Collection</h4>
+<p>Standardized ADNI1:Complete 1Yr 1.5T </p>
+<h2 id="how-to-download-dataset">How to Download Dataset</h2>
+<p>For authorized ADNI users only:
+Standardized Image Collections:
+1. Log into the archive: <a href="https://ida.loni.usc.edu/login.jsp?project=ADNI">https://ida.loni.usc.edu/login.jsp?project=ADNI</a>
+2. Under the DOWNLOAD menu, choose <strong>Image Collections</strong>
+3. In the left navigation section, click <strong>Other Shared Collections</strong>
+4. Select <strong>ADNI</strong>
+5. Click on the collection name matching the desired standardized data set (ADNI1:Complete 1Yr 1.5T)
+6. Download all the images and <strong>CSV</strong> with basic information about subjects(disease group)
+7. Download to an appropriately named location on your computer system </p>
+<p>(original tutorial at <a href="http://adni.loni.usc.edu/methods/mri-tool/mri-analysis/#mri-data-set-container">http://adni.loni.usc.edu/methods/mri-tool/mri-analysis/#mri-data-set-container</a>)</p>
+<h2 id="basic-info-and-glossary">Basic info and glossary</h2>
+<p><h3>Inlusion Criteria</h3>
+- age 55-90
+- at least 6 grades education or work history
+- fluently English/Spanish</p>
+<h3>Normal controls (NL)</h3>
+<ul>
+<li>no memory problems or complaints</li>
+</ul>
+<h3> Mild Cognitive Impairment (MCI) </h3>
+<ul>
+<li>memory problems</li>
+<li>Clinical Dementia Rating 0.5</li>
+</ul>
+<h3>Alzheimer's Disease (AD) </h3>
+<ul>
+<li>memory problems</li>
+<li>Clinical Dementia Rating 0.5 - 1</li>
+<li>Criteria of AD</li>
+</ul>
+<h1 id="preprocessing">Preprocessing</h1>
+<ul>
+<li>
+<p>To create preprocessing workflow we use the <a href="https://nipype.readthedocs.io/en/latest/">Nipype project</a></p>
+<ul>
+<li>Nipype allow us to connect a preprocessing tools and create a computational graph.</li>
+<li>Nipype supports the parallel execution</li>
+<li>To learn more about creating workflows in Nipype see the awesome <a href="https://nipype.readthedocs.io/en/latest">tutorial</a></li>
+</ul>
+</li>
+<li>
+<p>We extended Nipype nodes by some of our own, they can be found in submodule preproces of deep_mri as submodule </p>
+</li>
+<li>Use our predefined FSL or MINC toolkit pipelines <ul>
+<li><a href="./scripts/preprocess/fsl_pipeline.py">FSL pipeline</a></li>
+<li><a href="./scripts/preprocess/minc_pipeline.py">MINC pipeline</a>
+</li>
+</ul>
+</li>
+<li>We also have a workflow for entropy slicing of 3D images<ul>
+<li><a href="scripts/preprocess/slicer_pipeline.py">Slice pipeline</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="running">Running</h3>
+<ul>
+<li>Create workflow or use one of ours </li>
+<li>Extract dataset to single directory preserving original structure</li>
+<li>Run Docker container based on previously created image </li>
+</ul>
+<pre><code>docker run 
+       -it 
+       -v &lt;PATH_TO_SOURCE_CODES&gt;:/home/neuro/thesis 
+       -v &lt;PATH_TO_DATA_ROOT&gt;:/ADNI 
+       DOCKER_TAG /bin/bash
+</code></pre>
+<ul>
+<li>Setup the constants of the script</li>
+<li>Run the chosen script</li>
+</ul>
+<h1 id="training">Training</h1>
+<ul>
+<li>the Conda environment is required for using <strong>deep_mri</strong> module</li>
+</ul>
+<h3 id="run-from-config">Run from config</h3>
+<ul>
+<li>run_train.py script can be used for training defined by config file<ul>
+<li><a href="./configs/README.md">Read more about configs</a></li>
+<li>run_train.py arguments<ul>
+<li>&ndash;help<ul>
+<li>show help</li>
+</ul>
+</li>
+<li>-c, &ndash;config_file PATH <ul>
+<li>path to config file</li>
+</ul>
+</li>
+<li>-i, &ndash;int_var <TEXT INTEGER>&hellip;<ul>
+<li>override the integer variable of config <NAME VALUE> </li>
+</ul>
+</li>
+<li>-s, &ndash;str_var <TEXT TEXT>&hellip;<ul>
+<li>override the string variable of config <NAME VALUE> </li>
+</ul>
+</li>
+<li>-f, &ndash;float_var <TEXT FLOAT>&hellip;<ul>
+<li>override the float variable of config <NAME VALUE> </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="specific-train-cycle-or-non-standard-dataset">Specific train cycle or non-standard dataset</h2>
+<ul>
+<li>for testing model or dataset</li>
+<li>the functions can be used directly from the deep_mri module<ul>
+<li><a href="./scripts">our scripts and examples</a></li>
+</ul>
+</li>
+<li>or only parts of the config can be used for generation of:<ul>
+<li>dataset</li>
+<li>model </li>
+<li>training cycle </li>
+<li>see deep_mri <a href="./docs/deep_mri/index.html">docs</a> <ul>
+<li>submodule train.config_parser</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="other-components">Other components</h1>
+<h2 id="configs">Configs</h2>
+<p><h3>Config format</h3>
+* json format
+* fields
+* MODEL
+* model - model name for deep_mri factory(type_modelname)
+* model_args - arguments of the model constructor
+* differs along the models
+* typically contains input_shape, number of outputs etc.
+* for further details see model factory <a href="../docs/index.html">docs</a>
+* TRAINING CYCLE
+* init_lr - learning rate value
+* callbacks - list of callback names
+* for further details see config parser <a href="../docs/index.html">docs</a>
+* log_root - log root directory
+* log_name - name of the logs
+* epochs - number of epochs
+* batch_size - size of the batch
+* optimizer - string representing keras optimiser
+* loss - string representing keras loss function
+* metrics
+- list of metric names corresponding to keras metrics
+* DATASET
+* dataset_path - path in wildcard format (i.e "/home/karelto1/MRI/minc_core/<em>/</em>/*.nii")
+* data_csv_path - path to Dataset csv file
+* train_filter_first_screen - True if include only first scan in training set
+* valid_filter_first_screen - True if include only first scan in validation set
+* dataset - type of dataset (3d, encoder, 2d)
+* dataset_args - arguments for the dataset constructor
+* differs along the dataset types
+* typically contains image shape, shuffle, etc</p>
+<h3>Config files</h3>
+<ul>
+<li>configs of our experiments are included in <strong>config/our_models</strong> directory</li>
+<li>configs of using only published architectures are in <strong>configs/published_models</strong> directory</li>
+</ul>
+<h2 id="example-of-mri-image">Example of MRI Image</h2>
+<ul>
+<li>image in default MRI format nifty<ul>
+<li><a href="https://nifti.nimh.nih.gov">about nifty format</a></li>
+</ul>
+</li>
+</ul>
+<h3>Viewers of MRI images</h3>
+<ul>
+<li><a href="http://ric.uthscsa.edu/mango">Mango</a></li>
+<li><a href="https://fsl.fmrib.ox.ac.uk/fslcourse/lectures/practicals/intro1/index.html">FSLEyes</a></li>
+</ul>
+<h2 id="notebooks">Notebooks</h2>
+<ul>
+<li>this directory includes examples of our notebooks</li>
+<li>testing 2D augmentation</li>
+<li>testing 3D models</li>
+<li>basic visualization of processed data</li>
+</ul>
+<h2 id="scripts">Scripts</h2>
+<ul>
+<li>our experiments using only a subsection of the <a href="../docs/deep_mri/index.html">deep_mri</a></li>
+</ul>
+<h3>Preprocessing scripts</h3>
+<ul>
+<li>preprocess directory</li>
+<li>includes<ul>
+<li>FSL pipeline</li>
+<li>MINC pipeline</li>
+<li>Segmentation pipeline</li>
+<li>Slice pipeline</li>
+</ul>
+</li>
+</ul>
+<h3>Published models</h3>
+<ul>
+<li>published_models directory</li>
+<li>scripts used for training some of the published on dataset with different splitting strategy </li>
+</ul>
+<h3>Resnet scripts</h3>
+<ul>
+<li>an example of using our library for training various versions of Resnet</li>
+</ul>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="deep_mri.dataset" href="dataset/index.html">deep_mri.dataset</a></code></dt>
+<dd>
+<div class="desc"><p>Module for the data operations such as loading, data augmentation, rescaling.
+Creates tensorflow Dataset instances to provide simple usage in training …</p></div>
+</dd>
+<dt><code class="name"><a title="deep_mri.model_zoo" href="model_zoo/index.html">deep_mri.model_zoo</a></code></dt>
+<dd>
+<div class="desc"><p>Module implementing some of the published ADNI classification models and API for creating the traditional architectures.</p></div>
+</dd>
+<dt><code class="name"><a title="deep_mri.preprocess" href="preprocess/index.html">deep_mri.preprocess</a></code></dt>
+<dd>
+<div class="desc"><p>Utilities for preprocessing raw MRI (nifty images). It includes coregistration tools, bias filtering and brain extraction.
+It uses mainly FLS and MINC …</p></div>
+</dd>
+<dt><code class="name"><a title="deep_mri.train" href="train/index.html">deep_mri.train</a></code></dt>
+<dd>
+<div class="desc"><p>Module for automatic start of the experiments defined by configuration file.
+This model also includes our callbacks for the tensorflow keras learning …</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#module">Module</a></li>
+<li><a href="#master-thesis">Master Thesis</a><ul>
+<li><a href="#repository-structure">Repository structure</a></li>
+</ul>
+</li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#requirements">Requirements</a></li>
+</ul>
+</li>
+<li><a href="#dataset">Dataset</a><ul>
+<li><a href="#how-access-adni">How access ADNI</a></li>
+<li><a href="#image-collection">Image Collection</a></li>
+<li><a href="#how-to-download-dataset">How to Download Dataset</a></li>
+<li><a href="#basic-info-and-glossary">Basic info and glossary</a></li>
+</ul>
+</li>
+<li><a href="#preprocessing">Preprocessing</a><ul>
+<li><a href="#running">Running</a></li>
+</ul>
+</li>
+<li><a href="#training">Training</a><ul>
+<li><a href="#run-from-config">Run from config</a></li>
+<li><a href="#specific-train-cycle-or-non-standard-dataset">Specific train cycle or non-standard dataset</a></li>
+</ul>
+</li>
+<li><a href="#other-components">Other components</a><ul>
+<li><a href="#configs">Configs</a></li>
+<li><a href="#example-of-mri-image">Example of MRI Image</a></li>
+<li><a href="#notebooks">Notebooks</a></li>
+<li><a href="#scripts">Scripts</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="deep_mri.dataset" href="dataset/index.html">deep_mri.dataset</a></code></li>
+<li><code><a title="deep_mri.model_zoo" href="model_zoo/index.html">deep_mri.model_zoo</a></code></li>
+<li><code><a title="deep_mri.preprocess" href="preprocess/index.html">deep_mri.preprocess</a></code></li>
+<li><code><a title="deep_mri.train" href="train/index.html">deep_mri.train</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.4</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.4" />
+<title>deep_mri.preprocess.nipype_ext API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>deep_mri.preprocess.nipype_ext</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.calc_entropy"><code class="name flex">
+<span>def <span class="ident">calc_entropy</span></span>(<span>array, bins=10)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.entropy_along_axis"><code class="name flex">
+<span>def <span class="ident">entropy_along_axis</span></span>(<span>img, ax=2)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.load_np_img"><code class="name flex">
+<span>def <span class="ident">load_np_img</span></span>(<span>img_path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.ArgSort"><code class="flex name class">
+<span>class <span class="ident">ArgSort</span></span>
+<span>(</span><span>from_file=None, resource_monitor=None, ignore_exception=False, **inputs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implement common interface functionality.</p>
+<ul>
+<li>Initializes inputs/outputs from input_spec/output_spec</li>
+<li>Provides help based on input_spec and output_spec</li>
+<li>Checks for mandatory inputs before running an interface</li>
+<li>Runs an interface and returns results</li>
+<li>Determines which inputs should be copied or linked to cwd</li>
+</ul>
+<p>This class does not implement aggregate_outputs, input_spec or
+output_spec. These should be defined by derived classes.</p>
+<p>This class cannot be instantiated.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>input_spec</code></strong> :&ensp;<code>:obj:</code>nipype.interfaces.base.specs.TraitedSpec``</dt>
+<dd>points to the traited class for the inputs</dd>
+<dt><strong><code>output_spec</code></strong> :&ensp;<code>:obj:</code>nipype.interfaces.base.specs.TraitedSpec``</dt>
+<dd>points to the traited class for the outputs</dd>
+<dt><strong><code>_redirect_x</code></strong> :&ensp;<code>bool</code></dt>
+<dd>should be set to <code>True</code> when the interface requires
+connecting to a <code>$DISPLAY</code> (default is <code>False</code>).</dd>
+<dt><strong><code>resource_monitor</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If <code>False</code>, prevents resource-monitoring this interface
+If <code>True</code> monitoring will be enabled IFF the general
+Nipype config is set on (<code>resource_monitor = true</code>).</dd>
+</dl>
+<p>Subclasses must implement <strong>init</strong></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.core.BaseInterface</li>
+<li>nipype.interfaces.base.core.Interface</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.ArgSort.input_spec"><code class="name">var <span class="ident">input_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.ArgSort.output_spec"><code class="name">var <span class="ident">output_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.ArgSortInputSpec"><code class="flex name class">
+<span>class <span class="ident">ArgSortInputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.BaseInterfaceInputSpec</li>
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.ArgSortOutputSpec"><code class="flex name class">
+<span>class <span class="ident">ArgSortOutputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.BeastNormalize"><code class="flex name class">
+<span>class <span class="ident">BeastNormalize</span></span>
+<span>(</span><span>command=None, terminal_output=None, **inputs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implements functionality to interact with command line programs
+class must be instantiated with a command argument</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>command</code></strong> :&ensp;<code>str</code></dt>
+<dd>define base immutable <code>command</code> you wish to run</dd>
+<dt><strong><code>args</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>optional arguments passed to base <code>command</code></dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import pprint
+&gt;&gt;&gt; from nipype.interfaces.base import CommandLine
+&gt;&gt;&gt; cli = CommandLine(command='ls', environ={'DISPLAY': ':1'})
+&gt;&gt;&gt; cli.inputs.args = '-al'
+&gt;&gt;&gt; cli.cmdline
+'ls -al'
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; # Use get_traitsfree() to check all inputs set
+&gt;&gt;&gt; pprint.pprint(cli.inputs.get_traitsfree())  # doctest:
+{'args': '-al',
+ 'environ': {'DISPLAY': ':1'}}
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; cli.inputs.get_hashval()[0][0]
+('args', '-al')
+&gt;&gt;&gt; cli.inputs.get_hashval()[1]
+'11c37f97649cd61627f4afe5136af8c0'
+</code></pre>
+<p>Subclasses must implement <strong>init</strong></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.core.CommandLine</li>
+<li>nipype.interfaces.base.core.BaseInterface</li>
+<li>nipype.interfaces.base.core.Interface</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.BeastNormalize.input_spec"><code class="name">var <span class="ident">input_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.BeastNormalize.output_spec"><code class="name">var <span class="ident">output_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.BeastNormalizeInputSpec"><code class="flex name class">
+<span>class <span class="ident">BeastNormalizeInputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.CommandLineInputSpec</li>
+<li>nipype.interfaces.base.specs.BaseInterfaceInputSpec</li>
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.BeastNormalizeOutputSpec"><code class="flex name class">
+<span>class <span class="ident">BeastNormalizeOutputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.CopyDir"><code class="flex name class">
+<span>class <span class="ident">CopyDir</span></span>
+<span>(</span><span>from_file=None, resource_monitor=None, ignore_exception=False, **inputs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implement common interface functionality.</p>
+<ul>
+<li>Initializes inputs/outputs from input_spec/output_spec</li>
+<li>Provides help based on input_spec and output_spec</li>
+<li>Checks for mandatory inputs before running an interface</li>
+<li>Runs an interface and returns results</li>
+<li>Determines which inputs should be copied or linked to cwd</li>
+</ul>
+<p>This class does not implement aggregate_outputs, input_spec or
+output_spec. These should be defined by derived classes.</p>
+<p>This class cannot be instantiated.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>input_spec</code></strong> :&ensp;<code>:obj:</code>nipype.interfaces.base.specs.TraitedSpec``</dt>
+<dd>points to the traited class for the inputs</dd>
+<dt><strong><code>output_spec</code></strong> :&ensp;<code>:obj:</code>nipype.interfaces.base.specs.TraitedSpec``</dt>
+<dd>points to the traited class for the outputs</dd>
+<dt><strong><code>_redirect_x</code></strong> :&ensp;<code>bool</code></dt>
+<dd>should be set to <code>True</code> when the interface requires
+connecting to a <code>$DISPLAY</code> (default is <code>False</code>).</dd>
+<dt><strong><code>resource_monitor</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If <code>False</code>, prevents resource-monitoring this interface
+If <code>True</code> monitoring will be enabled IFF the general
+Nipype config is set on (<code>resource_monitor = true</code>).</dd>
+</dl>
+<p>Subclasses must implement <strong>init</strong></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.core.BaseInterface</li>
+<li>nipype.interfaces.base.core.Interface</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.CopyDir.input_spec"><code class="name">var <span class="ident">input_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.CopyDir.logging"><code class="name">var <span class="ident">logging</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.CopyDir.output_spec"><code class="name">var <span class="ident">output_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.CopyDirInputSpec"><code class="flex name class">
+<span>class <span class="ident">CopyDirInputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.BaseInterfaceInputSpec</li>
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.CopyDirOutputSpec"><code class="flex name class">
+<span>class <span class="ident">CopyDirOutputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.EntropyBySlice"><code class="flex name class">
+<span>class <span class="ident">EntropyBySlice</span></span>
+<span>(</span><span>from_file=None, resource_monitor=None, ignore_exception=False, **inputs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implement common interface functionality.</p>
+<ul>
+<li>Initializes inputs/outputs from input_spec/output_spec</li>
+<li>Provides help based on input_spec and output_spec</li>
+<li>Checks for mandatory inputs before running an interface</li>
+<li>Runs an interface and returns results</li>
+<li>Determines which inputs should be copied or linked to cwd</li>
+</ul>
+<p>This class does not implement aggregate_outputs, input_spec or
+output_spec. These should be defined by derived classes.</p>
+<p>This class cannot be instantiated.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>input_spec</code></strong> :&ensp;<code>:obj:</code>nipype.interfaces.base.specs.TraitedSpec``</dt>
+<dd>points to the traited class for the inputs</dd>
+<dt><strong><code>output_spec</code></strong> :&ensp;<code>:obj:</code>nipype.interfaces.base.specs.TraitedSpec``</dt>
+<dd>points to the traited class for the outputs</dd>
+<dt><strong><code>_redirect_x</code></strong> :&ensp;<code>bool</code></dt>
+<dd>should be set to <code>True</code> when the interface requires
+connecting to a <code>$DISPLAY</code> (default is <code>False</code>).</dd>
+<dt><strong><code>resource_monitor</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If <code>False</code>, prevents resource-monitoring this interface
+If <code>True</code> monitoring will be enabled IFF the general
+Nipype config is set on (<code>resource_monitor = true</code>).</dd>
+</dl>
+<p>Subclasses must implement <strong>init</strong></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.core.BaseInterface</li>
+<li>nipype.interfaces.base.core.Interface</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.EntropyBySlice.input_spec"><code class="name">var <span class="ident">input_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.EntropyBySlice.output_spec"><code class="name">var <span class="ident">output_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.EntropyBySlicesInputSpec"><code class="flex name class">
+<span>class <span class="ident">EntropyBySlicesInputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.BaseInterfaceInputSpec</li>
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.EntropyBySlicesOuputSpec"><code class="flex name class">
+<span>class <span class="ident">EntropyBySlicesOuputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.MincBeast"><code class="flex name class">
+<span>class <span class="ident">MincBeast</span></span>
+<span>(</span><span>command=None, terminal_output=None, **inputs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implements functionality to interact with command line programs
+class must be instantiated with a command argument</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>command</code></strong> :&ensp;<code>str</code></dt>
+<dd>define base immutable <code>command</code> you wish to run</dd>
+<dt><strong><code>args</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>optional arguments passed to base <code>command</code></dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import pprint
+&gt;&gt;&gt; from nipype.interfaces.base import CommandLine
+&gt;&gt;&gt; cli = CommandLine(command='ls', environ={'DISPLAY': ':1'})
+&gt;&gt;&gt; cli.inputs.args = '-al'
+&gt;&gt;&gt; cli.cmdline
+'ls -al'
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; # Use get_traitsfree() to check all inputs set
+&gt;&gt;&gt; pprint.pprint(cli.inputs.get_traitsfree())  # doctest:
+{'args': '-al',
+ 'environ': {'DISPLAY': ':1'}}
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; cli.inputs.get_hashval()[0][0]
+('args', '-al')
+&gt;&gt;&gt; cli.inputs.get_hashval()[1]
+'11c37f97649cd61627f4afe5136af8c0'
+</code></pre>
+<p>Subclasses must implement <strong>init</strong></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.core.CommandLine</li>
+<li>nipype.interfaces.base.core.BaseInterface</li>
+<li>nipype.interfaces.base.core.Interface</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.MincBeast.input_spec"><code class="name">var <span class="ident">input_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.MincBeast.output_spec"><code class="name">var <span class="ident">output_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.MincBeastInputSpec"><code class="flex name class">
+<span>class <span class="ident">MincBeastInputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.CommandLineInputSpec</li>
+<li>nipype.interfaces.base.specs.BaseInterfaceInputSpec</li>
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.MincBeastOutputSpec"><code class="flex name class">
+<span>class <span class="ident">MincBeastOutputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.MincProduct"><code class="flex name class">
+<span>class <span class="ident">MincProduct</span></span>
+<span>(</span><span>command=None, terminal_output=None, **inputs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implements functionality to interact with command line programs
+class must be instantiated with a command argument</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>command</code></strong> :&ensp;<code>str</code></dt>
+<dd>define base immutable <code>command</code> you wish to run</dd>
+<dt><strong><code>args</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>optional arguments passed to base <code>command</code></dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import pprint
+&gt;&gt;&gt; from nipype.interfaces.base import CommandLine
+&gt;&gt;&gt; cli = CommandLine(command='ls', environ={'DISPLAY': ':1'})
+&gt;&gt;&gt; cli.inputs.args = '-al'
+&gt;&gt;&gt; cli.cmdline
+'ls -al'
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; # Use get_traitsfree() to check all inputs set
+&gt;&gt;&gt; pprint.pprint(cli.inputs.get_traitsfree())  # doctest:
+{'args': '-al',
+ 'environ': {'DISPLAY': ':1'}}
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; cli.inputs.get_hashval()[0][0]
+('args', '-al')
+&gt;&gt;&gt; cli.inputs.get_hashval()[1]
+'11c37f97649cd61627f4afe5136af8c0'
+</code></pre>
+<p>Subclasses must implement <strong>init</strong></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.core.CommandLine</li>
+<li>nipype.interfaces.base.core.BaseInterface</li>
+<li>nipype.interfaces.base.core.Interface</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.MincProduct.input_spec"><code class="name">var <span class="ident">input_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.MincProduct.output_spec"><code class="name">var <span class="ident">output_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.MincProductInputSpec"><code class="flex name class">
+<span>class <span class="ident">MincProductInputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.CommandLineInputSpec</li>
+<li>nipype.interfaces.base.specs.BaseInterfaceInputSpec</li>
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.MincProductOutputSpec"><code class="flex name class">
+<span>class <span class="ident">MincProductOutputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Mnc2Nii"><code class="flex name class">
+<span>class <span class="ident">Mnc2Nii</span></span>
+<span>(</span><span>command=None, terminal_output=None, **inputs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implements functionality to interact with command line programs
+class must be instantiated with a command argument</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>command</code></strong> :&ensp;<code>str</code></dt>
+<dd>define base immutable <code>command</code> you wish to run</dd>
+<dt><strong><code>args</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>optional arguments passed to base <code>command</code></dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import pprint
+&gt;&gt;&gt; from nipype.interfaces.base import CommandLine
+&gt;&gt;&gt; cli = CommandLine(command='ls', environ={'DISPLAY': ':1'})
+&gt;&gt;&gt; cli.inputs.args = '-al'
+&gt;&gt;&gt; cli.cmdline
+'ls -al'
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; # Use get_traitsfree() to check all inputs set
+&gt;&gt;&gt; pprint.pprint(cli.inputs.get_traitsfree())  # doctest:
+{'args': '-al',
+ 'environ': {'DISPLAY': ':1'}}
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; cli.inputs.get_hashval()[0][0]
+('args', '-al')
+&gt;&gt;&gt; cli.inputs.get_hashval()[1]
+'11c37f97649cd61627f4afe5136af8c0'
+</code></pre>
+<p>Subclasses must implement <strong>init</strong></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.core.CommandLine</li>
+<li>nipype.interfaces.base.core.BaseInterface</li>
+<li>nipype.interfaces.base.core.Interface</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.Mnc2Nii.input_spec"><code class="name">var <span class="ident">input_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Mnc2Nii.output_spec"><code class="name">var <span class="ident">output_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Mnc2NiiInputSpec"><code class="flex name class">
+<span>class <span class="ident">Mnc2NiiInputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.CommandLineInputSpec</li>
+<li>nipype.interfaces.base.specs.BaseInterfaceInputSpec</li>
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Mnc2NiiOutputSpec"><code class="flex name class">
+<span>class <span class="ident">Mnc2NiiOutputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Nii2Mnc"><code class="flex name class">
+<span>class <span class="ident">Nii2Mnc</span></span>
+<span>(</span><span>command=None, terminal_output=None, **inputs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implements functionality to interact with command line programs
+class must be instantiated with a command argument</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>command</code></strong> :&ensp;<code>str</code></dt>
+<dd>define base immutable <code>command</code> you wish to run</dd>
+<dt><strong><code>args</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>optional arguments passed to base <code>command</code></dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import pprint
+&gt;&gt;&gt; from nipype.interfaces.base import CommandLine
+&gt;&gt;&gt; cli = CommandLine(command='ls', environ={'DISPLAY': ':1'})
+&gt;&gt;&gt; cli.inputs.args = '-al'
+&gt;&gt;&gt; cli.cmdline
+'ls -al'
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; # Use get_traitsfree() to check all inputs set
+&gt;&gt;&gt; pprint.pprint(cli.inputs.get_traitsfree())  # doctest:
+{'args': '-al',
+ 'environ': {'DISPLAY': ':1'}}
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; cli.inputs.get_hashval()[0][0]
+('args', '-al')
+&gt;&gt;&gt; cli.inputs.get_hashval()[1]
+'11c37f97649cd61627f4afe5136af8c0'
+</code></pre>
+<p>Subclasses must implement <strong>init</strong></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.core.CommandLine</li>
+<li>nipype.interfaces.base.core.BaseInterface</li>
+<li>nipype.interfaces.base.core.Interface</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.Nii2Mnc.input_spec"><code class="name">var <span class="ident">input_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Nii2Mnc.output_spec"><code class="name">var <span class="ident">output_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Nii2MncInputSpec"><code class="flex name class">
+<span>class <span class="ident">Nii2MncInputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.CommandLineInputSpec</li>
+<li>nipype.interfaces.base.specs.BaseInterfaceInputSpec</li>
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Nii2MncOutputSpec"><code class="flex name class">
+<span>class <span class="ident">Nii2MncOutputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Slicer2D"><code class="flex name class">
+<span>class <span class="ident">Slicer2D</span></span>
+<span>(</span><span>from_file=None, resource_monitor=None, ignore_exception=False, **inputs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implement common interface functionality.</p>
+<ul>
+<li>Initializes inputs/outputs from input_spec/output_spec</li>
+<li>Provides help based on input_spec and output_spec</li>
+<li>Checks for mandatory inputs before running an interface</li>
+<li>Runs an interface and returns results</li>
+<li>Determines which inputs should be copied or linked to cwd</li>
+</ul>
+<p>This class does not implement aggregate_outputs, input_spec or
+output_spec. These should be defined by derived classes.</p>
+<p>This class cannot be instantiated.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>input_spec</code></strong> :&ensp;<code>:obj:</code>nipype.interfaces.base.specs.TraitedSpec``</dt>
+<dd>points to the traited class for the inputs</dd>
+<dt><strong><code>output_spec</code></strong> :&ensp;<code>:obj:</code>nipype.interfaces.base.specs.TraitedSpec``</dt>
+<dd>points to the traited class for the outputs</dd>
+<dt><strong><code>_redirect_x</code></strong> :&ensp;<code>bool</code></dt>
+<dd>should be set to <code>True</code> when the interface requires
+connecting to a <code>$DISPLAY</code> (default is <code>False</code>).</dd>
+<dt><strong><code>resource_monitor</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If <code>False</code>, prevents resource-monitoring this interface
+If <code>True</code> monitoring will be enabled IFF the general
+Nipype config is set on (<code>resource_monitor = true</code>).</dd>
+</dl>
+<p>Subclasses must implement <strong>init</strong></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.core.BaseInterface</li>
+<li>nipype.interfaces.base.core.Interface</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="deep_mri.preprocess.nipype_ext.Slicer2D.input_spec"><code class="name">var <span class="ident">input_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Slicer2D.output_spec"><code class="name">var <span class="ident">output_spec</span></code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Slicer2DInputSpec"><code class="flex name class">
+<span>class <span class="ident">Slicer2DInputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.BaseInterfaceInputSpec</li>
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+<dt id="deep_mri.preprocess.nipype_ext.Slicer2DOuputSpec"><code class="flex name class">
+<span>class <span class="ident">Slicer2DOuputSpec</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a subclass with strict traits.</p>
+<p>This is used in 90% of the cases.</p>
+<p>Initialize handlers and inputs</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>nipype.interfaces.base.specs.TraitedSpec</li>
+<li>nipype.interfaces.base.specs.BaseTraitedSpec</li>
+<li>traits.has_traits.HasTraits</li>
+<li>traits.ctraits.CHasTraits</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="deep_mri.preprocess" href="index.html">deep_mri.preprocess</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="deep_mri.preprocess.nipype_ext.calc_entropy" href="#deep_mri.preprocess.nipype_ext.calc_entropy">calc_entropy</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.entropy_along_axis" href="#deep_mri.preprocess.nipype_ext.entropy_along_axis">entropy_along_axis</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.load_np_img" href="#deep_mri.preprocess.nipype_ext.load_np_img">load_np_img</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.ArgSort" href="#deep_mri.preprocess.nipype_ext.ArgSort">ArgSort</a></code></h4>
+<ul class="">
+<li><code><a title="deep_mri.preprocess.nipype_ext.ArgSort.input_spec" href="#deep_mri.preprocess.nipype_ext.ArgSort.input_spec">input_spec</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.ArgSort.output_spec" href="#deep_mri.preprocess.nipype_ext.ArgSort.output_spec">output_spec</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.ArgSortInputSpec" href="#deep_mri.preprocess.nipype_ext.ArgSortInputSpec">ArgSortInputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.ArgSortOutputSpec" href="#deep_mri.preprocess.nipype_ext.ArgSortOutputSpec">ArgSortOutputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.BeastNormalize" href="#deep_mri.preprocess.nipype_ext.BeastNormalize">BeastNormalize</a></code></h4>
+<ul class="">
+<li><code><a title="deep_mri.preprocess.nipype_ext.BeastNormalize.input_spec" href="#deep_mri.preprocess.nipype_ext.BeastNormalize.input_spec">input_spec</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.BeastNormalize.output_spec" href="#deep_mri.preprocess.nipype_ext.BeastNormalize.output_spec">output_spec</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.BeastNormalizeInputSpec" href="#deep_mri.preprocess.nipype_ext.BeastNormalizeInputSpec">BeastNormalizeInputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.BeastNormalizeOutputSpec" href="#deep_mri.preprocess.nipype_ext.BeastNormalizeOutputSpec">BeastNormalizeOutputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.CopyDir" href="#deep_mri.preprocess.nipype_ext.CopyDir">CopyDir</a></code></h4>
+<ul class="">
+<li><code><a title="deep_mri.preprocess.nipype_ext.CopyDir.input_spec" href="#deep_mri.preprocess.nipype_ext.CopyDir.input_spec">input_spec</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.CopyDir.logging" href="#deep_mri.preprocess.nipype_ext.CopyDir.logging">logging</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.CopyDir.output_spec" href="#deep_mri.preprocess.nipype_ext.CopyDir.output_spec">output_spec</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.CopyDirInputSpec" href="#deep_mri.preprocess.nipype_ext.CopyDirInputSpec">CopyDirInputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.CopyDirOutputSpec" href="#deep_mri.preprocess.nipype_ext.CopyDirOutputSpec">CopyDirOutputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.EntropyBySlice" href="#deep_mri.preprocess.nipype_ext.EntropyBySlice">EntropyBySlice</a></code></h4>
+<ul class="">
+<li><code><a title="deep_mri.preprocess.nipype_ext.EntropyBySlice.input_spec" href="#deep_mri.preprocess.nipype_ext.EntropyBySlice.input_spec">input_spec</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.EntropyBySlice.output_spec" href="#deep_mri.preprocess.nipype_ext.EntropyBySlice.output_spec">output_spec</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.EntropyBySlicesInputSpec" href="#deep_mri.preprocess.nipype_ext.EntropyBySlicesInputSpec">EntropyBySlicesInputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.EntropyBySlicesOuputSpec" href="#deep_mri.preprocess.nipype_ext.EntropyBySlicesOuputSpec">EntropyBySlicesOuputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.MincBeast" href="#deep_mri.preprocess.nipype_ext.MincBeast">MincBeast</a></code></h4>
+<ul class="">
+<li><code><a title="deep_mri.preprocess.nipype_ext.MincBeast.input_spec" href="#deep_mri.preprocess.nipype_ext.MincBeast.input_spec">input_spec</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.MincBeast.output_spec" href="#deep_mri.preprocess.nipype_ext.MincBeast.output_spec">output_spec</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.MincBeastInputSpec" href="#deep_mri.preprocess.nipype_ext.MincBeastInputSpec">MincBeastInputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.MincBeastOutputSpec" href="#deep_mri.preprocess.nipype_ext.MincBeastOutputSpec">MincBeastOutputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.MincProduct" href="#deep_mri.preprocess.nipype_ext.MincProduct">MincProduct</a></code></h4>
+<ul class="">
+<li><code><a title="deep_mri.preprocess.nipype_ext.MincProduct.input_spec" href="#deep_mri.preprocess.nipype_ext.MincProduct.input_spec">input_spec</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.MincProduct.output_spec" href="#deep_mri.preprocess.nipype_ext.MincProduct.output_spec">output_spec</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.MincProductInputSpec" href="#deep_mri.preprocess.nipype_ext.MincProductInputSpec">MincProductInputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.MincProductOutputSpec" href="#deep_mri.preprocess.nipype_ext.MincProductOutputSpec">MincProductOutputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.Mnc2Nii" href="#deep_mri.preprocess.nipype_ext.Mnc2Nii">Mnc2Nii</a></code></h4>
+<ul class="">
+<li><code><a title="deep_mri.preprocess.nipype_ext.Mnc2Nii.input_spec" href="#deep_mri.preprocess.nipype_ext.Mnc2Nii.input_spec">input_spec</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.Mnc2Nii.output_spec" href="#deep_mri.preprocess.nipype_ext.Mnc2Nii.output_spec">output_spec</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.Mnc2NiiInputSpec" href="#deep_mri.preprocess.nipype_ext.Mnc2NiiInputSpec">Mnc2NiiInputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.Mnc2NiiOutputSpec" href="#deep_mri.preprocess.nipype_ext.Mnc2NiiOutputSpec">Mnc2NiiOutputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.Nii2Mnc" href="#deep_mri.preprocess.nipype_ext.Nii2Mnc">Nii2Mnc</a></code></h4>
+<ul class="">
+<li><code><a title="deep_mri.preprocess.nipype_ext.Nii2Mnc.input_spec" href="#deep_mri.preprocess.nipype_ext.Nii2Mnc.input_spec">input_spec</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.Nii2Mnc.output_spec" href="#deep_mri.preprocess.nipype_ext.Nii2Mnc.output_spec">output_spec</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.Nii2MncInputSpec" href="#deep_mri.preprocess.nipype_ext.Nii2MncInputSpec">Nii2MncInputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.Nii2MncOutputSpec" href="#deep_mri.preprocess.nipype_ext.Nii2MncOutputSpec">Nii2MncOutputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.Slicer2D" href="#deep_mri.preprocess.nipype_ext.Slicer2D">Slicer2D</a></code></h4>
+<ul class="">
+<li><code><a title="deep_mri.preprocess.nipype_ext.Slicer2D.input_spec" href="#deep_mri.preprocess.nipype_ext.Slicer2D.input_spec">input_spec</a></code></li>
+<li><code><a title="deep_mri.preprocess.nipype_ext.Slicer2D.output_spec" href="#deep_mri.preprocess.nipype_ext.Slicer2D.output_spec">output_spec</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.Slicer2DInputSpec" href="#deep_mri.preprocess.nipype_ext.Slicer2DInputSpec">Slicer2DInputSpec</a></code></h4>
+</li>
+<li>
+<h4><code><a title="deep_mri.preprocess.nipype_ext.Slicer2DOuputSpec" href="#deep_mri.preprocess.nipype_ext.Slicer2DOuputSpec">Slicer2DOuputSpec</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.4</a>.</p>
+</footer>
+</body>
+</html>

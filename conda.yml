@@ -13,6 +13,7 @@ dependencies:
     - auto-tqdm
     - seaborn
     - pandas
+    - jupyter
     - fslpy
     - tensorflow-addons
     - tensorflow_hub

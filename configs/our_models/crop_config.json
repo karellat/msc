@@ -1,0 +1,32 @@
+{
+  "model" :  "2d_transfer",
+  "model_args" :
+    {
+        "feature_extractor_url" : "https://tfhub.dev/google/inaturalist/inception_v3/feature_vector/4",
+        "input_shape"  : [193, 193, 3],
+        "feature_trainable" : false,
+        "fc_count" : 1024,
+        "num_outputs" : 3
+    },
+
+  "init_lr" : 0.0001,
+  "dataset_path" : "/home/karelto1/MRI/slice_minc/*/*/*/*.png",
+  "data_csv_path" : "/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv",
+  "train_filter_first_screen" : false,
+  "valid_filter_first_screen" : false,
+  "dataset" : "2d",
+  "dataset_args" : {
+    "img_size" : 193,
+    "shuffle" : true,
+    "transform" : "crop"
+  },
+
+  "callbacks" : ["board", "save"],
+  "log_root" : "./logs/data_aug",
+  "log_name" :  "crop",
+  "epochs" : 100,
+  "batch_size" : 16,
+  "optimizer" : "adam",
+  "loss" : "categorical_crossentropy",
+  "metrics" : ["accuracy", "AUC"]
+}
