@@ -41,7 +41,7 @@
 # Dataset
 open dataset [**ADNI**](http://adni.loni.usc.edu/)
 
-''The Alzheimer's Disease Neuroimaging Initiative (ADNI) is a longitudinal multicenter study designed to develop clinical, imaging, genetic, and biochemical biomarkers for the early detection and tracking of Alzheimers disease (AD).'' 
+''The Alzheimer's Disease Neuroimaging Initiative (ADNI) is a longitudinal multicenter study designed to develop clinical, imaging, genetic, and biochemical biomarkers for the early detection and tracking of Alzheimer's disease (AD).'' 
 #### How access **ADNI** 
 enrol at https://ida.loni.usc.edu/login.jsp?project=ADNI
 #### Image Collection
@@ -49,6 +49,7 @@ Standardized ADNI1:Complete 1Yr 1.5T
 ## How to Download Dataset
 For authorized ADNI users only:
 Standardized Image Collections:
+
 1. Log into the archive: https://ida.loni.usc.edu/login.jsp?project=ADNI
 2. Under the DOWNLOAD menu, choose **Image Collections**
 3. In the left navigation section, click **Other Shared Collections**
