@@ -1,5 +1,6 @@
 # Master Thesis
 ##### by Tomáš Karella
+## [DOCUMENTATION](https://karellat.github.io/master_thesis)
 This repository contains: 
 #### Directories
 * configs - example of configs for model training
