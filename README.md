@@ -1,7 +1,11 @@
 <h2>[ONLINE DOCUMENTATION](https://karellat.github.io/master_thesis) </h2>
+
 # Master Thesis
+
 <h4>by Tomáš Karella </h4>
+
 ## Repository structure
+
 <h4>Directories</h4>
 * configs - example of configs for model training
 * deep_mri - python package for simple model training and preprocessing of dataset
