@@ -11,7 +11,6 @@ This repository contains:
 * examples - examples MRI images in nifty format  
     * [docs](./examples/README.md)
 * ext - external libraries for preprocessing Dockerfile
-* notes - some notes of adni dataset and preprocessing tools
 * scripts - examples of preprocessing scripts and variable training scripts
     * [docs](./scripts/README.md)
 #### Files 

@@ -110,7 +110,6 @@ urls = [
 ]
 
 EPOCHS = 300
-# TODO:  Solve smaller nets
 non_compatible = ["https://tfhub.dev/google/imagenet/mobilenet_v2_050_96/feature_vector/4",
                   "https://tfhub.dev/google/imagenet/mobilenet_v2_075_96/feature_vector/4"]
 

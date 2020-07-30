@@ -28,5 +28,3 @@
             * differs along the dataset types
             * typically contains image shape, shuffle, etc
 
-# Sample configs of our experiments
-TODO: 
