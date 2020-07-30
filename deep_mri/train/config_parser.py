@@ -8,6 +8,19 @@ from .callbacks import SaveConfigCallback, DummyPredictorCallback, ConfusionMatr
 
 
 def config_to_ds(config):
+    """
+    Create the dataset based on info from config
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    tf.keras.Dataset
+
+    """
     # Dataset setting
     assert ("dataset_path" in config) and ("train_filter_first_screen" in config) and (
             "valid_filter_first_screen" in config)
@@ -108,6 +121,19 @@ def config_to_callbacks(config, train_ds, valid_ds):
 
 
 def config_to_model(config):
+    """
+    Create the model based on info from config
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    tf.keras.Model
+
+    """
     assert "optimizer" in config
     optimizer = config["optimizer"]
     assert "loss" in config
@@ -131,13 +157,49 @@ def config_to_model(config):
 
 
 def config_epochs(config):
+    """
+    Parse epochs from config dict
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    int
+
+    """
     return int(config_get_field(config, "epochs"))
 
 
 def config_batch_size(config):
+    """
+    Parse batch size from config dict
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    int
+
+    """
     return int(config_get_field(config, "batch_size"))
 
 
 def config_get_field(config, name):
+    """
+    Get field by given name from config dict
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+    name : str
+        Name of the config field
+
+    """
     assert name in config, f"{name} not in config."
     return config[name]

@@ -156,12 +156,29 @@ def _get_image_id(name):
 
 
 def _get_image_group(file_path, class_folder):
+    &#34;&#34;&#34;
+    Get name of the ADNI group
+    Parameters
+    ----------
+    file_path : str
+        Image file path
+    class_folder
+        The class folder order in the path
+    Returns
+    -------
+    str
+    ADNI group such as AD, MCI, CH
+
+    &#34;&#34;&#34;
     parts = file_path.split(os.path.sep)
     assert np.sum(parts[class_folder] == CLASS_NAMES) == 1
     return CLASS_NAMES[np.argmax(parts[class_folder] == CLASS_NAMES)]
 
 
 class ShuffleStrategy(Enum):
+    &#34;&#34;&#34;
+    Strategy of splitting the images between training and validation dataset.
+    &#34;&#34;&#34;
     SHUFFLE_RANDOM = auto()
     SHUFFLE_SUBJECTS = auto()
 
@@ -176,6 +193,37 @@ def get_train_valid_files(path=DEFAULT_PATH,
                           dropping_group=None,
                           im_id_fnc=_get_image_id,
                           group_folder=-3):
+    &#34;&#34;&#34;
+    Create training and validation sets of files and labels from given folder path.
+    Parameters
+    ----------
+    path : str
+        Path to the directory with images
+    csv_path : str
+        Path to the additional info csv file
+    train_filter_first_screen : bool
+        True if use only the first scans in training dataset
+    valid_filter_first_screen : bool
+        True if use only the first scans in training dataset
+    shuffle_strategy : ShuffleStrategy
+        How to split the images
+    valid_train_ratio : float
+        Percentage of images used for validation
+    shuffle : bool
+        True if shuffling images in the datasets
+    dropping_group : str
+        Name of label to exclude from the dataset
+    im_id_fnc : function
+        Function transforming the image to the ADNI id
+    group_folder : int
+        The class folder order in the path
+
+    Returns
+    -------
+    tuple
+        Return the list of train files, list of train labels, list of validation files, list of validation labels
+
+    &#34;&#34;&#34;
     if dropping_group is not None:
         assert dropping_group in CLASS_NAMES, f&#34;Unknown group to drop {dropping_group}&#34;
     assert isinstance(shuffle_strategy, ShuffleStrategy)
@@ -341,7 +389,36 @@ Parameters</p>
 <span>def <span class="ident">get_train_valid_files</span></span>(<span>path='/ADNI/minc_beast/*/*/*.nii', csv_path='/ADNI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv', train_filter_first_screen=True, valid_filter_first_screen=False, shuffle_strategy=ShuffleStrategy.SHUFFLE_SUBJECTS, valid_train_ratio=0.2, shuffle=False, dropping_group=None, im_id_fnc=&lt;function _get_image_id&gt;, group_folder=-3)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Create training and validation sets of files and labels from given folder path.
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the directory with images</dd>
+<dt><strong><code>csv_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the additional info csv file</dd>
+<dt><strong><code>train_filter_first_screen</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True if use only the first scans in training dataset</dd>
+<dt><strong><code>valid_filter_first_screen</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True if use only the first scans in training dataset</dd>
+<dt><strong><code>shuffle_strategy</code></strong> :&ensp;<code><a title="deep_mri.dataset.dataset.ShuffleStrategy" href="#deep_mri.dataset.dataset.ShuffleStrategy">ShuffleStrategy</a></code></dt>
+<dd>How to split the images</dd>
+<dt><strong><code>valid_train_ratio</code></strong> :&ensp;<code>float</code></dt>
+<dd>Percentage of images used for validation</dd>
+<dt><strong><code>shuffle</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True if shuffling images in the datasets</dd>
+<dt><strong><code>dropping_group</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of label to exclude from the dataset</dd>
+<dt><strong><code>im_id_fnc</code></strong> :&ensp;<code>function</code></dt>
+<dd>Function transforming the image to the ADNI id</dd>
+<dt><strong><code>group_folder</code></strong> :&ensp;<code>int</code></dt>
+<dd>The class folder order in the path</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple</code></dt>
+<dd>Return the list of train files, list of train labels, list of validation files, list of validation labels</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -356,6 +433,37 @@ Parameters</p>
                           dropping_group=None,
                           im_id_fnc=_get_image_id,
                           group_folder=-3):
+    &#34;&#34;&#34;
+    Create training and validation sets of files and labels from given folder path.
+    Parameters
+    ----------
+    path : str
+        Path to the directory with images
+    csv_path : str
+        Path to the additional info csv file
+    train_filter_first_screen : bool
+        True if use only the first scans in training dataset
+    valid_filter_first_screen : bool
+        True if use only the first scans in training dataset
+    shuffle_strategy : ShuffleStrategy
+        How to split the images
+    valid_train_ratio : float
+        Percentage of images used for validation
+    shuffle : bool
+        True if shuffling images in the datasets
+    dropping_group : str
+        Name of label to exclude from the dataset
+    im_id_fnc : function
+        Function transforming the image to the ADNI id
+    group_folder : int
+        The class folder order in the path
+
+    Returns
+    -------
+    tuple
+        Return the list of train files, list of train labels, list of validation files, list of validation labels
+
+    &#34;&#34;&#34;
     if dropping_group is not None:
         assert dropping_group in CLASS_NAMES, f&#34;Unknown group to drop {dropping_group}&#34;
     assert isinstance(shuffle_strategy, ShuffleStrategy)
@@ -576,12 +684,15 @@ Parameters</p>
 <span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>An enumeration.</p></div>
+<div class="desc"><p>Strategy of splitting the images between training and validation dataset.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class ShuffleStrategy(Enum):
+    &#34;&#34;&#34;
+    Strategy of splitting the images between training and validation dataset.
+    &#34;&#34;&#34;
     SHUFFLE_RANDOM = auto()
     SHUFFLE_SUBJECTS = auto()</code></pre>
 </details>

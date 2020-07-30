@@ -5,6 +5,17 @@ from deep_mri.dataset.dataset import CLASS_NAMES
 
 
 def get_not_matching(ds, model):
+    """
+    Get wrongly classified datapoints
+    Parameters
+    ----------
+    ds : tf.keras.Dataset
+    model : tf.keras.Model
+
+    Returns
+    -------
+    list of images, list of labels, list of predictions
+    """
     not_matching_img = None
     not_matching_labels = None
     not_matching_pred = None

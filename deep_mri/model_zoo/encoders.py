@@ -4,6 +4,23 @@ from tensorflow.math import log
 
 
 def cae(input_shape=(32, 32, 32, 1), init_filters=256, activation='relu'):
+    """
+    Convolutional encoder using Transposed Convolutions as decoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    init_filters : int
+        Filters of the first convolutional layer
+    activation : string
+        Tensorflow activation function for all the layers
+
+    Returns
+    -------
+    tf.keras.model
+
+    """
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape),
         tf.keras.layers.Conv3D(filters=init_filters, kernel_size=6, strides=2, activation=activation),
@@ -21,6 +38,28 @@ def autoencoder_baseline(input_shape=(5, 5, 5, 1),
                          regularization='l2',
                          conv_filters=8,
                          dense_activation=None):
+    """
+    Convolutional encoder using Dense layer as decoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    conv_kernel : tuple
+        Shape of the convolutional kernel
+    conv_activation : string
+        Tensorflow activation function for all the layers
+    regularization : string
+        Regularization of convolutional weights
+    conv_filters : int
+        Number of convolutional filters
+    dense_activation : string
+        Decoder activation function
+
+    Returns
+    -------
+    tf.keras.model
+    """
     fc_nodes = np.prod(input_shape)
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape, name='Input'),
@@ -36,6 +75,9 @@ def _kld(target_s, s):
 
 
 class PayanEncoder(tf.keras.Model):
+    """
+    Payan Encoder model
+    """
     def __init__(self,
                  input_shape=(5, 5, 5, 1),
                  conv_filters=150,
@@ -81,6 +123,13 @@ class PayanEncoder(tf.keras.Model):
 
 
 def payan2():
+    """
+    Payan model with default settings
+
+    Returns
+    -------
+    tf.keras.model
+    """
     input_layer = tf.keras.layers.Input((5, 5, 5, 1))
     conv1 = tf.keras.layers.Conv3D(150, 5, activation='sigmoid', padding='same',
                                    kernel_regularizer=tf.keras.regularizers.l2(0.1))(input_layer)
@@ -102,6 +151,19 @@ def payan2():
 
 def my_encoder(init_filters=256,
                input_shape=(32, 32, 32, 1)):
+    """
+    CNN encoder model
+    Parameters
+    ----------
+    init_filters : int
+        Number of filters
+    input_shape : tuple
+        Expected input shape
+    Returns
+    -------
+    tf.keras.model
+
+    """
     pretrained_layers = ['conv1', 'maxp1', 'conv2', 'maxp2', 'conv3', 'maxp3']
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape),
@@ -129,6 +191,21 @@ def my_encoder(init_filters=256,
 
 
 def factory(model_name, **model_args):
+    """
+    Encoder factory creating encoder by given name and passing the model args
+
+    Parameters
+    ----------
+    model_name : str
+        Name of the encoder model
+    model_args : dict
+        Arguments for model
+
+    Returns
+    -------
+    tf.keras.model
+
+    """
     if model_name.lower() == 'baseline':
         return autoencoder_baseline(**model_args)
     elif model_name.lower() == 'myencoder':

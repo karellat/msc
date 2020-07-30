@@ -34,6 +34,29 @@ import random as rnd
 
 
 def _process_path(file_path, target, img_size, channels, class_names, transform):
+    &#34;&#34;&#34;
+    Transform path to the image tensor and label tensor.
+
+    Parameters
+    ----------
+    file_path : str
+        Image file path
+    target : str
+        Name of the ADNI group
+    img_size : int
+        Resolution of square image
+    channels : int
+        Number of image channels
+    class_names : list
+        List of all the ADNI group names
+    transform: str
+        Name of the data augmentation 
+        
+    Returns
+    -------
+    tuple
+        Image tensor and Label tensor
+    &#34;&#34;&#34;
     img = tf.io.read_file(file_path)
     img = tf.io.decode_image(img, channels=channels)
     if transform is not None:
@@ -47,6 +70,29 @@ def _process_path(file_path, target, img_size, channels, class_names, transform)
 
 
 def _generator(file_list, target_list, img_size, channels, class_names, shuffle=True, transform=None):
+    &#34;&#34;&#34;
+    Generator of 2d images and its labels 
+    
+    Parameters
+    ----------
+    file_list : list
+        List of image file paths
+    target_list : list
+        List of ADNI group names
+    img_size : int
+        Resolution of square image
+    channels : int
+        Number of image channels
+    class_names : list
+        List of all the ADNI group names
+    transform: str
+        Name of the data augmentation 
+
+    Returns
+    -------
+    iterable
+        Returns iterable generator yielding image tensors and label tensors
+    &#34;&#34;&#34;
     file_label_list = list(zip(file_list, target_list))
     if shuffle:
         rnd.shuffle(file_label_list)
@@ -60,7 +106,21 @@ def _generator(file_list, target_list, img_size, channels, class_names, shuffle=
 
 
 def _aug_factory(name, image):
-    # TODO: Remove fixed values
+    &#34;&#34;&#34;
+    Data augmentation of the image by method given by name
+
+    Parameters
+    ----------
+    name : str
+        Name of the data augmentation method
+    image : tensor
+        Image tensor
+    Returns
+    -------
+    tensor
+        Return the transformed image tensor
+
+    &#34;&#34;&#34;
     name = str(name.decode()).lower()
     if name == &#39;saturation&#39;:
         return tf.image.adjust_saturation(image, 2)
@@ -86,10 +146,38 @@ def _aug_factory(name, image):
 
 def factory(train_files, train_targets, valid_files, valid_targets, class_names, img_size=193, channels=3, shuffle=True,
             transform=None):
+    &#34;&#34;&#34;
+    Factory of the 2D datasets
+
+    Parameters
+    ----------
+    train_files : list
+        Image paths of training dataset
+    train_targets : list
+        Labels of the training dataset
+    valid_files : list
+        Image paths of validation dataset
+    valid_targets : list
+        Labels of the validation dataset
+    class_names : list
+        List of all the ADNI group names
+    img_size : int
+        Resolution of square image
+    channels : int
+        Number of image channels
+    shuffle : bool
+        True if shuffling images in the datasets
+    transform: str
+        Name of the data augmentation
+
+    Returns
+    -------
+    tuple
+        2D Training tensorflow dataset, 2D Validation tensorflow dataset
+    &#34;&#34;&#34;
     img_shape = np.array((img_size, img_size, channels)).astype(int)
 
     if transform is not None:
-        # TODO: Solve the None string retype
         train_ds = tf.data.Dataset.from_generator(_generator,
                                                   output_types=(tf.float32, tf.bool),
                                                   output_shapes=(img_shape, (len(class_names),)),
@@ -125,17 +213,71 @@ def factory(train_files, train_targets, valid_files, valid_targets, class_names,
 <span>def <span class="ident">factory</span></span>(<span>train_files, train_targets, valid_files, valid_targets, class_names, img_size=193, channels=3, shuffle=True, transform=None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Factory of the 2D datasets</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>train_files</code></strong> :&ensp;<code>list</code></dt>
+<dd>Image paths of training dataset</dd>
+<dt><strong><code>train_targets</code></strong> :&ensp;<code>list</code></dt>
+<dd>Labels of the training dataset</dd>
+<dt><strong><code>valid_files</code></strong> :&ensp;<code>list</code></dt>
+<dd>Image paths of validation dataset</dd>
+<dt><strong><code>valid_targets</code></strong> :&ensp;<code>list</code></dt>
+<dd>Labels of the validation dataset</dd>
+<dt><strong><code>class_names</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of all the ADNI group names</dd>
+<dt><strong><code>img_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Resolution of square image</dd>
+<dt><strong><code>channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of image channels</dd>
+<dt><strong><code>shuffle</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True if shuffling images in the datasets</dd>
+<dt><strong><code>transform</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of the data augmentation</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple</code></dt>
+<dd>2D Training tensorflow dataset, 2D Validation tensorflow dataset</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def factory(train_files, train_targets, valid_files, valid_targets, class_names, img_size=193, channels=3, shuffle=True,
             transform=None):
+    &#34;&#34;&#34;
+    Factory of the 2D datasets
+
+    Parameters
+    ----------
+    train_files : list
+        Image paths of training dataset
+    train_targets : list
+        Labels of the training dataset
+    valid_files : list
+        Image paths of validation dataset
+    valid_targets : list
+        Labels of the validation dataset
+    class_names : list
+        List of all the ADNI group names
+    img_size : int
+        Resolution of square image
+    channels : int
+        Number of image channels
+    shuffle : bool
+        True if shuffling images in the datasets
+    transform: str
+        Name of the data augmentation
+
+    Returns
+    -------
+    tuple
+        2D Training tensorflow dataset, 2D Validation tensorflow dataset
+    &#34;&#34;&#34;
     img_shape = np.array((img_size, img_size, channels)).astype(int)
 
     if transform is not None:
-        # TODO: Solve the None string retype
         train_ds = tf.data.Dataset.from_generator(_generator,
                                                   output_types=(tf.float32, tf.bool),
                                                   output_shapes=(img_shape, (len(class_names),)),

@@ -33,6 +33,17 @@ from deep_mri.dataset.dataset import CLASS_NAMES
 
 
 def get_not_matching(ds, model):
+    &#34;&#34;&#34;
+    Get wrongly classified datapoints
+    Parameters
+    ----------
+    ds : tf.keras.Dataset
+    model : tf.keras.Model
+
+    Returns
+    -------
+    list of images, list of labels, list of predictions
+    &#34;&#34;&#34;
     not_matching_img = None
     not_matching_labels = None
     not_matching_pred = None
@@ -96,12 +107,36 @@ def show_batch(image_batch, label_batch, predicted_batch=None):
 <span>def <span class="ident">get_not_matching</span></span>(<span>ds, model)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get wrongly classified datapoints
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>ds</code></strong> :&ensp;<code>tf.keras.Dataset</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>model</code></strong> :&ensp;<code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code> of <code>images, list</code> of <code>labels, list</code> of <code>predictions</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_not_matching(ds, model):
+    &#34;&#34;&#34;
+    Get wrongly classified datapoints
+    Parameters
+    ----------
+    ds : tf.keras.Dataset
+    model : tf.keras.Model
+
+    Returns
+    -------
+    list of images, list of labels, list of predictions
+    &#34;&#34;&#34;
     not_matching_img = None
     not_matching_labels = None
     not_matching_pred = None

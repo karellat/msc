@@ -4,6 +4,16 @@ from .config_parser import config_to_ds, config_to_model, config_to_callbacks, c
 
 
 def run_train(path_to_config, overriding_config):
+    """
+    Basic training loop using only config
+    Parameters
+    ----------
+    path_to_config : str
+        Path to config file
+    overriding_config : dict
+        Names and values of overriding fields from config
+
+    """
     # load config
     with open(path_to_config, 'r') as f:
         config = json.load(f)

@@ -14,6 +14,35 @@ def dataset_factory(dataset_name,
                     group_folder=None,
                     shuffle_strategy=None,
                     **dataset_args):
+    """
+    Factor for creating various datasets
+
+    Parameters
+    ----------
+    dataset_name : str
+        Format of the dataset [ 3d, 2d, encoder_boxes, encoder_full]
+    train_filter_first_screen : bool
+        True if include only the first scans in training dataset
+    valid_filter_first_screen : bool
+        True if include only the first scans in validation dataset
+    data_path : str
+        Wildcard path to images
+    data_csv_path : str
+        Path to csv file with ADNI information such groups etc.
+    dropping_group : str
+        Exclude one of the adni groups from dataset
+    group_folder : str
+        Order of the group folder in image path
+    shuffle_strategy : ShuffleStrategy
+        Shuffle by random or by subjects
+    dataset_args : dict
+        Additional arguments for the specific dataset factory
+
+    Returns
+    -------
+    tuple
+        Training tensorflow dataset, Validation tensorflow dataset
+    """
     if dropping_group is not None:
         dropping_group = dropping_group.lower()
         class_names = np.array([g for g in CLASS_NAMES if g != dropping_group])

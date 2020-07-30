@@ -6,7 +6,7 @@
         "input_shape"  : [193, 193, 3],
         "feature_trainable" : false,
         "fc_count" : 1024,
-        "num_outputs" : 2
+        "num_outputs" : 3
     },
 
   "init_lr" : 0.001,
@@ -14,7 +14,6 @@
   "data_csv_path" : "default",
   "train_filter_first_screen" : false,
   "valid_filter_first_screen" : false,
-  "dropping_group" : "MCI",
   "dataset" : "2d",
   "dataset_args" : {
     "img_size" : 193,
@@ -23,7 +22,7 @@
   },
 
   "callbacks" : ["board", "save"],
-  "log_root" : "./logs/2_way",
+  "log_root" : "./logs/data_aug",
   "log_name" :  "crop",
   "epochs" : 100,
   "batch_size" : 16,

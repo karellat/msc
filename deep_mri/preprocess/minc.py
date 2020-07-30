@@ -7,6 +7,25 @@ def get_preprocessing_workflow(iterables,
                                image_format,
                                input_path,
                                output_path):
+    """
+    Create Nipype MINC processing tool
+
+    Parameters
+    ----------
+    iterables : list
+        List of ids
+    image_format : str
+        Path in wildcard format
+    input_path : str
+        Root directory of dataset
+    output_path : str
+        Ouput directory
+
+    Returns
+    -------
+    Nipype.Workflow
+
+    """
     # Input
     infosource = Node(IdentityInterface(fields=['image_id']),
                       name="infosource")

@@ -35,6 +35,25 @@ def get_preprocessing_workflow(iterables,
                                image_format,
                                input_path,
                                output_path):
+    &#34;&#34;&#34;
+    Create Nipype MINC processing tool
+
+    Parameters
+    ----------
+    iterables : list
+        List of ids
+    image_format : str
+        Path in wildcard format
+    input_path : str
+        Root directory of dataset
+    output_path : str
+        Ouput directory
+
+    Returns
+    -------
+    Nipype.Workflow
+
+    &#34;&#34;&#34;
     # Input
     infosource = Node(IdentityInterface(fields=[&#39;image_id&#39;]),
                       name=&#34;infosource&#34;)
@@ -88,7 +107,23 @@ def get_preprocessing_workflow(iterables,
 <span>def <span class="ident">get_preprocessing_workflow</span></span>(<span>iterables, image_format, input_path, output_path)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Create Nipype MINC processing tool</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>iterables</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of ids</dd>
+<dt><strong><code>image_format</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path in wildcard format</dd>
+<dt><strong><code>input_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Root directory of dataset</dd>
+<dt><strong><code>output_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Ouput directory</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Nipype.Workflow</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -97,6 +132,25 @@ def get_preprocessing_workflow(iterables,
                                image_format,
                                input_path,
                                output_path):
+    &#34;&#34;&#34;
+    Create Nipype MINC processing tool
+
+    Parameters
+    ----------
+    iterables : list
+        List of ids
+    image_format : str
+        Path in wildcard format
+    input_path : str
+        Root directory of dataset
+    output_path : str
+        Ouput directory
+
+    Returns
+    -------
+    Nipype.Workflow
+
+    &#34;&#34;&#34;
     # Input
     infosource = Node(IdentityInterface(fields=[&#39;image_id&#39;]),
                       name=&#34;infosource&#34;)

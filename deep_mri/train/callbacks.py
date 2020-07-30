@@ -10,6 +10,19 @@ import io
 
 
 def plot_confusion_matrix(cm, class_names):
+    """
+    Create image of confussion matrix
+    Parameters
+    ----------
+    cm : np.array
+        Confussion matrix
+    class_names : list
+        List class names
+    Returns
+    -------
+    figure
+
+    """
     figure = plt.figure(figsize=(8, 8))
     cm = np.around(cm.astype('float') / cm.sum(axis=1)[:, np.newaxis], decimals=2)
     ax = sns.heatmap(cm,
@@ -23,6 +36,9 @@ def plot_confusion_matrix(cm, class_names):
 
 
 def plot_to_image(plot):
+    """
+    Transform plot to png image
+    """
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
     plt.close(plot)
@@ -33,6 +49,9 @@ def plot_to_image(plot):
 
 
 class SaveConfigCallback(tf.keras.callbacks.Callback):
+    """
+    Copy config to log file
+    """
     def __init__(self, log_dir, config):
         super().__init__()
         self.log_dir = log_dir
@@ -45,6 +64,9 @@ class SaveConfigCallback(tf.keras.callbacks.Callback):
 
 
 class DummyPredictorCallback(tf.keras.callbacks.Callback):
+    """
+    Predict the most common label
+    """
     def __init__(self, train_ds, valid_ds):
         super().__init__()
         self.train_ds = train_ds
@@ -69,6 +91,9 @@ class DummyPredictorCallback(tf.keras.callbacks.Callback):
 
 
 class ConfusionMatrixCallback(tf.keras.callbacks.Callback):
+    """
+    Create confussion matrix after epoch
+    """
 
     def __init__(self, ds, class_names, log_dir, name="CM"):
         super().__init__()

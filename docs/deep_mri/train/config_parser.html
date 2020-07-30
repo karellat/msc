@@ -36,6 +36,19 @@ from .callbacks import SaveConfigCallback, DummyPredictorCallback, ConfusionMatr
 
 
 def config_to_ds(config):
+    &#34;&#34;&#34;
+    Create the dataset based on info from config
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    tf.keras.Dataset
+
+    &#34;&#34;&#34;
     # Dataset setting
     assert (&#34;dataset_path&#34; in config) and (&#34;train_filter_first_screen&#34; in config) and (
             &#34;valid_filter_first_screen&#34; in config)
@@ -136,6 +149,19 @@ def config_to_callbacks(config, train_ds, valid_ds):
 
 
 def config_to_model(config):
+    &#34;&#34;&#34;
+    Create the model based on info from config
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    tf.keras.Model
+
+    &#34;&#34;&#34;
     assert &#34;optimizer&#34; in config
     optimizer = config[&#34;optimizer&#34;]
     assert &#34;loss&#34; in config
@@ -159,14 +185,50 @@ def config_to_model(config):
 
 
 def config_epochs(config):
+    &#34;&#34;&#34;
+    Parse epochs from config dict
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    int
+
+    &#34;&#34;&#34;
     return int(config_get_field(config, &#34;epochs&#34;))
 
 
 def config_batch_size(config):
+    &#34;&#34;&#34;
+    Parse batch size from config dict
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    int
+
+    &#34;&#34;&#34;
     return int(config_get_field(config, &#34;batch_size&#34;))
 
 
 def config_get_field(config, name):
+    &#34;&#34;&#34;
+    Get field by given name from config dict
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+    name : str
+        Name of the config field
+
+    &#34;&#34;&#34;
     assert name in config, f&#34;{name} not in config.&#34;
     return config[name]</code></pre>
 </details>
@@ -182,12 +244,35 @@ def config_get_field(config, name):
 <span>def <span class="ident">config_batch_size</span></span>(<span>config)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Parse batch size from config dict</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>config</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Config dictionary</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def config_batch_size(config):
+    &#34;&#34;&#34;
+    Parse batch size from config dict
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    int
+
+    &#34;&#34;&#34;
     return int(config_get_field(config, &#34;batch_size&#34;))</code></pre>
 </details>
 </dd>
@@ -195,12 +280,35 @@ def config_get_field(config, name):
 <span>def <span class="ident">config_epochs</span></span>(<span>config)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Parse epochs from config dict</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>config</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Config dictionary</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def config_epochs(config):
+    &#34;&#34;&#34;
+    Parse epochs from config dict
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    int
+
+    &#34;&#34;&#34;
     return int(config_get_field(config, &#34;epochs&#34;))</code></pre>
 </details>
 </dd>
@@ -208,12 +316,30 @@ def config_get_field(config, name):
 <span>def <span class="ident">config_get_field</span></span>(<span>config, name)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get field by given name from config dict
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>config</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Config dictionary</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of the config field</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def config_get_field(config, name):
+    &#34;&#34;&#34;
+    Get field by given name from config dict
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+    name : str
+        Name of the config field
+
+    &#34;&#34;&#34;
     assert name in config, f&#34;{name} not in config.&#34;
     return config[name]</code></pre>
 </details>
@@ -294,12 +420,35 @@ def config_get_field(config, name):
 <span>def <span class="ident">config_to_ds</span></span>(<span>config)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Create the dataset based on info from config</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>config</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Config dictionary</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Dataset</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def config_to_ds(config):
+    &#34;&#34;&#34;
+    Create the dataset based on info from config
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    tf.keras.Dataset
+
+    &#34;&#34;&#34;
     # Dataset setting
     assert (&#34;dataset_path&#34; in config) and (&#34;train_filter_first_screen&#34; in config) and (
             &#34;valid_filter_first_screen&#34; in config)
@@ -340,12 +489,35 @@ def config_get_field(config, name):
 <span>def <span class="ident">config_to_model</span></span>(<span>config)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Create the model based on info from config</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>config</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Config dictionary</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def config_to_model(config):
+    &#34;&#34;&#34;
+    Create the model based on info from config
+
+    Parameters
+    ----------
+    config : dict
+        Config dictionary
+
+    Returns
+    -------
+    tf.keras.Model
+
+    &#34;&#34;&#34;
     assert &#34;optimizer&#34; in config
     optimizer = config[&#34;optimizer&#34;]
     assert &#34;loss&#34; in config

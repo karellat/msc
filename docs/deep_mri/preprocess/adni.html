@@ -32,6 +32,21 @@ import re
 import os
 
 def get_adni_image_id(csv_path, input_path):
+    &#34;&#34;&#34;
+    Parse get all ids of adni images
+
+    Parameters
+    ----------
+    csv_path : str
+        Path to csv file of ADNI
+    input_path : str
+        Path to csv file with ADNI information such groups etc.
+
+    Returns
+    -------
+    dict
+        Dictionary of group label with list of image ids
+    &#34;&#34;&#34;
     df = pd.read_csv(csv_path)
 
     all_files = []
@@ -67,12 +82,39 @@ def get_adni_image_id(csv_path, input_path):
 <span>def <span class="ident">get_adni_image_id</span></span>(<span>csv_path, input_path)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Parse get all ids of adni images</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>csv_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to csv file of ADNI</dd>
+<dt><strong><code>input_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to csv file with ADNI information such groups etc.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>Dictionary of group label with list of image ids</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_adni_image_id(csv_path, input_path):
+    &#34;&#34;&#34;
+    Parse get all ids of adni images
+
+    Parameters
+    ----------
+    csv_path : str
+        Path to csv file of ADNI
+    input_path : str
+        Path to csv file with ADNI information such groups etc.
+
+    Returns
+    -------
+    dict
+        Dictionary of group label with list of image ids
+    &#34;&#34;&#34;
     df = pd.read_csv(csv_path)
 
     all_files = []

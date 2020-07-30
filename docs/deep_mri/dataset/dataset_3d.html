@@ -36,6 +36,23 @@ from fsl.data.image import Image
 
 
 def _decode_img(path, normalize, out_shape):
+    &#34;&#34;&#34;
+    Read the 3d image in nifty format to the tensor
+    Parameters
+    ----------
+    path : string
+        Path to file
+    normalize : boolean
+        Transform the image voxel from 0..255 to 0..1
+    out_shape : tuple
+        Output shape, downscale the image
+
+    Returns
+    -------
+    Tensor
+        3D representation of an image
+
+    &#34;&#34;&#34;
     path = str(path, &#39;utf-8&#39;)
     img = Image(path)
     if out_shape is not None:
@@ -48,6 +65,29 @@ def _decode_img(path, normalize, out_shape):
 
 
 def _generator(file_list, target_list, normalize, out_shape, class_names, shuffle):
+    &#34;&#34;&#34;
+    Wraps the image loader and file list into a generator
+
+    Parameters
+    ----------
+    file_list : list
+        List of image file paths
+    target_list : list
+        List of ADNI groups of files
+    normalize : boolean
+        Transform the image voxel from 0..255 to 0..1
+    out_shape : tuple
+        Output shape, downscale the image
+    class_names : list
+        List of ADNI group names
+    shuffle : bool
+        True if shuffling images in the datasets
+
+    Returns
+    -------
+    iterable
+        Returns iterable generator yielding image tensors and label tensors
+    &#34;&#34;&#34;
     file_label_list = list(zip(file_list, target_list))
     if shuffle:
         rnd.shuffle(file_label_list)
@@ -57,6 +97,27 @@ def _generator(file_list, target_list, normalize, out_shape, class_names, shuffl
 
 
 def _process_path(file_path, target, normalize, out_shape, class_names):
+    &#34;&#34;&#34;
+    Transform 3D image path to the 3d tensor and label tensor.
+
+    Parameters
+    ----------
+    file_path : str
+        Image file path
+    target : str
+        Name of the ADNI group
+    normalize: bool
+        Transform the image voxel from 0..255 to 0..1
+    out_shape : tuple
+        Output shape, downscale the image
+    class_names : list
+        List of ADNI group names
+
+    Returns
+    -------
+    tuple
+        Image tensor and Label tensor
+    &#34;&#34;&#34;
     label = _get_label_tf(target, class_names)
     img = _decode_img(file_path, normalize, out_shape)
     return img, label
@@ -72,6 +133,36 @@ def factory(train_files,
             output_shape=None,
             normalize=True,
             shuffle=True):
+    &#34;&#34;&#34;
+    Factory of the 3D datasets
+
+    Parameters
+    ----------
+    train_files : list
+        Image paths of training dataset
+    train_targets : list
+        Labels of the training dataset
+    valid_files : list
+        Image paths of validation dataset
+    valid_targets : list
+        Labels of the validation dataset
+    class_names : list
+        List of all the ADNI group names
+    img_shape : tuple
+        Input image shape
+    downscale_ratio : float
+        Desired output shape given by denominator
+    output_shape : tuple
+        Desired shape of the dataset
+    normalize: bool
+        Transform the image voxel from 0..255 to 0..1
+    shuffle : bool
+        True if shuffling images in the datasets
+    Returns
+    -------
+    tuple
+        3D Training tensorflow dataset, 3D Validation tensorflow dataset
+    &#34;&#34;&#34;
     if output_shape is None:
         output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
 
@@ -164,7 +255,35 @@ def encoder_factory(train_files,
 <span>def <span class="ident">factory</span></span>(<span>train_files, train_targets, valid_files, valid_targets, class_names, img_shape=(193, 229, 193, 1), downscale_ratio=1, output_shape=None, normalize=True, shuffle=True)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Factory of the 3D datasets</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>train_files</code></strong> :&ensp;<code>list</code></dt>
+<dd>Image paths of training dataset</dd>
+<dt><strong><code>train_targets</code></strong> :&ensp;<code>list</code></dt>
+<dd>Labels of the training dataset</dd>
+<dt><strong><code>valid_files</code></strong> :&ensp;<code>list</code></dt>
+<dd>Image paths of validation dataset</dd>
+<dt><strong><code>valid_targets</code></strong> :&ensp;<code>list</code></dt>
+<dd>Labels of the validation dataset</dd>
+<dt><strong><code>class_names</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of all the ADNI group names</dd>
+<dt><strong><code>img_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Input image shape</dd>
+<dt><strong><code>downscale_ratio</code></strong> :&ensp;<code>float</code></dt>
+<dd>Desired output shape given by denominator</dd>
+<dt><strong><code>output_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Desired shape of the dataset</dd>
+<dt><strong><code>normalize</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Transform the image voxel from 0..255 to 0..1</dd>
+<dt><strong><code>shuffle</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True if shuffling images in the datasets</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple</code></dt>
+<dd>3D Training tensorflow dataset, 3D Validation tensorflow dataset</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -179,6 +298,36 @@ def encoder_factory(train_files,
             output_shape=None,
             normalize=True,
             shuffle=True):
+    &#34;&#34;&#34;
+    Factory of the 3D datasets
+
+    Parameters
+    ----------
+    train_files : list
+        Image paths of training dataset
+    train_targets : list
+        Labels of the training dataset
+    valid_files : list
+        Image paths of validation dataset
+    valid_targets : list
+        Labels of the validation dataset
+    class_names : list
+        List of all the ADNI group names
+    img_shape : tuple
+        Input image shape
+    downscale_ratio : float
+        Desired output shape given by denominator
+    output_shape : tuple
+        Desired shape of the dataset
+    normalize: bool
+        Transform the image voxel from 0..255 to 0..1
+    shuffle : bool
+        True if shuffling images in the datasets
+    Returns
+    -------
+    tuple
+        3D Training tensorflow dataset, 3D Validation tensorflow dataset
+    &#34;&#34;&#34;
     if output_shape is None:
         output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
 

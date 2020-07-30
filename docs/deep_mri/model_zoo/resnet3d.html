@@ -99,10 +99,10 @@ def _residual_block3d(block_function,
     return f
 
 
-def basic_block(filters,
-                strides=(1, 1, 1),
-                kernel_regularizer=&#39;l2&#39;,
-                is_first_block_of_first_layer=False):
+def _basic_block(filters,
+                 strides=(1, 1, 1),
+                 kernel_regularizer=&#39;l2&#39;,
+                 is_first_block_of_first_layer=False):
     &#34;&#34;&#34;Basic 3 X 3 X 3 convolution blocks. Extended from raghakot&#39;s 2D impl.&#34;&#34;&#34;
 
     def f(input):
@@ -127,8 +127,8 @@ def basic_block(filters,
     return f
 
 
-def bottleneck(filters, strides=(1, 1, 1), kernel_regularizer=&#39;l2&#39;,
-               is_first_block_of_first_layer=False):
+def _bottleneck(filters, strides=(1, 1, 1), kernel_regularizer=&#39;l2&#39;,
+                is_first_block_of_first_layer=False):
     &#34;&#34;&#34;Basic 3 X 3 X 3 convolution blocks. Extended from raghakot&#39;s 2D impl.&#34;&#34;&#34;
 
     def f(input):
@@ -236,31 +236,31 @@ class Resnet3DBuilder(object):
     @staticmethod
     def build_resnet_18(input_shape, num_outputs, filters=64):
         &#34;&#34;&#34;Build resnet 18.&#34;&#34;&#34;
-        return Resnet3DBuilder.build(input_shape, num_outputs, basic_block,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _basic_block,
                                      [2, 2, 2, 2], filters)
 
     @staticmethod
     def build_resnet_34(input_shape, num_outputs, filters=64):
         &#34;&#34;&#34;Build resnet 34.&#34;&#34;&#34;
-        return Resnet3DBuilder.build(input_shape, num_outputs, basic_block,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _basic_block,
                                      [3, 4, 6, 3], filters)
 
     @staticmethod
     def build_resnet_50(input_shape, num_outputs, filters=64):
         &#34;&#34;&#34;Build resnet 50.&#34;&#34;&#34;
-        return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                      [3, 4, 6, 3], filters)
 
     @staticmethod
     def build_resnet_101(input_shape, num_outputs, filters=64):
         &#34;&#34;&#34;Build resnet 101.&#34;&#34;&#34;
-        return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                      [3, 4, 23, 3], filters)
 
     @staticmethod
     def build_resnet_152(input_shape, num_outputs, filters=64):
         &#34;&#34;&#34;Build resnet 152.&#34;&#34;&#34;
-        return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                      [3, 8, 36, 3], filters)</code></pre>
 </details>
 </section>
@@ -269,77 +269,6 @@ class Resnet3DBuilder(object):
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-functions">Functions</h2>
-<dl>
-<dt id="deep_mri.model_zoo.resnet3d.basic_block"><code class="name flex">
-<span>def <span class="ident">basic_block</span></span>(<span>filters, strides=(1, 1, 1), kernel_regularizer='l2', is_first_block_of_first_layer=False)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Basic 3 X 3 X 3 convolution blocks. Extended from raghakot's 2D impl.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def basic_block(filters,
-                strides=(1, 1, 1),
-                kernel_regularizer=&#39;l2&#39;,
-                is_first_block_of_first_layer=False):
-    &#34;&#34;&#34;Basic 3 X 3 X 3 convolution blocks. Extended from raghakot&#39;s 2D impl.&#34;&#34;&#34;
-
-    def f(input):
-        if is_first_block_of_first_layer:
-            # don&#39;t repeat bn-&gt;relu since we just did bn-&gt;relu-&gt;maxpool
-            conv1 = tf.keras.layers.Conv3D(filters=filters, kernel_size=(3, 3, 3),
-                                           strides=strides, padding=&#34;same&#34;,
-                                           kernel_regularizer=kernel_regularizer
-                                           )(input)
-        else:
-            conv1 = _conv3d_relu(filters=filters,
-                                 kernel_size=(3, 3, 3),
-                                 strides=strides,
-                                 kernel_regularizer=kernel_regularizer
-                                 )(input)
-
-        residual = _conv3d_relu(filters=filters, kernel_size=(3, 3, 3),
-                                kernel_regularizer=kernel_regularizer
-                                )(conv1)
-        return _shortcut3d(input, residual)
-
-    return f</code></pre>
-</details>
-</dd>
-<dt id="deep_mri.model_zoo.resnet3d.bottleneck"><code class="name flex">
-<span>def <span class="ident">bottleneck</span></span>(<span>filters, strides=(1, 1, 1), kernel_regularizer='l2', is_first_block_of_first_layer=False)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Basic 3 X 3 X 3 convolution blocks. Extended from raghakot's 2D impl.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def bottleneck(filters, strides=(1, 1, 1), kernel_regularizer=&#39;l2&#39;,
-               is_first_block_of_first_layer=False):
-    &#34;&#34;&#34;Basic 3 X 3 X 3 convolution blocks. Extended from raghakot&#39;s 2D impl.&#34;&#34;&#34;
-
-    def f(input):
-        conv_1_1 = _conv3d_relu(filters=filters, kernel_size=(1, 1, 1),
-                                strides=strides,
-                                kernel_regularizer=kernel_regularizer
-                                )(input)
-
-        conv_3_3 = _conv3d_relu(filters=filters, kernel_size=(3, 3, 3),
-                                kernel_regularizer=kernel_regularizer
-                                )(conv_1_1)
-        residual = _conv3d_relu(filters=filters * 4, kernel_size=(1, 1, 1),
-                                kernel_regularizer=kernel_regularizer
-                                )(conv_3_3)
-
-        return _shortcut3d(input, residual)
-
-    return f</code></pre>
-</details>
-</dd>
-</dl>
 </section>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
@@ -420,31 +349,31 @@ class Resnet3DBuilder(object):
     @staticmethod
     def build_resnet_18(input_shape, num_outputs, filters=64):
         &#34;&#34;&#34;Build resnet 18.&#34;&#34;&#34;
-        return Resnet3DBuilder.build(input_shape, num_outputs, basic_block,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _basic_block,
                                      [2, 2, 2, 2], filters)
 
     @staticmethod
     def build_resnet_34(input_shape, num_outputs, filters=64):
         &#34;&#34;&#34;Build resnet 34.&#34;&#34;&#34;
-        return Resnet3DBuilder.build(input_shape, num_outputs, basic_block,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _basic_block,
                                      [3, 4, 6, 3], filters)
 
     @staticmethod
     def build_resnet_50(input_shape, num_outputs, filters=64):
         &#34;&#34;&#34;Build resnet 50.&#34;&#34;&#34;
-        return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                      [3, 4, 6, 3], filters)
 
     @staticmethod
     def build_resnet_101(input_shape, num_outputs, filters=64):
         &#34;&#34;&#34;Build resnet 101.&#34;&#34;&#34;
-        return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                      [3, 4, 23, 3], filters)
 
     @staticmethod
     def build_resnet_152(input_shape, num_outputs, filters=64):
         &#34;&#34;&#34;Build resnet 152.&#34;&#34;&#34;
-        return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                      [3, 8, 36, 3], filters)</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -544,7 +473,7 @@ def build(input_shape, num_outputs, block_fn, repetitions, first_filters=64):
 <pre><code class="python">@staticmethod
 def build_resnet_101(input_shape, num_outputs, filters=64):
     &#34;&#34;&#34;Build resnet 101.&#34;&#34;&#34;
-    return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+    return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                  [3, 4, 23, 3], filters)</code></pre>
 </details>
 </dd>
@@ -560,7 +489,7 @@ def build_resnet_101(input_shape, num_outputs, filters=64):
 <pre><code class="python">@staticmethod
 def build_resnet_152(input_shape, num_outputs, filters=64):
     &#34;&#34;&#34;Build resnet 152.&#34;&#34;&#34;
-    return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+    return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                  [3, 8, 36, 3], filters)</code></pre>
 </details>
 </dd>
@@ -576,7 +505,7 @@ def build_resnet_152(input_shape, num_outputs, filters=64):
 <pre><code class="python">@staticmethod
 def build_resnet_18(input_shape, num_outputs, filters=64):
     &#34;&#34;&#34;Build resnet 18.&#34;&#34;&#34;
-    return Resnet3DBuilder.build(input_shape, num_outputs, basic_block,
+    return Resnet3DBuilder.build(input_shape, num_outputs, _basic_block,
                                  [2, 2, 2, 2], filters)</code></pre>
 </details>
 </dd>
@@ -592,7 +521,7 @@ def build_resnet_18(input_shape, num_outputs, filters=64):
 <pre><code class="python">@staticmethod
 def build_resnet_34(input_shape, num_outputs, filters=64):
     &#34;&#34;&#34;Build resnet 34.&#34;&#34;&#34;
-    return Resnet3DBuilder.build(input_shape, num_outputs, basic_block,
+    return Resnet3DBuilder.build(input_shape, num_outputs, _basic_block,
                                  [3, 4, 6, 3], filters)</code></pre>
 </details>
 </dd>
@@ -608,7 +537,7 @@ def build_resnet_34(input_shape, num_outputs, filters=64):
 <pre><code class="python">@staticmethod
 def build_resnet_50(input_shape, num_outputs, filters=64):
     &#34;&#34;&#34;Build resnet 50.&#34;&#34;&#34;
-    return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+    return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                  [3, 4, 6, 3], filters)</code></pre>
 </details>
 </dd>
@@ -626,12 +555,6 @@ def build_resnet_50(input_shape, num_outputs, filters=64):
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="deep_mri.model_zoo" href="index.html">deep_mri.model_zoo</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
-<li><code><a title="deep_mri.model_zoo.resnet3d.basic_block" href="#deep_mri.model_zoo.resnet3d.basic_block">basic_block</a></code></li>
-<li><code><a title="deep_mri.model_zoo.resnet3d.bottleneck" href="#deep_mri.model_zoo.resnet3d.bottleneck">bottleneck</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>

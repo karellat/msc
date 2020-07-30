@@ -15,7 +15,6 @@
   "train_filter_first_screen" : false,
   "valid_filter_first_screen" : false,
   "dataset" : "2d",
-  "dropping_group" : "MCI",
   "dataset_args" : {
     "img_size" : 193,
     "shuffle" : true,
@@ -23,7 +22,7 @@
   },
 
   "callbacks" : ["board", "save"],
-  "log_root" : "./logs/2_way",
+  "log_root" : "./logs/data_aug",
   "log_name" :  "blur",
   "epochs" : 100,
   "batch_size" : 16,

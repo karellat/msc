@@ -32,6 +32,21 @@ MODEL_TYPE_DELIMETER = &#34;_&#34;
 
 
 def model_factory(model_name, **model_args):
+    &#34;&#34;&#34;
+    Factory for creating tensorflow models
+
+    Parameters
+    ----------
+    model_name : str
+        Name of the model, &lt;type name&gt;, possible types [3d, encoder, 2d, str]
+    model_args : dict
+        Arguments for the model
+
+    Returns
+    -------
+    tf.keras.model
+
+    &#34;&#34;&#34;
     assert len(model_name.split(MODEL_TYPE_DELIMETER)) == 2, &#34;Model name can have only single delimeter&#34;
     mod_type, mod_name = model_name.split(MODEL_TYPE_DELIMETER)
     if mod_type.lower() == &#34;3d&#34;:
@@ -139,6 +154,24 @@ def _get_layer(layer_text, input_layer):
 
 
 def string_to_model(model_name, layers_text, input_shape, num_output=3):
+    &#34;&#34;&#34;
+    Generate model by input string
+
+    Parameters
+    ----------
+    model_name : str
+        Model name
+    layers_text : str
+        String representing model
+    input_shape : tuple
+        Expected shape of input data
+    num_output : int
+        number of outputs
+
+    Returns
+    -------
+    tf.keras.model
+    &#34;&#34;&#34;
     input_layer = tf.keras.layers.Input(input_shape)
     layers_text = layers_text.replace(&#39;\n&#39;, &#39;&#39;)
     layers_text = layers_text.split(layers_split)
@@ -163,12 +196,39 @@ def string_to_model(model_name, layers_text, input_shape, num_output=3):
 <span>def <span class="ident">model_factory</span></span>(<span>model_name, **model_args)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Factory for creating tensorflow models</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>model_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of the model, <type name>, possible types [3d, encoder, 2d, str]</dd>
+<dt><strong><code>model_args</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Arguments for the model</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def model_factory(model_name, **model_args):
+    &#34;&#34;&#34;
+    Factory for creating tensorflow models
+
+    Parameters
+    ----------
+    model_name : str
+        Name of the model, &lt;type name&gt;, possible types [3d, encoder, 2d, str]
+    model_args : dict
+        Arguments for the model
+
+    Returns
+    -------
+    tf.keras.model
+
+    &#34;&#34;&#34;
     assert len(model_name.split(MODEL_TYPE_DELIMETER)) == 2, &#34;Model name can have only single delimeter&#34;
     mod_type, mod_name = model_name.split(MODEL_TYPE_DELIMETER)
     if mod_type.lower() == &#34;3d&#34;:
@@ -188,12 +248,46 @@ def string_to_model(model_name, layers_text, input_shape, num_output=3):
 <span>def <span class="ident">string_to_model</span></span>(<span>model_name, layers_text, input_shape, num_output=3)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Generate model by input string</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>model_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>Model name</dd>
+<dt><strong><code>layers_text</code></strong> :&ensp;<code>str</code></dt>
+<dd>String representing model</dd>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected shape of input data</dd>
+<dt><strong><code>num_output</code></strong> :&ensp;<code>int</code></dt>
+<dd>number of outputs</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def string_to_model(model_name, layers_text, input_shape, num_output=3):
+    &#34;&#34;&#34;
+    Generate model by input string
+
+    Parameters
+    ----------
+    model_name : str
+        Model name
+    layers_text : str
+        String representing model
+    input_shape : tuple
+        Expected shape of input data
+    num_output : int
+        number of outputs
+
+    Returns
+    -------
+    tf.keras.model
+    &#34;&#34;&#34;
     input_layer = tf.keras.layers.Input(input_shape)
     layers_text = layers_text.replace(&#39;\n&#39;, &#39;&#39;)
     layers_text = layers_text.split(layers_split)

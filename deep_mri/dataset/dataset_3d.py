@@ -8,6 +8,23 @@ from fsl.data.image import Image
 
 
 def _decode_img(path, normalize, out_shape):
+    """
+    Read the 3d image in nifty format to the tensor
+    Parameters
+    ----------
+    path : string
+        Path to file
+    normalize : boolean
+        Transform the image voxel from 0..255 to 0..1
+    out_shape : tuple
+        Output shape, downscale the image
+
+    Returns
+    -------
+    Tensor
+        3D representation of an image
+
+    """
     path = str(path, 'utf-8')
     img = Image(path)
     if out_shape is not None:
@@ -20,6 +37,29 @@ def _decode_img(path, normalize, out_shape):
 
 
 def _generator(file_list, target_list, normalize, out_shape, class_names, shuffle):
+    """
+    Wraps the image loader and file list into a generator
+
+    Parameters
+    ----------
+    file_list : list
+        List of image file paths
+    target_list : list
+        List of ADNI groups of files
+    normalize : boolean
+        Transform the image voxel from 0..255 to 0..1
+    out_shape : tuple
+        Output shape, downscale the image
+    class_names : list
+        List of ADNI group names
+    shuffle : bool
+        True if shuffling images in the datasets
+
+    Returns
+    -------
+    iterable
+        Returns iterable generator yielding image tensors and label tensors
+    """
     file_label_list = list(zip(file_list, target_list))
     if shuffle:
         rnd.shuffle(file_label_list)
@@ -29,6 +69,27 @@ def _generator(file_list, target_list, normalize, out_shape, class_names, shuffl
 
 
 def _process_path(file_path, target, normalize, out_shape, class_names):
+    """
+    Transform 3D image path to the 3d tensor and label tensor.
+
+    Parameters
+    ----------
+    file_path : str
+        Image file path
+    target : str
+        Name of the ADNI group
+    normalize: bool
+        Transform the image voxel from 0..255 to 0..1
+    out_shape : tuple
+        Output shape, downscale the image
+    class_names : list
+        List of ADNI group names
+
+    Returns
+    -------
+    tuple
+        Image tensor and Label tensor
+    """
     label = _get_label_tf(target, class_names)
     img = _decode_img(file_path, normalize, out_shape)
     return img, label
@@ -44,6 +105,36 @@ def factory(train_files,
             output_shape=None,
             normalize=True,
             shuffle=True):
+    """
+    Factory of the 3D datasets
+
+    Parameters
+    ----------
+    train_files : list
+        Image paths of training dataset
+    train_targets : list
+        Labels of the training dataset
+    valid_files : list
+        Image paths of validation dataset
+    valid_targets : list
+        Labels of the validation dataset
+    class_names : list
+        List of all the ADNI group names
+    img_shape : tuple
+        Input image shape
+    downscale_ratio : float
+        Desired output shape given by denominator
+    output_shape : tuple
+        Desired shape of the dataset
+    normalize: bool
+        Transform the image voxel from 0..255 to 0..1
+    shuffle : bool
+        True if shuffling images in the datasets
+    Returns
+    -------
+    tuple
+        3D Training tensorflow dataset, 3D Validation tensorflow dataset
+    """
     if output_shape is None:
         output_shape = np.ceil(np.array(img_shape) / downscale_ratio).astype(int)
 

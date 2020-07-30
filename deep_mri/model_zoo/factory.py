@@ -4,6 +4,21 @@ MODEL_TYPE_DELIMETER = "_"
 
 
 def model_factory(model_name, **model_args):
+    """
+    Factory for creating tensorflow models
+
+    Parameters
+    ----------
+    model_name : str
+        Name of the model, <type name>, possible types [3d, encoder, 2d, str]
+    model_args : dict
+        Arguments for the model
+
+    Returns
+    -------
+    tf.keras.model
+
+    """
     assert len(model_name.split(MODEL_TYPE_DELIMETER)) == 2, "Model name can have only single delimeter"
     mod_type, mod_name = model_name.split(MODEL_TYPE_DELIMETER)
     if mod_type.lower() == "3d":
@@ -111,6 +126,24 @@ def _get_layer(layer_text, input_layer):
 
 
 def string_to_model(model_name, layers_text, input_shape, num_output=3):
+    """
+    Generate model by input string
+
+    Parameters
+    ----------
+    model_name : str
+        Model name
+    layers_text : str
+        String representing model
+    input_shape : tuple
+        Expected shape of input data
+    num_output : int
+        number of outputs
+
+    Returns
+    -------
+    tf.keras.model
+    """
     input_layer = tf.keras.layers.Input(input_shape)
     layers_text = layers_text.replace('\n', '')
     layers_text = layers_text.split(layers_split)

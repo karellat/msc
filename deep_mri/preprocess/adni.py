@@ -4,6 +4,21 @@ import re
 import os
 
 def get_adni_image_id(csv_path, input_path):
+    """
+    Parse get all ids of adni images
+
+    Parameters
+    ----------
+    csv_path : str
+        Path to csv file of ADNI
+    input_path : str
+        Path to csv file with ADNI information such groups etc.
+
+    Returns
+    -------
+    dict
+        Dictionary of group label with list of image ids
+    """
     df = pd.read_csv(csv_path)
 
     all_files = []

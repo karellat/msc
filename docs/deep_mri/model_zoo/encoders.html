@@ -32,6 +32,23 @@ from tensorflow.math import log
 
 
 def cae(input_shape=(32, 32, 32, 1), init_filters=256, activation=&#39;relu&#39;):
+    &#34;&#34;&#34;
+    Convolutional encoder using Transposed Convolutions as decoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    init_filters : int
+        Filters of the first convolutional layer
+    activation : string
+        Tensorflow activation function for all the layers
+
+    Returns
+    -------
+    tf.keras.model
+
+    &#34;&#34;&#34;
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape),
         tf.keras.layers.Conv3D(filters=init_filters, kernel_size=6, strides=2, activation=activation),
@@ -49,6 +66,28 @@ def autoencoder_baseline(input_shape=(5, 5, 5, 1),
                          regularization=&#39;l2&#39;,
                          conv_filters=8,
                          dense_activation=None):
+    &#34;&#34;&#34;
+    Convolutional encoder using Dense layer as decoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    conv_kernel : tuple
+        Shape of the convolutional kernel
+    conv_activation : string
+        Tensorflow activation function for all the layers
+    regularization : string
+        Regularization of convolutional weights
+    conv_filters : int
+        Number of convolutional filters
+    dense_activation : string
+        Decoder activation function
+
+    Returns
+    -------
+    tf.keras.model
+    &#34;&#34;&#34;
     fc_nodes = np.prod(input_shape)
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape, name=&#39;Input&#39;),
@@ -64,6 +103,9 @@ def _kld(target_s, s):
 
 
 class PayanEncoder(tf.keras.Model):
+    &#34;&#34;&#34;
+    Payan Encoder model
+    &#34;&#34;&#34;
     def __init__(self,
                  input_shape=(5, 5, 5, 1),
                  conv_filters=150,
@@ -109,6 +151,13 @@ class PayanEncoder(tf.keras.Model):
 
 
 def payan2():
+    &#34;&#34;&#34;
+    Payan model with default settings
+
+    Returns
+    -------
+    tf.keras.model
+    &#34;&#34;&#34;
     input_layer = tf.keras.layers.Input((5, 5, 5, 1))
     conv1 = tf.keras.layers.Conv3D(150, 5, activation=&#39;sigmoid&#39;, padding=&#39;same&#39;,
                                    kernel_regularizer=tf.keras.regularizers.l2(0.1))(input_layer)
@@ -130,6 +179,19 @@ def payan2():
 
 def my_encoder(init_filters=256,
                input_shape=(32, 32, 32, 1)):
+    &#34;&#34;&#34;
+    CNN encoder model
+    Parameters
+    ----------
+    init_filters : int
+        Number of filters
+    input_shape : tuple
+        Expected input shape
+    Returns
+    -------
+    tf.keras.model
+
+    &#34;&#34;&#34;
     pretrained_layers = [&#39;conv1&#39;, &#39;maxp1&#39;, &#39;conv2&#39;, &#39;maxp2&#39;, &#39;conv3&#39;, &#39;maxp3&#39;]
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape),
@@ -157,6 +219,21 @@ def my_encoder(init_filters=256,
 
 
 def factory(model_name, **model_args):
+    &#34;&#34;&#34;
+    Encoder factory creating encoder by given name and passing the model args
+
+    Parameters
+    ----------
+    model_name : str
+        Name of the encoder model
+    model_args : dict
+        Arguments for model
+
+    Returns
+    -------
+    tf.keras.model
+
+    &#34;&#34;&#34;
     if model_name.lower() == &#39;baseline&#39;:
         return autoencoder_baseline(**model_args)
     elif model_name.lower() == &#39;myencoder&#39;:
@@ -182,7 +259,27 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">autoencoder_baseline</span></span>(<span>input_shape=(5, 5, 5, 1), conv_kernel=(5, 5, 5), conv_activation='relu', regularization='l2', conv_filters=8, dense_activation=None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Convolutional encoder using Dense layer as decoder</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+<dt><strong><code>conv_kernel</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Shape of the convolutional kernel</dd>
+<dt><strong><code>conv_activation</code></strong> :&ensp;<code>string</code></dt>
+<dd>Tensorflow activation function for all the layers</dd>
+<dt><strong><code>regularization</code></strong> :&ensp;<code>string</code></dt>
+<dd>Regularization of convolutional weights</dd>
+<dt><strong><code>conv_filters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of convolutional filters</dd>
+<dt><strong><code>dense_activation</code></strong> :&ensp;<code>string</code></dt>
+<dd>Decoder activation function</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -193,6 +290,28 @@ def factory(model_name, **model_args):
                          regularization=&#39;l2&#39;,
                          conv_filters=8,
                          dense_activation=None):
+    &#34;&#34;&#34;
+    Convolutional encoder using Dense layer as decoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    conv_kernel : tuple
+        Shape of the convolutional kernel
+    conv_activation : string
+        Tensorflow activation function for all the layers
+    regularization : string
+        Regularization of convolutional weights
+    conv_filters : int
+        Number of convolutional filters
+    dense_activation : string
+        Decoder activation function
+
+    Returns
+    -------
+    tf.keras.model
+    &#34;&#34;&#34;
     fc_nodes = np.prod(input_shape)
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape, name=&#39;Input&#39;),
@@ -207,12 +326,43 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">cae</span></span>(<span>input_shape=(32, 32, 32, 1), init_filters=256, activation='relu')</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Convolutional encoder using Transposed Convolutions as decoder</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+<dt><strong><code>init_filters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Filters of the first convolutional layer</dd>
+<dt><strong><code>activation</code></strong> :&ensp;<code>string</code></dt>
+<dd>Tensorflow activation function for all the layers</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def cae(input_shape=(32, 32, 32, 1), init_filters=256, activation=&#39;relu&#39;):
+    &#34;&#34;&#34;
+    Convolutional encoder using Transposed Convolutions as decoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    init_filters : int
+        Filters of the first convolutional layer
+    activation : string
+        Tensorflow activation function for all the layers
+
+    Returns
+    -------
+    tf.keras.model
+
+    &#34;&#34;&#34;
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape),
         tf.keras.layers.Conv3D(filters=init_filters, kernel_size=6, strides=2, activation=activation),
@@ -228,12 +378,39 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">factory</span></span>(<span>model_name, **model_args)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Encoder factory creating encoder by given name and passing the model args</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>model_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of the encoder model</dd>
+<dt><strong><code>model_args</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Arguments for model</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def factory(model_name, **model_args):
+    &#34;&#34;&#34;
+    Encoder factory creating encoder by given name and passing the model args
+
+    Parameters
+    ----------
+    model_name : str
+        Name of the encoder model
+    model_args : dict
+        Arguments for model
+
+    Returns
+    -------
+    tf.keras.model
+
+    &#34;&#34;&#34;
     if model_name.lower() == &#39;baseline&#39;:
         return autoencoder_baseline(**model_args)
     elif model_name.lower() == &#39;myencoder&#39;:
@@ -252,13 +429,39 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">my_encoder</span></span>(<span>init_filters=256, input_shape=(32, 32, 32, 1))</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>CNN encoder model
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>init_filters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of filters</dd>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def my_encoder(init_filters=256,
                input_shape=(32, 32, 32, 1)):
+    &#34;&#34;&#34;
+    CNN encoder model
+    Parameters
+    ----------
+    init_filters : int
+        Number of filters
+    input_shape : tuple
+        Expected input shape
+    Returns
+    -------
+    tf.keras.model
+
+    &#34;&#34;&#34;
     pretrained_layers = [&#39;conv1&#39;, &#39;maxp1&#39;, &#39;conv2&#39;, &#39;maxp2&#39;, &#39;conv3&#39;, &#39;maxp3&#39;]
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape),
@@ -289,12 +492,24 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">payan2</span></span>(<span>)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Payan model with default settings</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def payan2():
+    &#34;&#34;&#34;
+    Payan model with default settings
+
+    Returns
+    -------
+    tf.keras.model
+    &#34;&#34;&#34;
     input_layer = tf.keras.layers.Input((5, 5, 5, 1))
     conv1 = tf.keras.layers.Conv3D(150, 5, activation=&#39;sigmoid&#39;, padding=&#39;same&#39;,
                                    kernel_regularizer=tf.keras.regularizers.l2(0.1))(input_layer)
@@ -324,67 +539,15 @@ def factory(model_name, **model_args):
 <span>(</span><span>*args, **kwargs)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><code>Model</code> groups layers into an object with training and inference features.</p>
-<p>There are two ways to instantiate a <code>Model</code>:</p>
-<p>1 - With the "functional API", where you start from <code>Input</code>,
-you chain layer calls to specify the model's forward pass,
-and finally you create your model from inputs and outputs:</p>
-<pre><code class="python">import tensorflow as tf
-
-inputs = tf.keras.Input(shape=(3,))
-x = tf.keras.layers.Dense(4, activation=tf.nn.relu)(inputs)
-outputs = tf.keras.layers.Dense(5, activation=tf.nn.softmax)(x)
-model = tf.keras.Model(inputs=inputs, outputs=outputs)
-</code></pre>
-<p>2 - By subclassing the <code>Model</code> class: in that case, you should define your
-layers in <code>__init__</code> and you should implement the model's forward pass
-in <code>call</code>.</p>
-<pre><code class="python">import tensorflow as tf
-
-class MyModel(tf.keras.Model):
-
-  def __init__(self):
-    super(MyModel, self).__init__()
-    self.dense1 = tf.keras.layers.Dense(4, activation=tf.nn.relu)
-    self.dense2 = tf.keras.layers.Dense(5, activation=tf.nn.softmax)
-
-  def call(self, inputs):
-    x = self.dense1(inputs)
-    return self.dense2(x)
-
-model = MyModel()
-</code></pre>
-<p>If you subclass <code>Model</code>, you can optionally have
-a <code>training</code> argument (boolean) in <code>call</code>, which you can use to specify
-a different behavior in training and inference:</p>
-<pre><code class="python">import tensorflow as tf
-
-class MyModel(tf.keras.Model):
-
-  def __init__(self):
-    super(MyModel, self).__init__()
-    self.dense1 = tf.keras.layers.Dense(4, activation=tf.nn.relu)
-    self.dense2 = tf.keras.layers.Dense(5, activation=tf.nn.softmax)
-    self.dropout = tf.keras.layers.Dropout(0.5)
-
-  def call(self, inputs, training=False):
-    x = self.dense1(inputs)
-    if training:
-      x = self.dropout(x, training=training)
-    return self.dense2(x)
-
-model = MyModel()
-</code></pre>
-<p>Once the model is created, you can config the model with losses and metrics
-with <code>model.compile()</code>, train the model with <code>model.fit()</code>, or use the model
-to do prediction with <code>model.predict()</code>.</p>
-<p>Checkout <a href="https://www.tensorflow.org/guide/keras/overview">guide</a> for
-additional details.</p></div>
+<div class="desc"><p>Payan Encoder model</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class PayanEncoder(tf.keras.Model):
+    &#34;&#34;&#34;
+    Payan Encoder model
+    &#34;&#34;&#34;
     def __init__(self,
                  input_shape=(5, 5, 5, 1),
                  conv_filters=150,

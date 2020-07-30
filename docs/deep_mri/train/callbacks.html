@@ -38,6 +38,19 @@ import io
 
 
 def plot_confusion_matrix(cm, class_names):
+    &#34;&#34;&#34;
+    Create image of confussion matrix
+    Parameters
+    ----------
+    cm : np.array
+        Confussion matrix
+    class_names : list
+        List class names
+    Returns
+    -------
+    figure
+
+    &#34;&#34;&#34;
     figure = plt.figure(figsize=(8, 8))
     cm = np.around(cm.astype(&#39;float&#39;) / cm.sum(axis=1)[:, np.newaxis], decimals=2)
     ax = sns.heatmap(cm,
@@ -51,6 +64,9 @@ def plot_confusion_matrix(cm, class_names):
 
 
 def plot_to_image(plot):
+    &#34;&#34;&#34;
+    Transform plot to png image
+    &#34;&#34;&#34;
     buffer = io.BytesIO()
     plt.savefig(buffer, format=&#39;png&#39;)
     plt.close(plot)
@@ -61,6 +77,9 @@ def plot_to_image(plot):
 
 
 class SaveConfigCallback(tf.keras.callbacks.Callback):
+    &#34;&#34;&#34;
+    Copy config to log file
+    &#34;&#34;&#34;
     def __init__(self, log_dir, config):
         super().__init__()
         self.log_dir = log_dir
@@ -73,6 +92,9 @@ class SaveConfigCallback(tf.keras.callbacks.Callback):
 
 
 class DummyPredictorCallback(tf.keras.callbacks.Callback):
+    &#34;&#34;&#34;
+    Predict the most common label
+    &#34;&#34;&#34;
     def __init__(self, train_ds, valid_ds):
         super().__init__()
         self.train_ds = train_ds
@@ -97,6 +119,9 @@ class DummyPredictorCallback(tf.keras.callbacks.Callback):
 
 
 class ConfusionMatrixCallback(tf.keras.callbacks.Callback):
+    &#34;&#34;&#34;
+    Create confussion matrix after epoch
+    &#34;&#34;&#34;
 
     def __init__(self, ds, class_names, log_dir, name=&#34;CM&#34;):
         super().__init__()
@@ -131,12 +156,38 @@ class ConfusionMatrixCallback(tf.keras.callbacks.Callback):
 <span>def <span class="ident">plot_confusion_matrix</span></span>(<span>cm, class_names)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Create image of confussion matrix
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>cm</code></strong> :&ensp;<code>np.array</code></dt>
+<dd>Confussion matrix</dd>
+<dt><strong><code>class_names</code></strong> :&ensp;<code>list</code></dt>
+<dd>List class names</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>figure</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_confusion_matrix(cm, class_names):
+    &#34;&#34;&#34;
+    Create image of confussion matrix
+    Parameters
+    ----------
+    cm : np.array
+        Confussion matrix
+    class_names : list
+        List class names
+    Returns
+    -------
+    figure
+
+    &#34;&#34;&#34;
     figure = plt.figure(figsize=(8, 8))
     cm = np.around(cm.astype(&#39;float&#39;) / cm.sum(axis=1)[:, np.newaxis], decimals=2)
     ax = sns.heatmap(cm,
@@ -153,12 +204,15 @@ class ConfusionMatrixCallback(tf.keras.callbacks.Callback):
 <span>def <span class="ident">plot_to_image</span></span>(<span>plot)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Transform plot to png image</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_to_image(plot):
+    &#34;&#34;&#34;
+    Transform plot to png image
+    &#34;&#34;&#34;
     buffer = io.BytesIO()
     plt.savefig(buffer, format=&#39;png&#39;)
     plt.close(plot)
@@ -178,38 +232,15 @@ class ConfusionMatrixCallback(tf.keras.callbacks.Callback):
 <span>(</span><span>ds, class_names, log_dir, name='CM')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Abstract base class used to build new callbacks.</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>params</code></strong></dt>
-<dd>dict. Training parameters
-(eg. verbosity, batch size, number of epochs&hellip;).</dd>
-<dt><strong><code>model</code></strong></dt>
-<dd>instance of <code>keras.models.Model</code>.
-Reference of the model being trained.</dd>
-<dt><strong><code>validation_data</code></strong></dt>
-<dd>Deprecated. Do not use.</dd>
-</dl>
-<p>The <code>logs</code> dictionary that callback methods
-take as argument will contain keys for quantities relevant to
-the current batch or epoch.</p>
-<p>Currently, the <code>.fit()</code> method of the <code>Model</code> class
-will include the following quantities in the <code>logs</code> that
-it passes to its callbacks:</p>
-<pre><code>on_epoch_end: logs include &lt;code&gt;acc&lt;/code&gt; and &lt;code&gt;loss&lt;/code&gt;, and
-    optionally include &lt;code&gt;val\_loss&lt;/code&gt;
-    (if validation is enabled in &lt;code&gt;fit&lt;/code&gt;), and &lt;code&gt;val\_acc&lt;/code&gt;
-    (if validation and accuracy monitoring are enabled).
-on_batch_begin: logs include &lt;code&gt;size&lt;/code&gt;,
-    the number of samples in the current batch.
-on_batch_end: logs include &lt;code&gt;loss&lt;/code&gt;, and optionally &lt;code&gt;acc&lt;/code&gt;
-    (if accuracy monitoring is enabled).
-</code></pre></div>
+<div class="desc"><p>Create confussion matrix after epoch</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class ConfusionMatrixCallback(tf.keras.callbacks.Callback):
+    &#34;&#34;&#34;
+    Create confussion matrix after epoch
+    &#34;&#34;&#34;
 
     def __init__(self, ds, class_names, log_dir, name=&#34;CM&#34;):
         super().__init__()
@@ -271,38 +302,15 @@ are prefixed with <code>val_</code>.</p></div>
 <span>(</span><span>train_ds, valid_ds)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Abstract base class used to build new callbacks.</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>params</code></strong></dt>
-<dd>dict. Training parameters
-(eg. verbosity, batch size, number of epochs&hellip;).</dd>
-<dt><strong><code>model</code></strong></dt>
-<dd>instance of <code>keras.models.Model</code>.
-Reference of the model being trained.</dd>
-<dt><strong><code>validation_data</code></strong></dt>
-<dd>Deprecated. Do not use.</dd>
-</dl>
-<p>The <code>logs</code> dictionary that callback methods
-take as argument will contain keys for quantities relevant to
-the current batch or epoch.</p>
-<p>Currently, the <code>.fit()</code> method of the <code>Model</code> class
-will include the following quantities in the <code>logs</code> that
-it passes to its callbacks:</p>
-<pre><code>on_epoch_end: logs include &lt;code&gt;acc&lt;/code&gt; and &lt;code&gt;loss&lt;/code&gt;, and
-    optionally include &lt;code&gt;val\_loss&lt;/code&gt;
-    (if validation is enabled in &lt;code&gt;fit&lt;/code&gt;), and &lt;code&gt;val\_acc&lt;/code&gt;
-    (if validation and accuracy monitoring are enabled).
-on_batch_begin: logs include &lt;code&gt;size&lt;/code&gt;,
-    the number of samples in the current batch.
-on_batch_end: logs include &lt;code&gt;loss&lt;/code&gt;, and optionally &lt;code&gt;acc&lt;/code&gt;
-    (if accuracy monitoring is enabled).
-</code></pre></div>
+<div class="desc"><p>Predict the most common label</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class DummyPredictorCallback(tf.keras.callbacks.Callback):
+    &#34;&#34;&#34;
+    Predict the most common label
+    &#34;&#34;&#34;
     def __init__(self, train_ds, valid_ds):
         super().__init__()
         self.train_ds = train_ds
@@ -368,38 +376,15 @@ but that may change in the future.</p></div>
 <span>(</span><span>log_dir, config)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Abstract base class used to build new callbacks.</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>params</code></strong></dt>
-<dd>dict. Training parameters
-(eg. verbosity, batch size, number of epochs&hellip;).</dd>
-<dt><strong><code>model</code></strong></dt>
-<dd>instance of <code>keras.models.Model</code>.
-Reference of the model being trained.</dd>
-<dt><strong><code>validation_data</code></strong></dt>
-<dd>Deprecated. Do not use.</dd>
-</dl>
-<p>The <code>logs</code> dictionary that callback methods
-take as argument will contain keys for quantities relevant to
-the current batch or epoch.</p>
-<p>Currently, the <code>.fit()</code> method of the <code>Model</code> class
-will include the following quantities in the <code>logs</code> that
-it passes to its callbacks:</p>
-<pre><code>on_epoch_end: logs include &lt;code&gt;acc&lt;/code&gt; and &lt;code&gt;loss&lt;/code&gt;, and
-    optionally include &lt;code&gt;val\_loss&lt;/code&gt;
-    (if validation is enabled in &lt;code&gt;fit&lt;/code&gt;), and &lt;code&gt;val\_acc&lt;/code&gt;
-    (if validation and accuracy monitoring are enabled).
-on_batch_begin: logs include &lt;code&gt;size&lt;/code&gt;,
-    the number of samples in the current batch.
-on_batch_end: logs include &lt;code&gt;loss&lt;/code&gt;, and optionally &lt;code&gt;acc&lt;/code&gt;
-    (if accuracy monitoring is enabled).
-</code></pre></div>
+<div class="desc"><p>Copy config to log file</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class SaveConfigCallback(tf.keras.callbacks.Callback):
+    &#34;&#34;&#34;
+    Copy config to log file
+    &#34;&#34;&#34;
     def __init__(self, log_dir, config):
         super().__init__()
         self.log_dir = log_dir

@@ -68,10 +68,10 @@ def _residual_block3d(block_function,
     return f
 
 
-def basic_block(filters,
-                strides=(1, 1, 1),
-                kernel_regularizer='l2',
-                is_first_block_of_first_layer=False):
+def _basic_block(filters,
+                 strides=(1, 1, 1),
+                 kernel_regularizer='l2',
+                 is_first_block_of_first_layer=False):
     """Basic 3 X 3 X 3 convolution blocks. Extended from raghakot's 2D impl."""
 
     def f(input):
@@ -96,8 +96,8 @@ def basic_block(filters,
     return f
 
 
-def bottleneck(filters, strides=(1, 1, 1), kernel_regularizer='l2',
-               is_first_block_of_first_layer=False):
+def _bottleneck(filters, strides=(1, 1, 1), kernel_regularizer='l2',
+                is_first_block_of_first_layer=False):
     """Basic 3 X 3 X 3 convolution blocks. Extended from raghakot's 2D impl."""
 
     def f(input):
@@ -205,29 +205,29 @@ class Resnet3DBuilder(object):
     @staticmethod
     def build_resnet_18(input_shape, num_outputs, filters=64):
         """Build resnet 18."""
-        return Resnet3DBuilder.build(input_shape, num_outputs, basic_block,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _basic_block,
                                      [2, 2, 2, 2], filters)
 
     @staticmethod
     def build_resnet_34(input_shape, num_outputs, filters=64):
         """Build resnet 34."""
-        return Resnet3DBuilder.build(input_shape, num_outputs, basic_block,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _basic_block,
                                      [3, 4, 6, 3], filters)
 
     @staticmethod
     def build_resnet_50(input_shape, num_outputs, filters=64):
         """Build resnet 50."""
-        return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                      [3, 4, 6, 3], filters)
 
     @staticmethod
     def build_resnet_101(input_shape, num_outputs, filters=64):
         """Build resnet 101."""
-        return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                      [3, 4, 23, 3], filters)
 
     @staticmethod
     def build_resnet_152(input_shape, num_outputs, filters=64):
         """Build resnet 152."""
-        return Resnet3DBuilder.build(input_shape, num_outputs, bottleneck,
+        return Resnet3DBuilder.build(input_shape, num_outputs, _bottleneck,
                                      [3, 8, 36, 3], filters)

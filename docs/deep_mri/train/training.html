@@ -32,6 +32,16 @@ from .config_parser import config_to_ds, config_to_model, config_to_callbacks, c
 
 
 def run_train(path_to_config, overriding_config):
+    &#34;&#34;&#34;
+    Basic training loop using only config
+    Parameters
+    ----------
+    path_to_config : str
+        Path to config file
+    overriding_config : dict
+        Names and values of overriding fields from config
+
+    &#34;&#34;&#34;
     # load config
     with open(path_to_config, &#39;r&#39;) as f:
         config = json.load(f)
@@ -66,12 +76,30 @@ def run_train(path_to_config, overriding_config):
 <span>def <span class="ident">run_train</span></span>(<span>path_to_config, overriding_config)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Basic training loop using only config
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>path_to_config</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to config file</dd>
+<dt><strong><code>overriding_config</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Names and values of overriding fields from config</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run_train(path_to_config, overriding_config):
+    &#34;&#34;&#34;
+    Basic training loop using only config
+    Parameters
+    ----------
+    path_to_config : str
+        Path to config file
+    overriding_config : dict
+        Names and values of overriding fields from config
+
+    &#34;&#34;&#34;
     # load config
     with open(path_to_config, &#39;r&#39;) as f:
         config = json.load(f)

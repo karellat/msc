@@ -34,16 +34,44 @@ def transfer_model(feature_extractor_url,
                    input_shape=(193, 193, 3),
                    feature_trainable=False,
                    fc_count=1024,
-                   num_outputs=3):
+                   num_outputs=3,
+                   dense_activation=&#39;relu&#39;,
+                   output_activation=&#39;softmax&#39;,
+                   dropout=0.5):
+    &#34;&#34;&#34;
+    Create 2D using model from tensorflow hub as feature extractor
+    Parameters
+    ----------
+    feature_extractor_url : str
+        Url of the tensorflow hub feature extractor
+    input_shape : tuple
+        Expected input shape
+    feature_trainable: bool
+        False if fixed weights of feature extractor
+    fc_count : int
+        Number of full connected units
+    num_outputs : int
+        Number of network outputs
+    dense_activation : str
+        Name of activation function of full connected
+    output_activation : str
+        Output activation function
+    dropout : float
+        Probability of dropout of unit
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     assert num_outputs &gt; 1
     feature_extractor_layer = hub.KerasLayer(feature_extractor_url,
                                              input_shape=input_shape,
                                              trainable=feature_trainable)
     return tf.keras.Sequential([
         feature_extractor_layer,
-        tf.keras.layers.Dense(fc_count, activation=&#39;relu&#39;),
-        tf.keras.layers.Dropout(0.5),
-        tf.keras.layers.Dense(num_outputs, activation=&#39;softmax&#39;)
+        tf.keras.layers.Dense(fc_count, activation=dense_activation),
+        tf.keras.layers.Dropout(dropout),
+        tf.keras.layers.Dense(num_outputs, activation=output_activation)
     ])
 
 
@@ -78,10 +106,35 @@ def factory(model_name, **model_args):
 </details>
 </dd>
 <dt id="deep_mri.model_zoo.models_2d.transfer_model"><code class="name flex">
-<span>def <span class="ident">transfer_model</span></span>(<span>feature_extractor_url, input_shape=(193, 193, 3), feature_trainable=False, fc_count=1024, num_outputs=3)</span>
+<span>def <span class="ident">transfer_model</span></span>(<span>feature_extractor_url, input_shape=(193, 193, 3), feature_trainable=False, fc_count=1024, num_outputs=3, dense_activation='relu', output_activation='softmax', dropout=0.5)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Create 2D using model from tensorflow hub as feature extractor
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>feature_extractor_url</code></strong> :&ensp;<code>str</code></dt>
+<dd>Url of the tensorflow hub feature extractor</dd>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+<dt><strong><code>feature_trainable</code></strong> :&ensp;<code>bool</code></dt>
+<dd>False if fixed weights of feature extractor</dd>
+<dt><strong><code>fc_count</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of full connected units</dd>
+<dt><strong><code>num_outputs</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of network outputs</dd>
+<dt><strong><code>dense_activation</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of activation function of full connected</dd>
+<dt><strong><code>output_activation</code></strong> :&ensp;<code>str</code></dt>
+<dd>Output activation function</dd>
+<dt><strong><code>dropout</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of dropout of unit</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -90,16 +143,44 @@ def factory(model_name, **model_args):
                    input_shape=(193, 193, 3),
                    feature_trainable=False,
                    fc_count=1024,
-                   num_outputs=3):
+                   num_outputs=3,
+                   dense_activation=&#39;relu&#39;,
+                   output_activation=&#39;softmax&#39;,
+                   dropout=0.5):
+    &#34;&#34;&#34;
+    Create 2D using model from tensorflow hub as feature extractor
+    Parameters
+    ----------
+    feature_extractor_url : str
+        Url of the tensorflow hub feature extractor
+    input_shape : tuple
+        Expected input shape
+    feature_trainable: bool
+        False if fixed weights of feature extractor
+    fc_count : int
+        Number of full connected units
+    num_outputs : int
+        Number of network outputs
+    dense_activation : str
+        Name of activation function of full connected
+    output_activation : str
+        Output activation function
+    dropout : float
+        Probability of dropout of unit
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     assert num_outputs &gt; 1
     feature_extractor_layer = hub.KerasLayer(feature_extractor_url,
                                              input_shape=input_shape,
                                              trainable=feature_trainable)
     return tf.keras.Sequential([
         feature_extractor_layer,
-        tf.keras.layers.Dense(fc_count, activation=&#39;relu&#39;),
-        tf.keras.layers.Dropout(0.5),
-        tf.keras.layers.Dense(num_outputs, activation=&#39;softmax&#39;)
+        tf.keras.layers.Dense(fc_count, activation=dense_activation),
+        tf.keras.layers.Dropout(dropout),
+        tf.keras.layers.Dense(num_outputs, activation=output_activation)
     ])</code></pre>
 </details>
 </dd>

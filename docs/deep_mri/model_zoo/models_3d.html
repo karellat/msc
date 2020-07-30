@@ -31,7 +31,7 @@ import tensorflow_addons as tfa
 from deep_mri.model_zoo.resnet3d import Resnet3DBuilder
 
 
-def batch_norm_conv(input, filters, kernel, name, activation):
+def _batch_norm_conv(input, filters, kernel, name, activation):
     layer = tf.keras.layers.Convolution3D(filters, kernel, name=name, activation=None)(input)
     layer = tf.keras.layers.BatchNormalization()(layer)
     return tf.keras.layers.Activation(activation)(layer)
@@ -42,13 +42,32 @@ def payan_montana_model(input_shape=(97, 115, 97, 1),
                         batch_norm=False,
                         dropout=0.5,
                         fc_size=800):
+    &#34;&#34;&#34;
+    Payan model without pretrained filters
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    conv_filters_count : int
+        Count of convolutinal filters
+    batch_norm : bool
+        True if use Batch norm
+    dropout : float
+        Probability of dropout of unit
+    fc_size
+        Number of full connected units
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     assert len(input_shape) == 4
 
     input_layer = tf.keras.layers.Input(input_shape, name=f&#39;Input&#39;)
     if batch_norm:
-        conv_layer1 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-1&#39;, activation=&#39;relu&#39;)
-        conv_layer2 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-2&#39;, activation=&#39;relu&#39;)
-        conv_layer3 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-3&#39;, activation=&#39;relu&#39;)
+        conv_layer1 = _batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-1&#39;, activation=&#39;relu&#39;)
+        conv_layer2 = _batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-2&#39;, activation=&#39;relu&#39;)
+        conv_layer3 = _batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-3&#39;, activation=&#39;relu&#39;)
     else:
         conv_layer1 = tf.keras.layers.Convolution3D(conv_filters_count, (5, 5, 5), name=&#39;Conv-1&#39;, activation=&#39;relu&#39;)(
             input_layer)
@@ -72,6 +91,21 @@ def payan_montana_model(input_shape=(97, 115, 97, 1),
 
 
 def payan_montana_model_pretrained_conv(path_to_model, input_shape=(97, 115, 97, 1), fc_size=800):
+    &#34;&#34;&#34;
+    Payan model with pretrained encoder
+
+    Parameters
+    ----------
+    path_to_model : str
+        Path to the pretrained payan encoder
+    input_shape : tuple
+        Expected input shape
+    fc_size: int
+        Number of full connected units
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     pretrained_model = tf.keras.models.load_model(path_to_model)
     trained_layer = pretrained_model.get_layer(&#39;Encoder-Conv&#39;)
     big_model = payan_montana_model(input_shape=input_shape,
@@ -92,6 +126,24 @@ def encoder_baseline(input_shape=(97, 115, 97, 1),
                      init_filters=150,
                      fc_size=500,
                      dropout=0.5):
+    &#34;&#34;&#34;
+    Model with the multiplicative convolutional layers
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    init_filters : int
+        Count of convolutinal filters
+    fc_size: int
+        Number of full connected units
+    dropout : float
+        Probability of dropout of unit
+
+    Returns
+    -------
+
+    &#34;&#34;&#34;
     input_layer = tf.keras.layers.Input(input_shape)
     conv1_layer = tf.keras.layers.Conv3D(filters=init_filters,
                                          kernel_size=3,
@@ -112,6 +164,20 @@ def encoder_baseline(input_shape=(97, 115, 97, 1),
 
 
 def clone_layer_from_model(model, layer_name):
+    &#34;&#34;&#34;
+    Get clone of layer
+
+    Parameters
+    ----------
+    model : tf.keras.Model
+       Instance of model
+    layer_name : str
+       Name of the cloned layer
+
+    Returns
+    -------
+    tf.keras.Layer
+    &#34;&#34;&#34;
     pretrained_layer = model.get_layer(name=layer_name)
     new_layer = type(pretrained_layer).from_config(pretrained_layer.get_config())
     return new_layer, pretrained_layer.get_weights()
@@ -121,6 +187,24 @@ def encoder_fc(encoder_model_path,
                pretrained_layers=[&#39;conv1&#39;, &#39;maxp1&#39;, &#39;conv2&#39;, &#39;maxp2&#39;, &#39;conv3&#39;, &#39;maxp3&#39;],
                input_shape=(93, 115, 93, 1),
                fc_units=800):
+    &#34;&#34;&#34;
+    Model with pretrained convolutional filters
+
+    Parameters
+    ----------
+    encoder_model_path : str
+        Path to the pretrained payan encoder
+    pretrained_layers : list
+        Names of the pretrained layers
+    input_shape : tuple
+        Expected input shape
+    fc_units : int
+        Number of full connected units
+
+    Returns
+    -------
+
+    &#34;&#34;&#34;
     pretrained_model = tf.keras.models.load_model(encoder_model_path)
     encoder_layer = []
     for n in pretrained_layers:
@@ -152,6 +236,29 @@ def martin_model(input_shape=(97, 115, 97, 1),
                  conv_activation=&#39;relu&#39;,
                  conv_stride=2,
                  conv_to_fc=None):
+    &#34;&#34;&#34;
+    Model proposed by my superviser using conv layers stride instead of maxpooling
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    init_filters : int
+        Count of convolutinal filters
+    conv_layers : int
+        Number of layers
+    conv_kernel : int
+        Dimension of the kernel
+    conv_activation : str
+        Tensorflow activation function
+    conv_stride : int
+        Convolutional layer stride
+    conv_to_fc : str
+        Last layer of model
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     convs = []
     for i in range(conv_layers):
         convs.append(tf.keras.layers.Conv3D(init_filters * (2 ** i),
@@ -182,6 +289,21 @@ def martin_model(input_shape=(97, 115, 97, 1),
 
 
 def liu_model(input_shape=(97, 115, 97, 1), f=8):
+    &#34;&#34;&#34;
+    Liu model
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    f : int
+        Scale of the filters
+
+    Returns
+    -------
+    tf.keras.Model
+
+    &#34;&#34;&#34;
     return tf.keras.Sequential(
         [
             tf.keras.layers.Input(input_shape),
@@ -228,6 +350,18 @@ def liu_model(input_shape=(97, 115, 97, 1), f=8):
 
 
 def hosseini_encoder_1(input_shape):
+    &#34;&#34;&#34;
+    First part of hosseini stack encoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     outputs = []
     input_layer = tf.keras.layers.Input(input_shape)
     for i in range(8):
@@ -240,6 +374,18 @@ def hosseini_encoder_1(input_shape):
 
 
 def hosseini_encoder_2(input_shape):
+    &#34;&#34;&#34;
+    Second part of hosseini stack encoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     outputs = []
     input_layer = tf.keras.layers.Input(input_shape)
     for i in range(8):
@@ -255,6 +401,18 @@ def hosseini_encoder_2(input_shape):
 
 
 def hosseini_encoder_3(input_shape):
+    &#34;&#34;&#34;
+    Third part of hosseini stack encoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     outputs = []
     input_layer = tf.keras.layers.Input(input_shape)
     for i in range(8):
@@ -273,6 +431,18 @@ def hosseini_encoder_3(input_shape):
 
 
 def hosseini_classifier(input_shape):
+    &#34;&#34;&#34;
+    Hosseini classifier
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     outputs = []
     input_layer = tf.keras.layers.Input(input_shape)
     for i in range(8):
@@ -317,6 +487,18 @@ class _ResnetBlock(tf.keras.Model):
 
 
 def karasawa_model(input_shape):
+    &#34;&#34;&#34;
+    Karasawa classifier
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape),
         tf.keras.layers.Conv3D(16, 5, strides=2, activation=&#39;relu&#39;, padding=&#39;same&#39;),
@@ -345,6 +527,20 @@ def karasawa_model(input_shape):
 
 
 def factory(model_name, **model_args):
+    &#34;&#34;&#34;
+    Factory of 3D models
+
+    Parameters
+    ----------
+    model_name : str
+        Name of the 3D model
+    model_args : dict
+        Additional model arguments
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     if model_name.lower() == &#34;martin&#34;:
         return martin_model(**model_args)
     elif model_name.lower() == &#39;karasawa&#39;:
@@ -390,31 +586,44 @@ def factory(model_name, **model_args):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="deep_mri.model_zoo.models_3d.batch_norm_conv"><code class="name flex">
-<span>def <span class="ident">batch_norm_conv</span></span>(<span>input, filters, kernel, name, activation)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def batch_norm_conv(input, filters, kernel, name, activation):
-    layer = tf.keras.layers.Convolution3D(filters, kernel, name=name, activation=None)(input)
-    layer = tf.keras.layers.BatchNormalization()(layer)
-    return tf.keras.layers.Activation(activation)(layer)</code></pre>
-</details>
-</dd>
 <dt id="deep_mri.model_zoo.models_3d.clone_layer_from_model"><code class="name flex">
 <span>def <span class="ident">clone_layer_from_model</span></span>(<span>model, layer_name)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get clone of layer</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>model</code></strong> :&ensp;<code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+<dt>Instance of model</dt>
+<dt><strong><code>layer_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>Name of the cloned layer</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Layer</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def clone_layer_from_model(model, layer_name):
+    &#34;&#34;&#34;
+    Get clone of layer
+
+    Parameters
+    ----------
+    model : tf.keras.Model
+       Instance of model
+    layer_name : str
+       Name of the cloned layer
+
+    Returns
+    -------
+    tf.keras.Layer
+    &#34;&#34;&#34;
     pretrained_layer = model.get_layer(name=layer_name)
     new_layer = type(pretrained_layer).from_config(pretrained_layer.get_config())
     return new_layer, pretrained_layer.get_weights()</code></pre>
@@ -424,7 +633,19 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">encoder_baseline</span></span>(<span>input_shape=(97, 115, 97, 1), init_filters=150, fc_size=500, dropout=0.5)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Model with the multiplicative convolutional layers</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+<dt><strong><code>init_filters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Count of convolutinal filters</dd>
+<dt><strong><code>fc_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of full connected units</dd>
+<dt><strong><code>dropout</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of dropout of unit</dd>
+</dl>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -433,6 +654,24 @@ def factory(model_name, **model_args):
                      init_filters=150,
                      fc_size=500,
                      dropout=0.5):
+    &#34;&#34;&#34;
+    Model with the multiplicative convolutional layers
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    init_filters : int
+        Count of convolutinal filters
+    fc_size: int
+        Number of full connected units
+    dropout : float
+        Probability of dropout of unit
+
+    Returns
+    -------
+
+    &#34;&#34;&#34;
     input_layer = tf.keras.layers.Input(input_shape)
     conv1_layer = tf.keras.layers.Conv3D(filters=init_filters,
                                          kernel_size=3,
@@ -456,7 +695,19 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">encoder_fc</span></span>(<span>encoder_model_path, pretrained_layers=['conv1', 'maxp1', 'conv2', 'maxp2', 'conv3', 'maxp3'], input_shape=(93, 115, 93, 1), fc_units=800)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Model with pretrained convolutional filters</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>encoder_model_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the pretrained payan encoder</dd>
+<dt><strong><code>pretrained_layers</code></strong> :&ensp;<code>list</code></dt>
+<dd>Names of the pretrained layers</dd>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+<dt><strong><code>fc_units</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of full connected units</dd>
+</dl>
+<h2 id="returns">Returns</h2></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -465,6 +716,24 @@ def factory(model_name, **model_args):
                pretrained_layers=[&#39;conv1&#39;, &#39;maxp1&#39;, &#39;conv2&#39;, &#39;maxp2&#39;, &#39;conv3&#39;, &#39;maxp3&#39;],
                input_shape=(93, 115, 93, 1),
                fc_units=800):
+    &#34;&#34;&#34;
+    Model with pretrained convolutional filters
+
+    Parameters
+    ----------
+    encoder_model_path : str
+        Path to the pretrained payan encoder
+    pretrained_layers : list
+        Names of the pretrained layers
+    input_shape : tuple
+        Expected input shape
+    fc_units : int
+        Number of full connected units
+
+    Returns
+    -------
+
+    &#34;&#34;&#34;
     pretrained_model = tf.keras.models.load_model(encoder_model_path)
     encoder_layer = []
     for n in pretrained_layers:
@@ -493,12 +762,38 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">factory</span></span>(<span>model_name, **model_args)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Factory of 3D models</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>model_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of the 3D model</dd>
+<dt><strong><code>model_args</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Additional model arguments</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def factory(model_name, **model_args):
+    &#34;&#34;&#34;
+    Factory of 3D models
+
+    Parameters
+    ----------
+    model_name : str
+        Name of the 3D model
+    model_args : dict
+        Additional model arguments
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     if model_name.lower() == &#34;martin&#34;:
         return martin_model(**model_args)
     elif model_name.lower() == &#39;karasawa&#39;:
@@ -541,12 +836,34 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">hosseini_classifier</span></span>(<span>input_shape)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Hosseini classifier</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def hosseini_classifier(input_shape):
+    &#34;&#34;&#34;
+    Hosseini classifier
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     outputs = []
     input_layer = tf.keras.layers.Input(input_shape)
     for i in range(8):
@@ -569,12 +886,34 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">hosseini_encoder_1</span></span>(<span>input_shape)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>First part of hosseini stack encoder</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def hosseini_encoder_1(input_shape):
+    &#34;&#34;&#34;
+    First part of hosseini stack encoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     outputs = []
     input_layer = tf.keras.layers.Input(input_shape)
     for i in range(8):
@@ -590,12 +929,34 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">hosseini_encoder_2</span></span>(<span>input_shape)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Second part of hosseini stack encoder</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def hosseini_encoder_2(input_shape):
+    &#34;&#34;&#34;
+    Second part of hosseini stack encoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     outputs = []
     input_layer = tf.keras.layers.Input(input_shape)
     for i in range(8):
@@ -614,12 +975,34 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">hosseini_encoder_3</span></span>(<span>input_shape)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Third part of hosseini stack encoder</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def hosseini_encoder_3(input_shape):
+    &#34;&#34;&#34;
+    Third part of hosseini stack encoder
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     outputs = []
     input_layer = tf.keras.layers.Input(input_shape)
     for i in range(8):
@@ -641,12 +1024,34 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">karasawa_model</span></span>(<span>input_shape)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Karasawa classifier</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def karasawa_model(input_shape):
+    &#34;&#34;&#34;
+    Karasawa classifier
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     return tf.keras.Sequential([
         tf.keras.layers.Input(input_shape),
         tf.keras.layers.Conv3D(16, 5, strides=2, activation=&#39;relu&#39;, padding=&#39;same&#39;),
@@ -678,12 +1083,39 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">liu_model</span></span>(<span>input_shape=(97, 115, 97, 1), f=8)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Liu model</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+<dt><strong><code>f</code></strong> :&ensp;<code>int</code></dt>
+<dd>Scale of the filters</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def liu_model(input_shape=(97, 115, 97, 1), f=8):
+    &#34;&#34;&#34;
+    Liu model
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    f : int
+        Scale of the filters
+
+    Returns
+    -------
+    tf.keras.Model
+
+    &#34;&#34;&#34;
     return tf.keras.Sequential(
         [
             tf.keras.layers.Input(input_shape),
@@ -733,7 +1165,30 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">martin_model</span></span>(<span>input_shape=(97, 115, 97, 1), init_filters=256, conv_layers=5, conv_kernel=2, conv_activation='relu', conv_stride=2, conv_to_fc=None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Model proposed by my superviser using conv layers stride instead of maxpooling
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+<dt><strong><code>init_filters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Count of convolutinal filters</dd>
+<dt><strong><code>conv_layers</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of layers</dd>
+<dt><strong><code>conv_kernel</code></strong> :&ensp;<code>int</code></dt>
+<dd>Dimension of the kernel</dd>
+<dt><strong><code>conv_activation</code></strong> :&ensp;<code>str</code></dt>
+<dd>Tensorflow activation function</dd>
+<dt><strong><code>conv_stride</code></strong> :&ensp;<code>int</code></dt>
+<dd>Convolutional layer stride</dd>
+<dt><strong><code>conv_to_fc</code></strong> :&ensp;<code>str</code></dt>
+<dd>Last layer of model</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -745,6 +1200,29 @@ def factory(model_name, **model_args):
                  conv_activation=&#39;relu&#39;,
                  conv_stride=2,
                  conv_to_fc=None):
+    &#34;&#34;&#34;
+    Model proposed by my superviser using conv layers stride instead of maxpooling
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    init_filters : int
+        Count of convolutinal filters
+    conv_layers : int
+        Number of layers
+    conv_kernel : int
+        Dimension of the kernel
+    conv_activation : str
+        Tensorflow activation function
+    conv_stride : int
+        Convolutional layer stride
+    conv_to_fc : str
+        Last layer of model
+
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     convs = []
     for i in range(conv_layers):
         convs.append(tf.keras.layers.Conv3D(init_filters * (2 ** i),
@@ -778,7 +1256,25 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">payan_montana_model</span></span>(<span>input_shape=(97, 115, 97, 1), conv_filters_count=150, batch_norm=False, dropout=0.5, fc_size=800)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Payan model without pretrained filters</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+<dt><strong><code>conv_filters_count</code></strong> :&ensp;<code>int</code></dt>
+<dd>Count of convolutinal filters</dd>
+<dt><strong><code>batch_norm</code></strong> :&ensp;<code>bool</code></dt>
+<dd>True if use Batch norm</dd>
+<dt><strong><code>dropout</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of dropout of unit</dd>
+<dt><strong><code>fc_size</code></strong></dt>
+<dd>Number of full connected units</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -788,13 +1284,32 @@ def factory(model_name, **model_args):
                         batch_norm=False,
                         dropout=0.5,
                         fc_size=800):
+    &#34;&#34;&#34;
+    Payan model without pretrained filters
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Expected input shape
+    conv_filters_count : int
+        Count of convolutinal filters
+    batch_norm : bool
+        True if use Batch norm
+    dropout : float
+        Probability of dropout of unit
+    fc_size
+        Number of full connected units
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     assert len(input_shape) == 4
 
     input_layer = tf.keras.layers.Input(input_shape, name=f&#39;Input&#39;)
     if batch_norm:
-        conv_layer1 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-1&#39;, activation=&#39;relu&#39;)
-        conv_layer2 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-2&#39;, activation=&#39;relu&#39;)
-        conv_layer3 = batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-3&#39;, activation=&#39;relu&#39;)
+        conv_layer1 = _batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-1&#39;, activation=&#39;relu&#39;)
+        conv_layer2 = _batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-2&#39;, activation=&#39;relu&#39;)
+        conv_layer3 = _batch_norm_conv(input_layer, conv_filters_count, (5, 5, 5), name=&#39;Conv-3&#39;, activation=&#39;relu&#39;)
     else:
         conv_layer1 = tf.keras.layers.Convolution3D(conv_filters_count, (5, 5, 5), name=&#39;Conv-1&#39;, activation=&#39;relu&#39;)(
             input_layer)
@@ -821,12 +1336,41 @@ def factory(model_name, **model_args):
 <span>def <span class="ident">payan_montana_model_pretrained_conv</span></span>(<span>path_to_model, input_shape=(97, 115, 97, 1), fc_size=800)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Payan model with pretrained encoder</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>path_to_model</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the pretrained payan encoder</dd>
+<dt><strong><code>input_shape</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Expected input shape</dd>
+<dt><strong><code>fc_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of full connected units</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tf.keras.Model</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def payan_montana_model_pretrained_conv(path_to_model, input_shape=(97, 115, 97, 1), fc_size=800):
+    &#34;&#34;&#34;
+    Payan model with pretrained encoder
+
+    Parameters
+    ----------
+    path_to_model : str
+        Path to the pretrained payan encoder
+    input_shape : tuple
+        Expected input shape
+    fc_size: int
+        Number of full connected units
+    Returns
+    -------
+    tf.keras.Model
+    &#34;&#34;&#34;
     pretrained_model = tf.keras.models.load_model(path_to_model)
     trained_layer = pretrained_model.get_layer(&#39;Encoder-Conv&#39;)
     big_model = payan_montana_model(input_shape=input_shape,
@@ -861,7 +1405,6 @@ def factory(model_name, **model_args):
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="deep_mri.model_zoo.models_3d.batch_norm_conv" href="#deep_mri.model_zoo.models_3d.batch_norm_conv">batch_norm_conv</a></code></li>
 <li><code><a title="deep_mri.model_zoo.models_3d.clone_layer_from_model" href="#deep_mri.model_zoo.models_3d.clone_layer_from_model">clone_layer_from_model</a></code></li>
 <li><code><a title="deep_mri.model_zoo.models_3d.encoder_baseline" href="#deep_mri.model_zoo.models_3d.encoder_baseline">encoder_baseline</a></code></li>
 <li><code><a title="deep_mri.model_zoo.models_3d.encoder_fc" href="#deep_mri.model_zoo.models_3d.encoder_fc">encoder_fc</a></code></li>

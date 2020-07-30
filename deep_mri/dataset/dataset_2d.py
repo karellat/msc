@@ -48,7 +48,7 @@ def _generator(file_list, target_list, img_size, channels, class_names, shuffle=
     Parameters
     ----------
     file_list : list
-        List of file paths
+        List of image file paths
     target_list : list
         List of ADNI group names
     img_size : int
@@ -145,12 +145,11 @@ def factory(train_files, train_targets, valid_files, valid_targets, class_names,
     Returns
     -------
     tuple
-        Training tensorflow dataset, Validation tensorflow dataset
+        2D Training tensorflow dataset, 2D Validation tensorflow dataset
     """
     img_shape = np.array((img_size, img_size, channels)).astype(int)
 
     if transform is not None:
-        # TODO: Solve the None string retype
         train_ds = tf.data.Dataset.from_generator(_generator,
                                                   output_types=(tf.float32, tf.bool),
                                                   output_shapes=(img_shape, (len(class_names),)),
