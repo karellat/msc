@@ -1,0 +1,26 @@
+{
+  "model" : "encoder_payan2",
+  "model_args" : {
+  },
+  "dataset_path" : "/home/karelto1/MRI/minc_core/*/*/*.nii",
+  "data_csv_path" : "/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv",
+  "train_filter_first_screen" : false,
+  "valid_filter_first_screen" : false,
+  "dataset" : "encoder_boxes",
+  "dataset_args" : {
+    "normalize" : true,
+    "downscale_ratio" : 2,
+    "box_size" : 5, 
+    "boxes_per_img" : 100
+  },
+  "callbacks" : ["board", "save"],
+  "init_lr" : 0.00001,
+  "log_root" : "./logs/final_3d",
+  "log_name" : "payan_encoder",
+  "epochs" : 10,
+  "batch_size" : 1,
+  "optimizer" : "adam",
+  "loss" : "mse",
+  "metrics" : ["mse"]
+
+}

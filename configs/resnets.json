@@ -1,27 +1,24 @@
 {
-  "model" : "3d_payan",
+  "model" : "wrong",
   "model_args" : {
-    "input_shape"  : [78, 92, 78, 1],
-    "conv_filters_count" : 150,
-    "batch_norm" : false,
-    "dropout" : 0.5,
-    "fc_size" : 800
-  },
-  "dataset_path" : "/home/karelto1/MRI/minc_core/*/*/*.nii",
+    "input_shape"  : [97, 115, 97, 1],
+    "num_outputs" : 3
+    },
+  "dataset_path" : "/home/karelto1/MRI/minc_beast/*/*/*.nii",
   "data_csv_path" : "/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv",
   "train_filter_first_screen" : false,
   "valid_filter_first_screen" : false,
   "dataset" : "3d",
   "dataset_args" : {
     "normalize" : true,
-    "downscale_ratio" : 2.5
+    "downscale_ratio" : 2
   },
-  "callbacks" : ["board"],
-  "init_lr" : 0.0001,
+  "callbacks" : ["board", "save"],
+  "init_lr" : 0.00001,
   "log_root" : "./logs/final_3d",
-  "log_name" : "payan_DP",
-  "epochs" : 10,
-  "batch_size" : 8,
+  "log_name" : "wrong",
+  "epochs" : 20,
+  "batch_size" : 2,
   "optimizer" : "adam",
   "loss" : "categorical_crossentropy",
   "metrics" : ["accuracy", "AUC"]

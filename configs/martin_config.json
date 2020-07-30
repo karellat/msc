@@ -3,16 +3,16 @@
   "model_args" : {
     "input_shape"  : [97, 115, 97, 1],
                 "init_filters":256,
-                 "conv_layers":2,
-                 "conv_kernel":3,
+                 "conv_layers":3,
+                 "conv_kernel":5,
                  "conv_activation":"relu",
                  "conv_stride":2,
                  "conv_to_fc":null
   },
-  "dataset_path" : "default",
-  "data_csv_path" : "default",
-  "train_filter_first_screen" : true,
-  "valid_filter_first_screen" : true,
+  "dataset_path" : "/home/karelto1/MRI/minc_core/*/*/*.nii",
+  "data_csv_path" : "/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv",
+  "train_filter_first_screen" : false,
+  "valid_filter_first_screen" : false,
   "dataset" : "3d",
   "dataset_args" : {
     "normalize" : true,
@@ -20,7 +20,7 @@
   },
 
   "callbacks" : ["board", "save"],
-  "log_root" : "./logs/martin",
+  "log_root" : "./logs/final_3d",
   "log_name" : "L5-F256-relu-None",
   "epochs" : 100,
   "batch_size" : 8,

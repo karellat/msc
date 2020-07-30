@@ -12,6 +12,7 @@
   "train_filter_first_screen" : false,
   "valid_filter_first_screen" : false,
   "dataset" : "3d",
+  "shuffle_strategy": "random",
   "dataset_args" : {
     "normalize" : true,
     "downscale_ratio" : 2.5
@@ -19,7 +20,7 @@
   "callbacks" : ["board"],
   "init_lr" : 0.0001,
   "log_root" : "./logs/final_3d",
-  "log_name" : "payan_DP",
+  "log_name" : "payan_random",
   "epochs" : 10,
   "batch_size" : 8,
   "optimizer" : "adam",

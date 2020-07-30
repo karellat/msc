@@ -1,12 +1,7 @@
 {
-  "model" : "3d_payan",
+  "model" : "3d_karasawa",
   "model_args" : {
-    "input_shape"  : [78, 92, 78, 1],
-    "conv_filters_count" : 150,
-    "batch_norm" : false,
-    "dropout" : 0.5,
-    "fc_size" : 800
-  },
+    "input_shape"  : [96, 96, 64, 1]},
   "dataset_path" : "/home/karelto1/MRI/minc_core/*/*/*.nii",
   "data_csv_path" : "/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv",
   "train_filter_first_screen" : false,
@@ -14,14 +9,14 @@
   "dataset" : "3d",
   "dataset_args" : {
     "normalize" : true,
-    "downscale_ratio" : 2.5
+    "output_shape": [96, 96, 64, 1] 
   },
-  "callbacks" : ["board"],
+  "callbacks" : ["board", "save"],
   "init_lr" : 0.0001,
   "log_root" : "./logs/final_3d",
-  "log_name" : "payan_DP",
-  "epochs" : 10,
-  "batch_size" : 8,
+  "log_name" : "wrong",
+  "epochs" : 20,
+  "batch_size" : 2,
   "optimizer" : "adam",
   "loss" : "categorical_crossentropy",
   "metrics" : ["accuracy", "AUC"]

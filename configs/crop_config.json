@@ -9,9 +9,9 @@
         "num_outputs" : 3
     },
 
-  "init_lr" : 0.001,
-  "dataset_path" : "default",
-  "data_csv_path" : "default",
+  "init_lr" : 0.0001,
+  "dataset_path" : "/home/karelto1/MRI/slice_minc/*/*/*/*.png",
+  "data_csv_path" : "/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv",
   "train_filter_first_screen" : false,
   "valid_filter_first_screen" : false,
   "dataset" : "2d",

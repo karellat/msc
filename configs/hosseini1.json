@@ -1,0 +1,25 @@
+{
+  "model" : "3d_hosseini1",
+  "model_args" : {
+    "input_shape"  : [192, 228, 192, 1]
+    },
+  "dataset_path" : "/home/karelto1/MRI/minc_beast/*/*/*.nii",
+  "data_csv_path" : "/home/karelto1/MRI/ADNI1_Complete_1Yr_1.5T_10_13_2019.csv",
+  "train_filter_first_screen" : false,
+  "valid_filter_first_screen" : false,
+  "dataset" : "encoder_full",
+  "dataset_args" : {
+    "normalize" : true, 
+    "output_shape"  : [192, 228, 192, 1]
+  },
+  "callbacks" : ["board", "save"],
+  "log_root" : "./logs/final_3d",
+  "log_name" : "hosseini1",
+  "init_lr" : 0.0001,
+  "epochs" : 20,
+  "batch_size" : 2,
+  "optimizer" : "adam",
+  "loss" : "mse",
+  "metrics" : ["mse"]
+
+}
