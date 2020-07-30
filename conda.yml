@@ -1,0 +1,20 @@
+name: deep_mri
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python==3.7.7
+  - nipype
+  - pip>=20.1.1
+  - pip:
+    - scikit-learn==0.20
+    - tensorflow==2.2.0
+    - nilearn==0.6.2
+    - auto-tqdm
+    - seaborn
+    - pandas
+    - fslpy
+    - tensorflow-addons
+    - tensorflow_hub
+    - pdoc3
+    - git+https://github.com/JihongJu/keras-resnet3d.git

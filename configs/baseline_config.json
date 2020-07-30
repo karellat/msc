@@ -1,0 +1,29 @@
+{
+  "model" : "3d_payan",
+  "model_args" : {
+    "input_shape"  : [97, 115, 97, 1],
+    "conv_filters_count" : 150,
+    "batch_norm" : false,
+    "dropout" : 0.5,
+    "fc_size" : 800
+  },
+  "dataset_path" : "default",
+  "data_csv_path" : "default",
+  "train_filter_first_screen" : true,
+  "valid_filter_first_screen" : true,
+  "dataset" : "3d",
+  "dataset_args" : {
+    "normalize" : true,
+    "downscale_ratio" : 2
+  },
+
+  "callbacks" : ["board", "save", "early_stop"],
+  "log_root" : "./logs/baseline",
+  "log_name" : "payan_DP",
+  "epochs" : 100,
+  "batch_size" : 8,
+  "optimizer" : "adam",
+  "loss" : "categorical_crossentropy",
+  "metrics" : ["accuracy", "AUC"]
+
+}
